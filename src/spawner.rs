@@ -13,6 +13,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             glyph: rltk::to_cp437('☺'),
             fg: RGB::from_u8(255, 201, 14),
             bg: RGB::named(rltk::BLACK),
+            render_order: 0
         })
         .with(Player{})
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty : true })
@@ -93,6 +94,7 @@ fn monster<S : ToString>(ecs: &mut World, x: i32, y:i32, glyph : rltk::FontCharT
                 glyph,
                 fg: RGB::named(rltk::GREEN3),
                 bg: RGB::named(rltk::BLACK),
+                render_order: 1
             })
             .with(Viewshed{ visible_tiles: Vec::new(), range: 8, dirty: true })
             .with(Monster{})
@@ -110,6 +112,7 @@ fn health_potion(ecs: &mut World, x: i32, y: i32) {
             glyph: rltk::to_cp437('∞'),
             fg: RGB::from_u8(180, 125, 0),
             bg: RGB::named(rltk::BLACK),
+            render_order: 2
         })
         .with(Name{ name : "Pasztecik".to_string() })
         .with(Item{})
