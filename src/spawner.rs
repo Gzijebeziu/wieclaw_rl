@@ -1,6 +1,7 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::prelude::*;
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage};
+use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
+            map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, Confusion};
 
 const MAX_MONSTERS : i32 = 4;
 const MAX_ITEMS : i32 = 2;
@@ -88,10 +89,12 @@ fn random_item(ecs: &mut World, x: i32, y: i32) {
     let roll :i32;
     {
         let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        roll = rng.roll_dice(1, 2);
+        roll = rng.roll_dice(1, 4);
     }
     match roll {
         1 => { health_potion(ecs, x, y) }
+        2 => { fireball_scroll(ecs, x, y) }
+        3 => { confusion_scroll(ecs, x, y) }
         _ => { magic_missile_scroll(ecs, x, y) }
     }
 }
@@ -148,5 +151,41 @@ fn magic_missile_scroll(ecs: &mut World, x: i32, y: i32) {
         .with(Consumable{})
         .with(Ranged{ range: 6 })
         .with(InflictsDamage{ damage: 8 })
+        .build();
+}
+
+
+fn fireball_scroll(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('π'),
+            fg: RGB::named(rltk::ORANGE),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name: "Zwój Saznistego Pierdniecia".to_string() })
+        .with(Item{})
+        .with(Consumable{})
+        .with(Ranged{ range: 6 })
+        .with(InflictsDamage{ damage: 20 })
+        .with(AreaOfEffect{ radius: 3 })
+        .build();
+}
+
+fn confusion_scroll(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('π'),
+            fg: RGB::named(rltk::PINK),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name: "Zwój z Waznym Pytaniem".to_string() })
+        .with(Item{})
+        .with(Consumable{})
+        .with(Ranged { range: 6 })
+        .with(Confusion{ turns: 4 })
         .build();
 }
