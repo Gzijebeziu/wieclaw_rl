@@ -1,6 +1,6 @@
 use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
-use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem};
+use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem, TileType};
 use std::cmp::{min, max};
 
 
@@ -35,6 +35,20 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
             ppos.x = pos.x;
             ppos.y = pos.y;
         }
+    }
+}
+
+
+pub fn try_next_level(ecs: &mut World) -> bool {
+    let player_pos = ecs.fetch::<Point>();
+    let map = ecs.fetch::<Map>();
+    let player_idx = map.xy_idx(player_pos.x, player_pos.y);
+    if map.tiles[player_idx] == TileType::DownStairs {
+        true
+    } else {
+        let mut gamelog = ecs.fetch_mut::<GameLog>();
+        gamelog.entries.push("Tedy nie zejdziesz.".to_string());
+        false
     }
 }
 
@@ -103,6 +117,12 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::D => return RunState::ShowDropItem,
 
             VirtualKeyCode::Escape => return RunState::SaveGame,
+
+            VirtualKeyCode::Period => {
+                if try_next_level(&mut gs.ecs) {
+                    return RunState::NextLevel;
+                }
+            }
 
             _ => { return RunState::AwaitingInput }
         },
