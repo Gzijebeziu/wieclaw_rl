@@ -1,6 +1,6 @@
 use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
-use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem, TileType};
+use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem, TileType, Monster};
 use std::cmp::{min, max};
 
 
@@ -36,6 +36,36 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
             ppos.y = pos.y;
         }
     }
+}
+
+
+pub fn skip_turn(ecs: &mut World) -> RunState {
+    let player_entity = ecs.fetch::<Entity>();
+    let viewshed_components = ecs.read_storage::<Viewshed>();
+    let monsters = ecs.read_storage::<Monster>();
+
+    let worldmap_resource = ecs.fetch::<Map>();
+
+    let mut can_heal = true;
+    let viewshed = viewshed_components.get(*player_entity).unwrap();
+    for tile in viewshed.visible_tiles.iter() {
+        let idx = worldmap_resource.xy_idx(tile.x, tile.y);
+        for entity_id in worldmap_resource.tile_content[idx].iter() {
+            let mob = monsters.get(*entity_id);
+            match mob {
+                None => {}
+                Some(_) => { can_heal = false; }
+            }
+        }
+    }
+
+    if can_heal {
+        let mut health_components = ecs.write_storage::<CombatStats>();
+        let player_hp = health_components.get_mut(*player_entity).unwrap();
+        player_hp.hp = i32::min(player_hp.hp + 1, player_hp.max_hp);
+    }
+
+    RunState::PlayerTurn
 }
 
 
@@ -123,6 +153,9 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
                     return RunState::NextLevel;
                 }
             }
+
+            VirtualKeyCode::Numpad5 |
+            VirtualKeyCode::Space => return skip_turn(&mut gs.ecs),
 
             _ => { return RunState::AwaitingInput }
         },
