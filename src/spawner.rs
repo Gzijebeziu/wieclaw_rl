@@ -1,8 +1,10 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
+use crate::{MeleePowerBonus, DefenseBonus};
+
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
-            Confusion, SerializeMe, random_table::RandomTable};
+            Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -62,6 +64,10 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Zwoj Rzutu Kartoflem" => magic_missile_scroll(ecs, x, y),
             "Zwoj z Waznym Pytaniem" => confusion_scroll(ecs, x, y),
             "Zwoj Saznistego Pierdniecia" => fireball_scroll(ecs, x, y),
+            "Klapek" => klapek(ecs, x, y),
+            "Sandalki" => sandalki(ecs, x, y),
+            "Laczek" => laczek(ecs, x, y),
+            "Kalosze" => kalosze(ecs, x, y),
             _ => {}
         }
     }
@@ -76,6 +82,10 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Zwoj Rzutu Kartoflem", 4)
         .add("Zwoj z Waznym Pytaniem", 2 + map_depth)
         .add("Zwoj Saznistego Pierdniecia", 2 + map_depth)
+        .add("Klapek", 3)
+        .add("Sandalki", 3)
+        .add("Laczek", map_depth - 1)
+        .add("Kalosze", map_depth - 1)
 }
 
 fn golem(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('G'), "Golem Zoledny"); }
@@ -170,6 +180,74 @@ fn confusion_scroll(ecs: &mut World, x: i32, y: i32) {
         .with(Consumable{})
         .with(Ranged { range: 6 })
         .with(Confusion{ turns: 4 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn klapek(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('Θ'),
+            fg: RGB::from_u8(189, 188, 56),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Klapek".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot : EquipmentSlot::Melee })
+        .with(MeleePowerBonus{ power : 2 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn sandalki(ecs: &mut World, x: i32, y:i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('╚'),
+            fg: RGB::from_u8(255, 4, 131),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Sandalki".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot : EquipmentSlot::Armor })
+        .with(DefenseBonus{ defense : 1 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn laczek(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('Θ'),
+            fg: RGB::from_u8(240, 95, 56),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Laczek".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot : EquipmentSlot::Melee })
+        .with(MeleePowerBonus{ power: 4 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn kalosze(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('╚'),
+            fg: RGB::from_u8(53, 217, 234),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Kalosze".to_string() })
+        .with(Item{})
+        .with(Equippable{ slot : EquipmentSlot::Armor })
+        .with(DefenseBonus{ defense: 3 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
