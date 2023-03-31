@@ -27,6 +27,7 @@ mod inventory_system;
 use inventory_system::{ItemCollectionSystem, ItemUseSystem, ItemDropSystem, ItemRemoveSystem};
 pub mod saveload_system;
 pub mod random_table;
+mod particle_system;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -68,6 +69,8 @@ impl State {
         drop_items.run_now(&self.ecs);
         let mut item_remove = ItemRemoveSystem{};
         item_remove.run_now(&self.ecs);
+        let mut particles = particle_system::ParticleSpawnSystem{};
+        particles.run_now(&self.ecs);
 
         self.ecs.maintain();
     }
@@ -84,6 +87,7 @@ impl GameState for State {
         }
 
         ctx.cls();
+        particle_system::cull_dead_particles(&mut self.ecs, ctx);
 
         match newrunstate {
             RunState::MainMenu {..} => {}
@@ -399,6 +403,7 @@ fn main() -> rltk::BError {
      gs.ecs.register::<MeleePowerBonus>();
      gs.ecs.register::<DefenseBonus>();
      gs.ecs.register::<WantsToRemoveItem>();
+     gs.ecs.register::<ParticleLifetime>();
 
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
@@ -417,6 +422,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(map);
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
+    gs.ecs.insert(particle_system::ParticleBuilder::new());
 
     rltk::main_loop(context, gs)
 }
