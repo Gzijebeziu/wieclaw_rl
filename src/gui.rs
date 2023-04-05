@@ -41,7 +41,7 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
             HungerState::WellFed => ctx.print_color(71, 42, RGB::named(rltk::GREEN), RGB::named(rltk::BLACK), "Najedzony"),
             HungerState::Normal => {}
             HungerState::Hungry => ctx.print_color(71, 42, RGB::named(rltk::ORANGE), RGB::named(rltk::BLACK), "Glodny"),
-            HungerState::Starving => ctx.print_color(71, 42, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Wyglodzony"),
+            HungerState::Starving => ctx.print_color(70, 42, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Wyglodzony"),
         }
 
         let mouse_pos = ctx.mouse_pos();
