@@ -1,6 +1,6 @@
 use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
-use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem, TileType, Monster};
+use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, CombatStats, WantsToMelee, WantsToPickupItem, TileType, Monster, HungerClock, HungerState};
 use std::cmp::{min, max};
 
 
@@ -56,6 +56,16 @@ pub fn skip_turn(ecs: &mut World) -> RunState {
                 None => {}
                 Some(_) => { can_heal = false; }
             }
+        }
+    }
+
+    let hunger_clocks = ecs.read_storage::<HungerClock>();
+    let hc = hunger_clocks.get(*player_entity);
+    if let Some(hc) = hc {
+        match hc.state {
+            HungerState::Hungry => can_heal = false,
+            HungerState::Starving => can_heal = false,
+            _ => {}
         }
     }
 

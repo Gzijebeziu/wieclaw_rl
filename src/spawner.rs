@@ -1,10 +1,9 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
-use crate::{MeleePowerBonus, DefenseBonus};
-
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
-            Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot};
+            Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
+            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -23,6 +22,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Viewshed{ visible_tiles : Vec::new(), range : 8, dirty : true })
         .with(Name{ name: "Wieclaw".to_string() })
         .with(CombatStats{ max_hp: 30, hp: 30, defense: 2, power: 5 })
+        .with(HungerClock{ state: HungerState::WellFed, duration: 20 })
         .marked::<SimpleMarker<SerializeMe>>()
         .build()
 }
@@ -68,6 +68,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Sandalki" => sandalki(ecs, x, y),
             "Laczek" => laczek(ecs, x, y),
             "Kalosze" => kalosze(ecs, x, y),
+            "Surowka" => rations(ecs, x, y),
             _ => {}
         }
     }
@@ -86,6 +87,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Sandalki", 3)
         .add("Laczek", map_depth - 1)
         .add("Kalosze", map_depth - 1)
+        .add("Surowka", 10)
 }
 
 fn golem(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('G'), "Golem Zoledny"); }
@@ -248,6 +250,23 @@ fn kalosze(ecs: &mut World, x: i32, y: i32) {
         .with(Item{})
         .with(Equippable{ slot : EquipmentSlot::Armor })
         .with(DefenseBonus{ defense: 3 })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn rations(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('%'),
+            fg: RGB::named(rltk::GREEN),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Surówka Grzeskowiak".to_string() })
+        .with(Item{})
+        .with(ProvidesFood{})
+        .with(Consumable{})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }

@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem, ProvidesHealing,
             WantsToDropItem, Consumable, CombatStats, InflictsDamage, SufferDamage, Map, AreaOfEffect, Confusion,
-            Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder};
+            Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder, ProvidesFood, HungerClock, HungerState};
 
 pub struct ItemCollectionSystem {}
 
@@ -53,12 +53,15 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteStorage<'a, Equipped>,
                         WriteStorage<'a, InBackpack>,
                         WriteExpect<'a, ParticleBuilder>,
-                        ReadStorage<'a, Position>
+                        ReadStorage<'a, Position>,
+                        ReadStorage<'a, ProvidesFood>,
+                        WriteStorage<'a, HungerClock>
                     );
 
     fn run(&mut self, data : Self::SystemData) {
         let (player_entity, mut gamelog, map, entities, mut wants_use, names, consumables, healing,
-            mut combat_stats, inflict_damage, mut suffer_damage, aoe, mut confused, equippable, mut equipped, mut backpack, mut particle_builder, positions) = data;
+            mut combat_stats, inflict_damage, mut suffer_damage, aoe, mut confused, equippable, mut equipped, 
+            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks) = data;
 
         for (entity, useitem) in (&entities, &wants_use).join() {
             let mut used_item = true;
@@ -191,6 +194,21 @@ impl<'a> System<'a> for ItemUseSystem {
             for mob in add_confusion.iter() {
                 confused.insert(mob.0, Confusion{ turns: mob.1 }).expect("Unable to insert status");
             }
+
+            let item_edible = provides_food.get(useitem.item);
+            match item_edible {
+                None => {}
+                Some(_) => {
+                    used_item = true;
+                    let target = targets[0];
+                    let hc = hunger_clocks.get_mut(target);
+                    if let Some(hc) = hc {
+                        hc.state = HungerState::WellFed;
+                        hc.duration = 20;
+                        gamelog.entries.push(format!("Wieclaw zjada {}.", names.get(useitem.item).unwrap().name));
+                    }
+                }
+            }           
 
             if used_item {
                 let consumable = consumables.get(useitem.item);

@@ -1,6 +1,6 @@
 use rltk::{ RGB, Rltk, VirtualKeyCode };
 use specs::prelude::*;
-use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Viewshed, RunState, Equipped};
+use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Viewshed, RunState, Equipped, HungerClock, HungerState};
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -22,6 +22,7 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
 
     let combat_stats = ecs.read_storage::<CombatStats>();
     let players = ecs.read_storage::<Player>();
+    let hunger = ecs.read_storage::<HungerClock>();
     let log = ecs.fetch::<GameLog>();
 
     let mut y = 44;
@@ -30,11 +31,18 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
         y += 1;
     }
 
-    for (_player, stats) in (&players, &combat_stats).join() {
+    for (_player, stats, hc) in (&players, &combat_stats, &hunger).join() {
         let health = format!(" HP: {} / {} ", stats.hp, stats.max_hp);
         ctx.print_color(12, 43, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), &health);
 
         ctx.draw_bar_horizontal(28, 43, 51, stats.hp, stats.max_hp, RGB::named(rltk::RED), RGB::named(rltk::BLACK));
+
+        match hc.state {
+            HungerState::WellFed => ctx.print_color(71, 42, RGB::named(rltk::GREEN), RGB::named(rltk::BLACK), "Najedzony"),
+            HungerState::Normal => {}
+            HungerState::Hungry => ctx.print_color(71, 42, RGB::named(rltk::ORANGE), RGB::named(rltk::BLACK), "Glodny"),
+            HungerState::Starving => ctx.print_color(71, 42, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Wyglodzony"),
+        }
 
         let mouse_pos = ctx.mouse_pos();
         ctx.set_bg(mouse_pos.0, mouse_pos.1, RGB::named(rltk::MAGENTA));
