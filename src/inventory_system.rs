@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem, ProvidesHealing,
             WantsToDropItem, Consumable, CombatStats, InflictsDamage, SufferDamage, Map, AreaOfEffect, Confusion,
-            Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder, ProvidesFood, HungerClock, HungerState};
+            Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder, ProvidesFood, HungerClock, HungerState, MagicMapper, RunState};
 
 pub struct ItemCollectionSystem {}
 
@@ -55,13 +55,15 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteExpect<'a, ParticleBuilder>,
                         ReadStorage<'a, Position>,
                         ReadStorage<'a, ProvidesFood>,
-                        WriteStorage<'a, HungerClock>
+                        WriteStorage<'a, HungerClock>,
+                        ReadStorage<'a, MagicMapper>,
+                        WriteExpect<'a, RunState>
                     );
 
     fn run(&mut self, data : Self::SystemData) {
         let (player_entity, mut gamelog, map, entities, mut wants_use, names, consumables, healing,
             mut combat_stats, inflict_damage, mut suffer_damage, aoe, mut confused, equippable, mut equipped, 
-            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks) = data;
+            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks, magic_mapper, mut runstate) = data;
 
         for (entity, useitem) in (&entities, &wants_use).join() {
             let mut used_item = true;
@@ -208,7 +210,17 @@ impl<'a> System<'a> for ItemUseSystem {
                         gamelog.entries.push(format!("Wieclaw zjada {}.", names.get(useitem.item).unwrap().name));
                     }
                 }
-            }           
+            }
+
+            let is_mapper = magic_mapper.get(useitem.item);
+            match is_mapper {
+                None => {}
+                Some(_) => {
+                    used_item = true;
+                    gamelog.entries.push("Wieclaw odkryl cala mape!".to_string());
+                    *runstate = RunState::MagicMapReveal{ row : 0};
+                }
+            }
 
             if used_item {
                 let consumable = consumables.get(useitem.item);

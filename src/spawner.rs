@@ -3,7 +3,7 @@ use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
             Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
-            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood};
+            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -69,6 +69,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Laczek" => laczek(ecs, x, y),
             "Kalosze" => kalosze(ecs, x, y),
             "Surowka" => rations(ecs, x, y),
+            "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
             _ => {}
         }
     }
@@ -88,6 +89,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Laczek", map_depth - 1)
         .add("Kalosze", map_depth - 1)
         .add("Surowka", 10)
+        .add("Magic Mapping Scroll", 2)
 }
 
 fn golem(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('G'), "Golem Zoledny"); }
@@ -267,6 +269,23 @@ fn rations(ecs: &mut World, x: i32, y: i32) {
         .with(Name{ name : "Surówka Grzeskowiak".to_string() })
         .with(Item{})
         .with(ProvidesFood{})
+        .with(Consumable{})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn magic_mapping_scroll(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('π'),
+            fg: RGB::named(rltk::CYAN3),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Zwój Malego Odkrywcy".to_string() })
+        .with(Item{})
+        .with(MagicMapper{})
         .with(Consumable{})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
