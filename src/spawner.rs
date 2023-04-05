@@ -125,6 +125,7 @@ fn health_potion(ecs: &mut World, x: i32, y: i32) {
         .with(Item{})
         .with(Consumable{})
         .with(ProvidesHealing{ heal_amount: 8 })
+        .with(ProvidesFood{})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
