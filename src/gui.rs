@@ -1,6 +1,6 @@
 use rltk::{ RGB, Rltk, VirtualKeyCode };
 use specs::prelude::*;
-use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Viewshed, RunState, Equipped, HungerClock, HungerState};
+use super::{CombatStats, Player, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets};
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -233,67 +233,75 @@ pub fn ranged_target(gs : &mut State, ctx : &mut Rltk, range : i32) -> (ItemMenu
 }
 
 pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
+    let assets = gs.ecs.fetch::<RexAssets>();
+    ctx.render_xp_sprite(&assets.menu, 0, 0);
     let save_exists = super::saveload_system::does_save_exist();
     let runstate = gs.ecs.fetch::<RunState>();
 
-    ctx.print_color_centered(15, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Wieclaw Roguelike");
+    ctx.draw_box_double(24, 18, 31, 10, RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK));
+    ctx.print_color_centered(20, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Wieclaw Roguelike");
+    ctx.print_color_centered(21, RGB::named(rltk::CYAN), RGB::named(rltk::BLACK), "Zebyr Zyjgames");
+    ctx.print_color_centered(22, RGB::named(rltk::GRAY), RGB::named(rltk::BLACK), "(strzalki góra/dól, Enter)");
 
-    if let RunState::MainMenu{ menu_selection : selection } = *runstate {
-        if selection == MainMenuSelection::NewGame {
-            ctx.print_color_centered(24, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Nowa gra");
-        } else {
-            ctx.print_color_centered(24, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Nowa gra");
-        }
-
-        if save_exists {
-            if selection == MainMenuSelection::LoadGame {
-                ctx.print_color_centered(25, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Wczytaj gre");
+    let mut y = 24;
+        if let RunState::MainMenu{ menu_selection : selection } = *runstate {
+            if selection == MainMenuSelection::NewGame {
+                ctx.print_color_centered(y, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Nowa gra");
             } else {
-                ctx.print_color_centered(25, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Wczytaj gre");
+                ctx.print_color_centered(y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Nowa gra");
             }
-        }
+            y += 1;
 
-        if selection == MainMenuSelection::Quit {
-            ctx.print_color_centered(26, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "ANI MI SIE WAZ");
-        } else {
-            ctx.print_color_centered(26, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Wyjscie");
-        }
+            if save_exists {
+                if selection == MainMenuSelection::LoadGame {
+                    ctx.print_color_centered(y, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Wczytaj gre");
+                } else {
+                    ctx.print_color_centered(y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Wczytaj gre");
+                }
+                y += 1;
+            }
 
-        match ctx.key {
-            None => return MainMenuResult::NoSelection { selected: selection },
-            Some(key) => {
-                match key {
-                    VirtualKeyCode::Escape => { return MainMenuResult::NoSelection { selected: MainMenuSelection::Quit }}
-                    VirtualKeyCode::Up => {
-                        let mut newselection;
-                        match selection {
-                            MainMenuSelection::NewGame => newselection = MainMenuSelection::Quit,
-                            MainMenuSelection::LoadGame => newselection = MainMenuSelection::NewGame,
-                            MainMenuSelection::Quit => newselection = MainMenuSelection::LoadGame
+            if selection == MainMenuSelection::Quit {
+                ctx.print_color_centered(y, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "ANI MI SIE WAZ");
+            } else {
+                ctx.print_color_centered(y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Wyjscie");
+            }
+
+            match ctx.key {
+                None => return MainMenuResult::NoSelection { selected: selection },
+                Some(key) => {
+                    match key {
+                        VirtualKeyCode::Escape => { return MainMenuResult::NoSelection { selected: MainMenuSelection::Quit }}
+                        VirtualKeyCode::Up => {
+                            let mut newselection;
+                            match selection {
+                                MainMenuSelection::NewGame => newselection = MainMenuSelection::Quit,
+                                MainMenuSelection::LoadGame => newselection = MainMenuSelection::NewGame,
+                                MainMenuSelection::Quit => newselection = MainMenuSelection::LoadGame
+                            }
+                            if newselection == MainMenuSelection::LoadGame && !save_exists {
+                                newselection = MainMenuSelection::NewGame;
+                            }
+                            return MainMenuResult::NoSelection { selected: newselection }
                         }
-                        if newselection == MainMenuSelection::LoadGame && !save_exists {
-                            newselection = MainMenuSelection::NewGame;
+                        VirtualKeyCode::Down => {
+                            let mut newselection;
+                            match selection {
+                                MainMenuSelection::NewGame => newselection = MainMenuSelection::LoadGame,
+                                MainMenuSelection::LoadGame => newselection = MainMenuSelection::Quit,
+                                MainMenuSelection::Quit => newselection = MainMenuSelection::NewGame
+                            }
+                            if newselection == MainMenuSelection::LoadGame && !save_exists {
+                                newselection = MainMenuSelection::Quit;
+                            }
+                            return MainMenuResult::NoSelection { selected: newselection }
                         }
-                        return MainMenuResult::NoSelection { selected: newselection }
+                        VirtualKeyCode::Return => return MainMenuResult::Selected { selected: selection },
+                        _ => return MainMenuResult::NoSelection { selected: selection }
                     }
-                    VirtualKeyCode::Down => {
-                        let mut newselection;
-                        match selection {
-                            MainMenuSelection::NewGame => newselection = MainMenuSelection::LoadGame,
-                            MainMenuSelection::LoadGame => newselection = MainMenuSelection::Quit,
-                            MainMenuSelection::Quit => newselection = MainMenuSelection::NewGame
-                        }
-                        if newselection == MainMenuSelection::LoadGame && !save_exists {
-                            newselection = MainMenuSelection::Quit;
-                        }
-                        return MainMenuResult::NoSelection { selected: newselection }
-                    }
-                    VirtualKeyCode::Return => return MainMenuResult::Selected { selected: selection },
-                    _ => return MainMenuResult::NoSelection { selected: selection }
                 }
             }
         }
-    }
 
     MainMenuResult::NoSelection { selected: MainMenuSelection::NewGame }
 }

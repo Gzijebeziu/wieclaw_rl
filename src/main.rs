@@ -31,6 +31,7 @@ mod particle_system;
 use particle_system::ParticleSpawnSystem;
 mod hunger_system;
 use hunger_system::HungerSystem;
+mod rex_assets;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -447,6 +448,7 @@ fn main() -> rltk::BError {
     gs.ecs.insert(Point::new(player_x, player_y));
     gs.ecs.insert(player_entity);
     gs.ecs.insert(particle_system::ParticleBuilder::new());
+    gs.ecs.insert(rex_assets::RexAssets::new());
 
     rltk::main_loop(context, gs)
 }
