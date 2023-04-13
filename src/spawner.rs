@@ -1,9 +1,11 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
+use crate::SingleActivation;
+
 use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
             Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
-            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper};
+            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper, Hidden, EntryTrigger};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -70,6 +72,7 @@ pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
             "Kalosze" => kalosze(ecs, x, y),
             "Surowka" => rations(ecs, x, y),
             "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
+            "Bear Trap" => bear_trap(ecs, x, y),
             _ => {}
         }
     }
@@ -90,6 +93,7 @@ fn room_table(map_depth: i32) -> RandomTable {
         .add("Kalosze", map_depth - 1)
         .add("Surowka", 10)
         .add("Magic Mapping Scroll", 2)
+        .add("Bear Trap", 2)
 }
 
 fn golem(ecs: &mut World, x: i32, y: i32) { monster(ecs, x, y, rltk::to_cp437('G'), "Golem Zoledny"); }
@@ -287,6 +291,24 @@ fn magic_mapping_scroll(ecs: &mut World, x: i32, y: i32) {
         .with(Item{})
         .with(MagicMapper{})
         .with(Consumable{})
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
+}
+
+fn bear_trap(ecs: &mut World, x: i32, y: i32) {
+    ecs.create_entity()
+        .with(Position{ x, y })
+        .with(Renderable{
+            glyph: rltk::to_cp437('^'),
+            fg: RGB::named(rltk::RED),
+            bg: RGB::named(rltk::BLACK),
+            render_order: 2
+        })
+        .with(Name{ name : "Pulapka na mazowszan".to_string() })
+        .with(Hidden{})
+        .with(EntryTrigger{})
+        .with(InflictsDamage{ damage: 6 })
+        .with(SingleActivation{})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 }
