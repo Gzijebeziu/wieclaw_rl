@@ -1,3 +1,4 @@
+#[allow(deprecated)]
 use specs::{prelude::*, saveload::{Marker, ConvertSaveload}, error::NoError};
 use specs_derive::*;
 use rltk::{RGB};

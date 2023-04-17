@@ -1,11 +1,11 @@
-use specs::{prelude::*, saveload::{SimpleMarker, SimpleMarkerAllocator, SerializeComponents, DeserializeComponents, MarkedBuilder}, error::NoError};
+use specs::{prelude::*, saveload::{SimpleMarker, SimpleMarkerAllocator, SerializeComponents, DeserializeComponents, MarkedBuilder}};
 use super::components::*;
-use std::{fs::File, path::Path, fs::{self, read_to_string}};
+use std::{fs::File, path::Path, fs::{self}, convert::Infallible};
 
 macro_rules! serialize_individually {
     ($ecs:expr, $ser:expr, $data:expr, $( $type:ty),*) => {
         $(
-        SerializeComponents::<NoError, SimpleMarker<SerializeMe>>::serialize(
+        SerializeComponents::<Infallible, SimpleMarker<SerializeMe>>::serialize(
             &( $ecs.read_storage::<$type>(), ),
             &$data.0,
             &$data.1,
@@ -46,7 +46,7 @@ pub fn does_save_exist() -> bool {
 macro_rules! deserialize_individually {
     ($ecs:expr, $de:expr, $data:expr, $( $type:ty),*) => {
         $(
-        DeserializeComponents::<NoError, _>::deserialize(
+        DeserializeComponents::<Infallible, _>::deserialize(
             &mut ( &mut $ecs.write_storage::<$type>(), ),
             &mut $data.0,
             &mut $data.1,
