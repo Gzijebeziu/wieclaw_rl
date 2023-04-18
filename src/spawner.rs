@@ -2,7 +2,7 @@ use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use crate::SingleActivation;
 
-use super::{CombatStats, Player, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
+use super::{CombatStats, Player, Map, TileType, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
             Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
             HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper, Hidden, EntryTrigger};
@@ -29,52 +29,69 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .build()
 }
 
+
 #[allow(clippy::map_entry)]
 pub fn spawn_room(ecs: &mut World, room : &Rect, map_depth: i32) {
-    let spawn_table = room_table(map_depth);
-    let mut spawn_points : HashMap<usize, String> = HashMap::new();
-
+    let mut possible_targets : Vec<usize> = Vec::new();
     {
-        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-        let num_spawns = rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3;
-
-        for _i in 0..num_spawns {
-            let mut added = false;
-            let mut tries = 0;
-            while !added && tries < 20 {
-                let x = (room.x1 + rng.roll_dice(1, i32::abs(room.x2 - room.x1))) as usize;
-                let y = (room.y1 + rng.roll_dice(1, i32::abs(room.y2 - room.y1))) as usize;
-                let idx = (y * MAPWIDTH) + x;
-                if !spawn_points.contains_key(&idx) {
-                    spawn_points.insert(idx, spawn_table.roll(&mut rng));
-                    added  = true;
-                } else {
-                    tries += 1;
+        let map = ecs.fetch::<Map>();
+        for y in room.y1 + 1 .. room.y2 {
+            for x in room.x1 + 1 .. room.x2 {
+                let idx = map.xy_idx(x, y);
+                if map.tiles[idx] == TileType::Floor {
+                    possible_targets.push(idx);
                 }
             }
         }
     }
 
-    for spawn in spawn_points.iter() {
-        let x = (*spawn.0 % MAPWIDTH) as i32;
-        let y = (*spawn.0 / MAPWIDTH) as i32;
+    spawn_region(ecs, &possible_targets, map_depth);
+}
 
-        match spawn.1.as_ref() {
-            "Gnomon" => gnomon(ecs, x, y),
-            "Golem Zoledny" => golem(ecs, x, y),
-            "Pasztecik" => health_potion(ecs, x, y),
-            "Zwoj Rzutu Kartoflem" => magic_missile_scroll(ecs, x, y),
-            "Zwoj z Waznym Pytaniem" => confusion_scroll(ecs, x, y),
-            "Zwoj Saznistego Pierdniecia" => fireball_scroll(ecs, x, y),
-            "Klapek" => klapek(ecs, x, y),
-            "Sandalki" => sandalki(ecs, x, y),
-            "Laczek" => laczek(ecs, x, y),
-            "Kalosze" => kalosze(ecs, x, y),
-            "Surowka" => rations(ecs, x, y),
-            "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
-            "Bear Trap" => bear_trap(ecs, x, y),
-            _ => {}
+
+pub fn spawn_region(ecs: &mut World, area : &[usize], map_depth: i32) {
+    let spawn_table = room_table(map_depth);
+    let mut spawn_points : HashMap<usize, String> = HashMap::new();
+    let mut areas : Vec<usize> = Vec::from(area);
+
+    {
+        let mut rng = ecs.write_resource::<RandomNumberGenerator>();
+        let num_spawns = i32::min(areas.len() as i32, rng.roll_dice(1, MAX_MONSTERS + 3) + (map_depth - 1) - 3);
+        if num_spawns == 0 { return; }
+
+        for _i in 0 .. num_spawns {
+            let array_index = if areas.len() == 1 { 0usize } else { (rng.roll_dice(1, areas.len() as i32)-1) as usize };
+            let map_idx = areas[array_index];
+            spawn_points.insert(map_idx, spawn_table.roll(&mut rng));
+            areas.remove(array_index);
         }
+    }
+
+    for spawn in spawn_points.iter() {
+        spawn_entity(ecs, &spawn);
+    }
+}
+
+
+fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
+    let x = (*spawn.0 % MAPWIDTH) as i32;
+    let y = (*spawn.0 / MAPWIDTH) as i32;
+
+    match spawn.1.as_ref() {
+        "Gnomon" => gnomon(ecs, x, y),
+        "Golem Zoledny" => golem(ecs, x, y),
+        "Pasztecik" => health_potion(ecs, x, y),
+        "Zwoj Rzutu Kartoflem" => magic_missile_scroll(ecs, x, y),
+        "Zwoj z Waznym Pytaniem" => confusion_scroll(ecs, x, y),
+        "Zwoj Saznistego Pierdniecia" => fireball_scroll(ecs, x, y),
+        "Klapek" => klapek(ecs, x, y),
+        "Sandalki" => sandalki(ecs, x, y),
+        "Laczek" => laczek(ecs, x, y),
+        "Kalosze" => kalosze(ecs, x, y),
+        "Surowka" => rations(ecs, x, y),
+        "Magic Mapping Scroll" => magic_mapping_scroll(ecs, x, y),
+        "Bear Trap" => bear_trap(ecs, x, y),
+        _ => {}
     }
 }
 
