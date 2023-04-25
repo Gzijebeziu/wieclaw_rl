@@ -16,7 +16,8 @@ pub struct DLABuilder {
     algorithm : DLAAlgorithm,
     brush_size: i32,
     symmetry: Symmetry,
-    floor_percent: f32
+    floor_percent: f32,
+    spawn_list: Vec<(usize, String)>
 }
 
 impl MapBuilder for DLABuilder {
@@ -36,12 +37,6 @@ impl MapBuilder for DLABuilder {
         self.build();
     }
 
-    fn spawn_entities(&mut self, ecs : &mut World) {
-        for area in self.noise_areas.iter() {
-            spawner::spawn_region(ecs, area.1, self.depth);
-        }
-    }
-
     fn take_snapshot(&mut self) {
         if SHOW_MAPGEN_VISUALIZER {
             let mut snapshot = self.map.clone();
@@ -50,6 +45,10 @@ impl MapBuilder for DLABuilder {
             }
             self.history.push(snapshot);
         }
+    }
+
+    fn get_spawn_list(&self) -> &Vec<(usize, String)> {
+        &self.spawn_list
     }
 }
 
@@ -65,7 +64,8 @@ impl DLABuilder {
             algorithm : DLAAlgorithm::WalkInwards,
             brush_size : 2,
             symmetry : Symmetry::None,
-            floor_percent : 0.25
+            floor_percent : 0.25,
+            spawn_list : Vec::new()
         }
     }
 
@@ -79,7 +79,8 @@ impl DLABuilder {
             algorithm : DLAAlgorithm::WalkInwards,
             brush_size : 1,
             symmetry : Symmetry::None,
-            floor_percent : 0.25
+            floor_percent : 0.25,
+            spawn_list : Vec::new()
         }
     }
 
@@ -93,7 +94,8 @@ impl DLABuilder {
             algorithm : DLAAlgorithm::WalkOutwards,
             brush_size : 2,
             symmetry : Symmetry::None,
-            floor_percent : 0.25
+            floor_percent : 0.25,
+            spawn_list : Vec::new()
         }
     }
 
@@ -107,7 +109,8 @@ impl DLABuilder {
             algorithm : DLAAlgorithm::CentralAttractor,
             brush_size : 2,
             symmetry : Symmetry::None,
-            floor_percent : 0.25
+            floor_percent : 0.25,
+            spawn_list : Vec::new()
         }
     }
 
@@ -121,7 +124,8 @@ impl DLABuilder {
             algorithm : DLAAlgorithm::CentralAttractor,
             brush_size : 2,
             symmetry : Symmetry::Horizontal,
-            floor_percent : 0.25
+            floor_percent : 0.25,
+            spawn_list : Vec::new()
         }
     }
 
@@ -217,5 +221,9 @@ impl DLABuilder {
         self.take_snapshot();
 
         self.noise_areas = generate_voronoi_spawn_regions(&self.map, &mut rng);
+
+        for area in self.noise_areas.iter() {
+            spawner::spawn_region(&self.map, &mut rng, area.1, self.depth, &mut self.spawn_list);
+        }
     }
 }
