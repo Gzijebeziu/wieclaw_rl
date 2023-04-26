@@ -1,6 +1,5 @@
 use super::{MapBuilder, Map, TileType, Position, spawner, super::SHOW_MAPGEN_VISUALIZER, remove_unreachable_areas_returning_most_distant, generate_voronoi_spawn_regions, paint, Symmetry};
 use rltk::RandomNumberGenerator;
-use specs::prelude::*;
 use std::collections::HashMap;
 
 #[derive(PartialEq, Copy, Clone)]

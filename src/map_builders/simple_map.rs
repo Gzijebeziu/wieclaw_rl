@@ -1,6 +1,5 @@
 use super::{MapBuilder, Map, Rect, apply_room_to_map, apply_horizontal_tunnel, apply_vertical_tunnel, TileType, Position, spawner, super::SHOW_MAPGEN_VISUALIZER};
 use rltk::RandomNumberGenerator;
-use specs::prelude::*;
 
 pub struct SimpleMapBuilder {
     map : Map,
