@@ -1,6 +1,27 @@
-use super::{MapBuilder, Map, TileType, Position, spawner, super::SHOW_MAPGEN_VISUALIZER, remove_unreachable_areas_returning_most_distant, generate_voronoi_spawn_regions};
+use super::{Map, InitialMapBuilder, BuilderMap, TileType};
 use rltk::RandomNumberGenerator;
-use std::collections::HashMap;
+
+pub struct MazeBuilder {}
+
+impl InitialMapBuilder for MazeBuilder {
+    #[allow(dead_code)]
+    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
+        self.build(rng, build_data);
+    }
+}
+
+impl MazeBuilder {
+    #[allow(dead_code)]
+    pub fn new() -> Box<MazeBuilder> {
+        Box::new(MazeBuilder{})
+    }
+
+    #[allow(clippy::map_entry)]
+    fn build(&mut self, rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
+        let mut maze = Grid::new((build_data.map.width / 2)-2, (build_data.map.height / 2)-2, rng);
+        maze.generate_maze(build_data);
+    }
+}
 
 const TOP : usize = 0;
 const RIGHT : usize = 1;
@@ -119,7 +140,7 @@ impl<'a> Grid<'a> {
         None
     }
 
-    fn generate_maze(&mut self, generator : &mut MazeBuilder) {
+    fn generate_maze(&mut self, build_data : &mut BuilderMap) {
         let mut i = 0;
         loop {
             self.cells[self.current].visited = true;
@@ -146,8 +167,8 @@ impl<'a> Grid<'a> {
                 }
             }
             if i % 50 == 0 {
-                self.copy_to_map(&mut generator.map);
-                generator.take_snapshot();
+                self.copy_to_map(&mut build_data.map);
+                build_data.take_snapshot();
             }
             i += 1;
         }
@@ -170,81 +191,3 @@ impl<'a> Grid<'a> {
     }
 }
 
-
-pub struct MazeBuilder {
-    map : Map,
-    starting_position : Position,
-    depth: i32,
-    history: Vec<Map>,
-    noise_areas : HashMap<i32, Vec<usize>>,
-    spawn_list : Vec<(usize, String)>
-}
-
-impl MapBuilder for MazeBuilder {
-    fn get_map(&self) -> Map {
-        self.map.clone()
-    }
-
-    fn get_starting_position(&self) -> Position {
-        self.starting_position.clone()
-    }
-
-    fn get_snapshot_history(&self) -> Vec<Map> {
-        self.history.clone()
-    }
-
-    fn build_map(&mut self) {
-        self.build();
-    }
-
-    fn take_snapshot(&mut self) {
-        if SHOW_MAPGEN_VISUALIZER {
-            let mut snapshot = self.map.clone();
-            for v in snapshot.revealed_tiles.iter_mut() {
-                *v = true;
-            }
-            self.history.push(snapshot);
-        }
-    }
-
-    fn get_spawn_list(&self) -> &Vec<(usize, String)> {
-        &self.spawn_list
-    }
-}
-
-impl MazeBuilder {
-    pub fn new(new_depth : i32) -> MazeBuilder {
-        MazeBuilder{
-            map : Map::new(new_depth),
-            starting_position : Position{ x: 0, y: 0 },
-            depth : new_depth,
-            history: Vec::new(),
-            noise_areas : HashMap::new(),
-            spawn_list : Vec::new()
-        }
-    }
-
-    #[allow(clippy::map_entry)]
-    fn build(&mut self) {
-        let mut rng = RandomNumberGenerator::new();
-
-        let mut maze = Grid::new((self.map.width / 2)-2, (self.map.height / 2)-2, &mut rng);
-        maze.generate_maze(self);
-
-        self.starting_position = Position{ x: 2, y: 2 };
-        let start_idx = self.map.xy_idx(self.starting_position.x, self.starting_position.y);
-        self.take_snapshot();
-
-        let exit_tile = remove_unreachable_areas_returning_most_distant(&mut self.map, start_idx);
-        self.take_snapshot();
-
-        self.map.tiles[exit_tile] = TileType::DownStairs;
-        self.take_snapshot();
-
-        self.noise_areas = generate_voronoi_spawn_regions(&self.map, &mut rng);
-
-        for area in self.noise_areas.iter() {
-            spawner::spawn_region(&self.map, &mut rng, area.1, self.depth, &mut self.spawn_list);
-        }
-    }
-}

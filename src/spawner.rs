@@ -1,11 +1,9 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
-use crate::SingleActivation;
-
 use super::{CombatStats, Player, Map, TileType, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
             map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
             Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
-            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper, Hidden, EntryTrigger};
+            HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -48,7 +46,7 @@ pub fn spawn_room(map: &Map, rng: &mut RandomNumberGenerator, room : &Rect, map_
 }
 
 
-pub fn spawn_region(map: &Map, rng: &mut RandomNumberGenerator, area : &[usize], map_depth: i32, spawn_list : &mut Vec<(usize, String)>) {
+pub fn spawn_region(_map: &Map, rng: &mut RandomNumberGenerator, area : &[usize], map_depth: i32, spawn_list : &mut Vec<(usize, String)>) {
     let spawn_table = room_table(map_depth);
     let mut spawn_points : HashMap<usize, String> = HashMap::new();
     let mut areas : Vec<usize> = Vec::from(area);
