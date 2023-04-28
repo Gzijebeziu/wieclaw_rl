@@ -45,6 +45,12 @@ mod room_sorter;
 use room_sorter::*;
 mod room_draw;
 use room_draw::RoomDrawer;
+mod room_corridors_nearest;
+use room_corridors_nearest::NearestCorridors;
+mod room_corridors_lines;
+use room_corridors_lines::StraightLineCorridors;
+mod room_corridor_spawner;
+use room_corridor_spawner::CorridorSpawner;
 mod common;
 use common::*;
 use specs::prelude::*;
@@ -54,6 +60,7 @@ pub struct BuilderMap {
     pub map : Map,
     pub starting_position : Option<Position>,
     pub rooms: Option<Vec<Rect>>,
+    pub corridors: Option<Vec<Vec<usize>>>,
     pub history : Vec<Map>
 }
 
@@ -85,6 +92,7 @@ impl BuilderChain {
                 map: Map::new(new_depth),
                 starting_position: None,
                 rooms: None,
+                corridors: None,
                 history : Vec::new()
             }
         }
@@ -169,10 +177,17 @@ fn random_room_builder(rng: &mut rltk::RandomNumberGenerator, builder : &mut Bui
 
         builder.with(RoomDrawer::new());
 
-        let corridor_roll = rng.roll_dice(1, 2);
+        let corridor_roll = rng.roll_dice(1, 4);
         match corridor_roll {
             1 => builder.with(DoglegCorridors::new()),
+            2 => builder.with(NearestCorridors::new()),
+            3 => builder.with(StraightLineCorridors::new()),
             _ => builder.with(BspCorridors::new())
+        }
+
+        let cspawn_roll = rng.roll_dice(1, 2);
+        if cspawn_roll == 1 {
+            builder.with(CorridorSpawner::new());
         }
 
         let modifier_roll = rng.roll_dice(1, 6);
