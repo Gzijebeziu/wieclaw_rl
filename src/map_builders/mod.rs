@@ -51,6 +51,8 @@ mod room_corridors_lines;
 use room_corridors_lines::StraightLineCorridors;
 mod room_corridor_spawner;
 use room_corridor_spawner::CorridorSpawner;
+mod door_placement;
+use door_placement::DoorPlacement;
 mod common;
 use common::*;
 use specs::prelude::*;
@@ -259,12 +261,19 @@ pub fn random_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator) ->
 
     if rng.roll_dice(1, 3)==1 {
         builder.with(WaveformCollapseBuilder::new());
+
+        let (start_x, start_y) = random_start_position(rng);
+        builder.with(AreaStartingPosition::new(start_x, start_y));
+
+        builder.with(VoronoiSpawning::new());
+        builder.with(DistantExit::new());
     }
 
     if rng.roll_dice(1, 20)==1 {
         builder.with(PrefabBuilder::sectional(prefab_builder::prefab_sections::UNDERGROUND_FORT));
     }
 
+    builder.with(DoorPlacement::new());
     builder.with(PrefabBuilder::vaults());
 
     builder
