@@ -1,7 +1,7 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{CombatStats, Player, Map, TileType, Renderable, Name, Position, Viewshed, Monster, BlocksTile, Rect, 
-            map::MAPWIDTH, Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
+            Item, ProvidesHealing, Consumable, Ranged, InflictsDamage, AreaOfEffect, 
             Confusion, SerializeMe, random_table::RandomTable, Equippable, EquipmentSlot, HungerState, 
             HungerClock, MeleePowerBonus, DefenseBonus, ProvidesFood, MagicMapper, Hidden, EntryTrigger, SingleActivation,
             BlocksVisibility, Door};
@@ -72,8 +72,11 @@ pub fn spawn_region(_map: &Map, rng: &mut RandomNumberGenerator, area : &[usize]
 
 
 pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
-    let x = (*spawn.0 % MAPWIDTH) as i32;
-    let y = (*spawn.0 / MAPWIDTH) as i32;
+    let map = ecs.fetch::<Map>();
+    let width = map.width as usize;
+    let x = (*spawn.0 % width) as i32;
+    let y = (*spawn.0 / width) as i32;
+    std::mem::drop(map);
 
     match spawn.1.as_ref() {
         "Gnomon" => gnomon(ecs, x, y),
