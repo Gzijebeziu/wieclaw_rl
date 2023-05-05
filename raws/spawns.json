@@ -1,0 +1,222 @@
+{
+"items" : [
+    {
+        "name" : "Pasztecik",
+        "renderable" : {
+            "glyph" : "∞",
+            "fg" : "#B47D00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "provides_healing" : "8",
+                "food" : ""
+            }
+        }
+    },
+
+    {
+        "name" : "Zwój Rzutu Kartoflem",
+        "renderable" : {
+            "glyph" : "π",
+            "fg" : "#AF825A",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "damage" : "8"
+            }
+        }
+    },
+
+    {
+        "name" : "Zwój Saznistego Pierdniecia",
+        "renderable" : {
+            "glyph" : "π",
+            "fg" : "#FFA500",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "damage" : "20",
+                "area_of_effect" : "3"
+            }
+        }
+    },
+
+    {
+        "name" : "Zwój z Waznym Pytaniem",
+        "renderable" : {
+            "glyph" : "π",
+            "fg" : "#FFAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "confusion" : "4"
+            }
+        }
+    },
+
+    {
+        "name" : "Zwój Malego Odkrywcy",
+        "renderable" : {
+            "glyph" : "π",
+            "fg" : "#AAAAFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "magic_mapping" : ""
+            }
+        }
+    },
+
+    {
+        "name" : "Surówka Grzeskowiak",
+        "renderable" : {
+            "glyph" : "%",
+            "fg" : "#00FF00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "food" : ""
+            }
+        }
+    },
+
+    {
+        "name" : "Klapek",
+        "renderable" : {
+            "glyph" : "Θ",
+            "fg" : "#BDBC38",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "power_bonus" : 2
+        }
+    },
+
+    {
+        "name" : "Laczek",
+        "renderable" : {
+            "glyph" : "Θ",
+            "fg" : "#F05F38",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "power_bonus" : 4
+        }
+    },
+
+    {
+        "name" : "Sandalki",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#FF0483",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "armor" : {
+            "defense_bonus" : 1
+        }
+    },
+
+    {
+        "name" : "Kalosze",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#35D9EA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "armor" : {
+            "defense_bonus" : 3
+        }
+    }
+],
+
+"mobs" : [
+    {
+        "name" : "Golem Zoledny",
+        "renderable" : {
+            "glyph" : "G",
+            "fg" : "#8A622F",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 8
+    },
+
+    {
+        "name" : "Gnomon",
+        "renderable" : {
+            "glyph" : "g",
+            "fg" : "#23613B",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 8,
+            "hp" : 8,
+            "defense" : 1,
+            "power" : 3
+        },
+        "vision_range" : 8
+    }
+],
+
+"props" : [
+    {
+        "name" : "Stupkogryzarka",
+        "renderable" : {
+            "glyph" : "^",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : true,
+        "entry_trigger" : {
+            "effects" : {
+                "damage" : "6",
+                "single_activation" : "1"
+            }
+        }
+    },
+    {
+        "name" : "Drzwi",
+        "renderable" : {
+            "glyph" : "+",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false,
+        "blocks_tile" : true,
+        "blocks_visibility" : true,
+        "door_open" : true
+    }
+]
+}

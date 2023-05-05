@@ -22,7 +22,7 @@ impl DoorPlacement {
             for hall in halls.iter() {
                 if hall.len() > 2 {
                     if self.door_possible(build_data, hall[0]) {
-                        build_data.spawn_list.push((hall[0], "Door".to_string()));
+                        build_data.spawn_list.push((hall[0], "Drzwi".to_string()));
                     }
                 }
             }
@@ -30,7 +30,7 @@ impl DoorPlacement {
             let tiles = build_data.map.tiles.clone();
             for (i, tile) in tiles.iter().enumerate() {
                 if *tile == TileType::Floor && self.door_possible(build_data, i) && rng.roll_dice(1,3)==1 {
-                    build_data.spawn_list.push((i, "Door".to_string()));
+                    build_data.spawn_list.push((i, "Drzwi".to_string()));
                 }
             }
         }

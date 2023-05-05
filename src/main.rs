@@ -36,9 +36,12 @@ mod trigger_system;
 use trigger_system::TriggerSystem;
 pub mod map_builders;
 pub mod camera;
+pub mod raws;
+#[macro_use]
+extern crate lazy_static;
 
 
-const SHOW_MAPGEN_VISUALIZER : bool = true;
+const SHOW_MAPGEN_VISUALIZER : bool = false;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -410,46 +413,47 @@ fn main() -> rltk::BError {
         mapgen_timer: 0.0
      };
 
-     gs.ecs.register::<Position>();
-     gs.ecs.register::<Renderable>();
-     gs.ecs.register::<Player>();
-     gs.ecs.register::<Viewshed>();
-     gs.ecs.register::<Monster>();
-     gs.ecs.register::<Name>();
-     gs.ecs.register::<BlocksTile>();
-     gs.ecs.register::<CombatStats>();
-     gs.ecs.register::<WantsToMelee>();
-     gs.ecs.register::<SufferDamage>();
-     gs.ecs.register::<Item>();
-     gs.ecs.register::<ProvidesHealing>();
-     gs.ecs.register::<InBackpack>();
-     gs.ecs.register::<WantsToPickupItem>();
-     gs.ecs.register::<WantsToUseItem>();
-     gs.ecs.register::<WantsToDropItem>();
-     gs.ecs.register::<Consumable>();
-     gs.ecs.register::<Ranged>();
-     gs.ecs.register::<InflictsDamage>();
-     gs.ecs.register::<AreaOfEffect>();
-     gs.ecs.register::<Confusion>();
-     gs.ecs.register::<SimpleMarker<SerializeMe>>();
-     gs.ecs.register::<SerializationHelper>();
-     gs.ecs.register::<Equippable>();
-     gs.ecs.register::<Equipped>();
-     gs.ecs.register::<MeleePowerBonus>();
-     gs.ecs.register::<DefenseBonus>();
-     gs.ecs.register::<WantsToRemoveItem>();
-     gs.ecs.register::<ParticleLifetime>();
-     gs.ecs.register::<HungerClock>();
-     gs.ecs.register::<ProvidesFood>();
-     gs.ecs.register::<MagicMapper>();
-     gs.ecs.register::<Hidden>();
-     gs.ecs.register::<EntryTrigger>();
-     gs.ecs.register::<EntityMoved>();
-     gs.ecs.register::<SingleActivation>();
-     gs.ecs.register::<BlocksVisibility>();
-     gs.ecs.register::<Door>();
-
+    gs.ecs.register::<Position>();
+    gs.ecs.register::<Renderable>();
+    gs.ecs.register::<Player>();
+    gs.ecs.register::<Viewshed>();
+    gs.ecs.register::<Monster>();
+    gs.ecs.register::<Name>();
+    gs.ecs.register::<BlocksTile>();
+    gs.ecs.register::<CombatStats>();
+    gs.ecs.register::<WantsToMelee>();
+    gs.ecs.register::<SufferDamage>();
+    gs.ecs.register::<Item>();
+    gs.ecs.register::<ProvidesHealing>();
+    gs.ecs.register::<InBackpack>();
+    gs.ecs.register::<WantsToPickupItem>();
+    gs.ecs.register::<WantsToUseItem>();
+    gs.ecs.register::<WantsToDropItem>();
+    gs.ecs.register::<Consumable>();
+    gs.ecs.register::<Ranged>();
+    gs.ecs.register::<InflictsDamage>();
+    gs.ecs.register::<AreaOfEffect>();
+    gs.ecs.register::<Confusion>();
+    gs.ecs.register::<SimpleMarker<SerializeMe>>();
+    gs.ecs.register::<SerializationHelper>();
+    gs.ecs.register::<Equippable>();
+    gs.ecs.register::<Equipped>();
+    gs.ecs.register::<MeleePowerBonus>();
+    gs.ecs.register::<DefenseBonus>();
+    gs.ecs.register::<WantsToRemoveItem>();
+    gs.ecs.register::<ParticleLifetime>();
+    gs.ecs.register::<HungerClock>();
+    gs.ecs.register::<ProvidesFood>();
+    gs.ecs.register::<MagicMapper>();
+    gs.ecs.register::<Hidden>();
+    gs.ecs.register::<EntryTrigger>();
+    gs.ecs.register::<EntityMoved>();
+    gs.ecs.register::<SingleActivation>();
+    gs.ecs.register::<BlocksVisibility>();
+    gs.ecs.register::<Door>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
+
+    raws::load_raws();
 
     gs.ecs.insert(Map::new(1, 64, 64));
     gs.ecs.insert(Point::new(0, 0));
