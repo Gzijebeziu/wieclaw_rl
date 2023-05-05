@@ -6,6 +6,10 @@ use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
 
+fn room_table(map_depth: i32) -> RandomTable {
+    get_spawn_table_for_depth(&RAWS.lock().unwrap(), map_depth)
+}
+
 pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     ecs
         .create_entity()
@@ -81,22 +85,4 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     }
 
     rltk::console::log(format!("WARNING: don't know how to spawn [{}]!", spawn.1));
-}
-
-
-fn room_table(map_depth: i32) -> RandomTable {
-    RandomTable::new()
-        .add("Gnomon", 10)
-        .add("Golem Zoledny", 1 + map_depth)
-        .add("Pasztecik", 7)
-        .add("Zwój Rzutu Kartoflem", 4)
-        .add("Zwój z Waznym Pytaniem", 2 + map_depth)
-        .add("Zwój Saznistego Pierdniecia", 2 + map_depth)
-        .add("Klapek", 3)
-        .add("Sandalki", 3)
-        .add("Laczek", map_depth - 1)
-        .add("Kalosze", map_depth - 1)
-        .add("Surówka Grzeskowiak", 10)
-        .add("Zwój Malego Odkrywcy", 2)
-        .add("Stupkogryzarka", 2)
 }

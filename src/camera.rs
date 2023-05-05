@@ -2,7 +2,7 @@ use specs::prelude::*;
 use super::{Map, TileType, Position, Renderable, Hidden};
 use rltk::{Point, Rltk, RGB};
 
-const SHOW_BOUNDARIES : bool = true;
+const SHOW_BOUNDARIES : bool = false;
 
 pub fn get_screen_bounds(ecs: &World, ctx : &mut Rltk) -> (i32, i32, i32, i32) {
     let player_pos = ecs.fetch::<Point>();
