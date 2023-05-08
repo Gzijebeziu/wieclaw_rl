@@ -55,6 +55,8 @@ mod door_placement;
 use door_placement::DoorPlacement;
 mod common;
 use common::*;
+mod town;
+use town::town_builder;
 use specs::prelude::*;
 
 pub struct BuilderMap {
@@ -281,4 +283,12 @@ pub fn random_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator, wi
     builder.with(PrefabBuilder::vaults());
 
     builder
+}
+
+pub fn level_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+    rltk::console::log(format!("Pietro: {}", new_depth));
+    match new_depth {
+        1 => town_builder(new_depth, rng, width, height),
+        _ => random_builder(new_depth, rng, width, height)
+    }
 }

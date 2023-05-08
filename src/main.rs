@@ -41,7 +41,7 @@ pub mod raws;
 extern crate lazy_static;
 
 
-const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -360,7 +360,7 @@ impl State {
         self.mapgen_timer = 0.0;
         self.mapgen_history.clear();
         let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
-        let mut builder = map_builders::random_builder(new_depth, &mut rng, 80, 50);
+        let mut builder = map_builders::level_builder(new_depth, &mut rng, 80, 50);
         builder.build_map(&mut rng);
         std::mem::drop(rng);
         self.mapgen_history = builder.build_data.history.clone();

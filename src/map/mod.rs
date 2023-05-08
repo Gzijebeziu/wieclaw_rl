@@ -2,12 +2,9 @@ use rltk::{ BaseMap, Algorithm2D, Point };
 use std::collections::HashSet;
 use specs::prelude::*;
 use serde::{Serialize, Deserialize};
+mod tiletype;
+pub use tiletype::{TileType, tile_walkable, tile_opaque, tile_cost};
 
-
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Serialize, Deserialize)]
-pub enum TileType {
-    Wall, Floor, DownStairs
-}
 
 #[derive(Default, Serialize, Deserialize, Clone)]
 pub struct Map {
@@ -42,7 +39,7 @@ impl Map {
 
     pub fn populate_blocked(&mut self) {
         for (i,tile) in self.tiles.iter_mut().enumerate() {
-            self.blocked[i] = *tile == TileType::Wall;
+            self.blocked[i] = !tile_walkable(*tile);
         }
     }
 
@@ -75,7 +72,11 @@ impl Map {
 impl BaseMap for Map {
     fn is_opaque(&self, idx:usize) -> bool {
         let idx_u = idx as usize;
-        self.tiles[idx_u] == TileType::Wall || self.view_blocked.contains(&idx_u)
+        if idx_u > 0 && idx_u < self.tiles.len() {
+            tile_opaque(self.tiles[idx_u]) || self.view_blocked.contains(&idx_u)
+        } else {
+            true
+        }
     }
 
     fn get_pathing_distance(&self, idx1:usize, idx2:usize) -> f32 {
@@ -85,21 +86,22 @@ impl BaseMap for Map {
         rltk::DistanceAlg::Pythagoras.distance2d(p1, p2)
     }
 
-        fn get_available_exits(&self, idx:usize) -> rltk::SmallVec<[(usize, f32); 10]> {
+    fn get_available_exits(&self, idx:usize) -> rltk::SmallVec<[(usize, f32); 10]> {
         let mut exits = rltk::SmallVec::new();
         let x = idx as i32 % self.width;
         let y = idx as i32 / self.width;
+        let tt = self.tiles[idx as usize];
         let w = self.width as usize;
 
-        if self.is_exit_valid(x-1, y) { exits.push((idx-1, 1.0)) };
-        if self.is_exit_valid(x+1, y) { exits.push((idx+1, 1.0)) };
-        if self.is_exit_valid(x, y-1) { exits.push((idx-w, 1.0)) };
-        if self.is_exit_valid(x, y+1) { exits.push((idx+w, 1.0)) };
+        if self.is_exit_valid(x-1, y) { exits.push((idx-1, tile_cost(tt))) };
+        if self.is_exit_valid(x+1, y) { exits.push((idx+1, tile_cost(tt))) };
+        if self.is_exit_valid(x, y-1) { exits.push((idx-w, tile_cost(tt))) };
+        if self.is_exit_valid(x, y+1) { exits.push((idx+w, tile_cost(tt))) };
 
-        if self.is_exit_valid(x-1, y-1) { exits.push(((idx-w)-1, 1.45)) };
-        if self.is_exit_valid(x+1, y-1) { exits.push(((idx-w)+1, 1.45)) };
-        if self.is_exit_valid(x-1, y+1) { exits.push(((idx+w)-1, 1.45)) };
-        if self.is_exit_valid(x+1, y+1) { exits.push(((idx+w)+1, 1.45)) };
+        if self.is_exit_valid(x-1, y-1) { exits.push(((idx-w)-1, tile_cost(tt) * 1.45)) };
+        if self.is_exit_valid(x+1, y-1) { exits.push(((idx-w)+1, tile_cost(tt) * 1.45)) };
+        if self.is_exit_valid(x-1, y+1) { exits.push(((idx+w)-1, tile_cost(tt) * 1.45)) };
+        if self.is_exit_valid(x+1, y+1) { exits.push(((idx+w)+1, tile_cost(tt) * 1.45)) };
 
         exits
     }
