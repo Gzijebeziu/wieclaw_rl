@@ -37,6 +37,10 @@ pub struct Viewshed {
 pub struct Monster {}
 
 
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Bystander {}
+
+
 #[derive(Component, Debug, ConvertSaveload, Clone)]
 pub struct Name {
     pub name : String

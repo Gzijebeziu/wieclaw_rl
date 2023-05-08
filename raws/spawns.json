@@ -180,7 +180,8 @@
             "defense" : 1,
             "power" : 4
         },
-        "vision_range" : 8
+        "vision_range" : 8,
+        "ai" : "melee"
     },
 
     {
@@ -198,7 +199,8 @@
             "defense" : 1,
             "power" : 3
         },
-        "vision_range" : 8
+        "vision_range" : 8,
+        "ai" : "melee"
     },
 
     {
@@ -216,7 +218,217 @@
             "defense" : 0,
             "power" : 2
         },
-        "vision_range" : 4
+        "vision_range" : 4,
+        "ai" : "melee"
+    },
+
+    {
+        "name" : "Barman",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Diler",
+        "renderable": {
+            "glyph" : "h",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Menel",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power": 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Kaplan",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Wierny",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Kowal",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Krawiec",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Alchemik",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#EE82EE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Szympans Juzek",
+        "renderable": {
+            "glyph" : "S",
+            "fg" : "#AA5000",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 1312,
+            "hp" : 1312,
+            "defense" : 1312,
+            "power" : 1312
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Juhas",
+        "renderable": {
+            "glyph" : "☻",
+            "fg" : "#999999",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 16,
+            "hp" : 16,
+            "defense" : 1,
+            "power" : 4
+        },
+        "vision_range" : 4,
+        "ai" : "bystander"
+    },
+
+    {
+        "name" : "Moris",
+        "renderable": {
+            "glyph" : "m",
+            "fg" : "#111111",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "stats" : {
+            "max_hp" : 2,
+            "hp" : 2,
+            "defense" : 1,
+            "power" : 3
+        },
+        "vision_range" : 8,
+        "ai" : "melee"
     }
 ],
 
@@ -237,6 +449,7 @@
             }
         }
     },
+
     {
         "name" : "Drzwi",
         "renderable" : {
@@ -249,6 +462,149 @@
         "blocks_tile" : true,
         "blocks_visibility" : true,
         "door_open" : true
+    },
+
+    {
+        "name" : "Beczka",
+        "renderable": {
+            "glyph" : "φ",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Stól",
+        "renderable": {
+            "glyph" : "╦",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Krzeslo",
+        "renderable": {
+            "glyph" : "└",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Swieca",
+        "renderable": {
+            "glyph" : "Ä",
+            "fg" : "#FFA500",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Kowadlo",
+        "renderable": {
+            "glyph" : "╔",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Koryto",
+        "renderable": {
+            "glyph" : "•",
+            "fg" : "#5555FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Stojak na bron",
+        "renderable": {
+            "glyph" : "╫",
+            "fg" : "#FFD700",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Stojak na pancerz",
+        "renderable": {
+            "glyph" : "⌠",
+            "fg" : "#FFFFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Zestaw Chemiczny",
+        "renderable": {
+            "glyph" : "δ",
+            "fg" : "#00FFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Szafka",
+        "renderable": {
+            "glyph" : "∩",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Lózko",
+        "renderable": {
+            "glyph" : "8",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Krosno",
+        "renderable": {
+            "glyph" : "≡",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
+    },
+
+    {
+        "name" : "Stojak na skóry",
+        "renderable": {
+            "glyph" : "π",
+            "fg" : "#805A46",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false
     }
 ],
 
