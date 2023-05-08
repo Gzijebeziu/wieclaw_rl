@@ -2,7 +2,7 @@ use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
 use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, 
             CombatStats, WantsToMelee, WantsToPickupItem, TileType, Monster, HungerClock, HungerState, EntityMoved,
-            Door, BlocksVisibility, BlocksTile, Renderable, Bystander};
+            Door, BlocksVisibility, BlocksTile, Renderable, Bystander, Vendor};
 use std::cmp::{min, max};
 
 
@@ -20,6 +20,7 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let mut blocks_movement = ecs.write_storage::<BlocksTile>();
     let mut renderables = ecs.write_storage::<Renderable>();
     let bystanders = ecs.read_storage::<Bystander>();
+    let vendors = ecs.read_storage::<Vendor>();
 
     let mut swap_entities : Vec<(Entity, i32, i32)> = Vec::new();
 
@@ -29,7 +30,8 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
 
         for potential_target in map.tile_content[destination_idx].iter() {
             let bystander = bystanders.get(*potential_target);
-            if bystander.is_some() {
+            let vendor = vendors.get(*potential_target);
+            if bystander.is_some() || vendor.is_some() {
                 swap_entities.push((*potential_target, pos.x, pos.y));
 
                 pos.x = min(map.width-1, max(0, pos.x + delta_x));

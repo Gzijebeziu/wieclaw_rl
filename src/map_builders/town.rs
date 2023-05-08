@@ -39,6 +39,9 @@ impl TownBuilder {
         let building_size = self.sort_buildings(&buildings);
         self.building_factory(rng, build_data, &buildings, &building_size);
 
+        self.spawn_dockers(build_data, rng);
+        self.spawn_townsfolk(build_data, rng, &mut available_building_tiles);
+
         for t in build_data.map.visible_tiles.iter_mut() {
             *t = true;
         }
@@ -74,7 +77,7 @@ impl TownBuilder {
             let y = rng.roll_dice(1, build_data.height)-1;
             for x in 2 + rng.roll_dice(1, 6) .. water_width[y as usize] + 4 {
                 let idx = build_data.map.xy_idx(x, y);
-                build_data.map.tiles[idx] = TileType::WoodFloor;
+                build_data.map.tiles[idx] = TileType::Bridge;
             }
         }
         build_data.take_snapshot();
@@ -323,7 +326,7 @@ impl TownBuilder {
         });
         let player_idx = build_data.map.xy_idx(building.0 + (building.2 / 2), building.1 + (building.3 / 2));
 
-        let mut to_place : Vec<&str> = vec!["Barman", "Diler", "Menel", "Menel", "Beczka", "Stól", "Krzeslo", "Stól", "Krzeslo"];
+        let mut to_place : Vec<&str> = vec!["Barman", "Diler", "Staly bywalec", "Staly bywalec", "Beczka", "Stól", "Krzeslo", "Stól", "Krzeslo"];
         self.random_building_spawn(building, build_data, rng, &mut to_place, player_idx);
     }
 
@@ -391,6 +394,36 @@ impl TownBuilder {
                 let idx = build_data.map.xy_idx(x, y);
                 if build_data.map.tiles[idx] == TileType::WoodFloor && idx != 0 && rng.roll_dice(1, 2)==1 {
                     build_data.spawn_list.push((idx, "Moris".to_string()));
+                }
+            }
+        }
+    }
+
+    fn spawn_dockers(&mut self, build_data: &mut BuilderMap, rng: &mut rltk::RandomNumberGenerator) {
+        for (idx, tt) in build_data.map.tiles.iter().enumerate() {
+            if *tt == TileType::Bridge && rng.roll_dice(1, 12)==1 {
+                let roll = rng.roll_dice(1, 2);
+                match roll {
+                    1 => build_data.spawn_list.push((idx, "Pracownik doku".to_string())),
+                    _ => build_data.spawn_list.push((idx, "Wedkarz".to_string()))
+                }
+            }
+        }
+    }
+
+    fn spawn_townsfolk(&mut self,
+        build_data: &mut BuilderMap,
+        rng: &mut rltk::RandomNumberGenerator,
+        available_building_tiles : &mut HashSet<usize>)
+    {
+        for idx in available_building_tiles.iter() {
+            if rng.roll_dice(1, 20)==1 {
+                let roll = rng.roll_dice(1, 4);
+                match roll {
+                    1 => build_data.spawn_list.push((*idx, "Juhas".to_string())),
+                    2 => build_data.spawn_list.push((*idx, "Pijak".to_string())),
+                    3 => build_data.spawn_list.push((*idx, "Pracownik doku".to_string())),
+                    _ => build_data.spawn_list.push((*idx, "Wedkarz".to_string()))
                 }
             }
         }

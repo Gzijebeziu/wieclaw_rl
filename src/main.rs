@@ -37,6 +37,7 @@ use trigger_system::TriggerSystem;
 pub mod map_builders;
 pub mod camera;
 pub mod raws;
+pub mod bystander_ai_system;
 #[macro_use]
 extern crate lazy_static;
 
@@ -79,6 +80,8 @@ impl State {
         triggers.run_now(&self.ecs);
         let mut mapindex = MapIndexingSystem{};
         mapindex.run_now(&self.ecs);
+        let mut bystander = bystander_ai_system::BystanderAI{};
+        bystander.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem{};
         melee.run_now(&self.ecs);
         let mut damage = DamageSystem{};
@@ -419,6 +422,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Viewshed>();
     gs.ecs.register::<Monster>();
     gs.ecs.register::<Bystander>();
+    gs.ecs.register::<Vendor>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<CombatStats>();
@@ -452,6 +456,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<SingleActivation>();
     gs.ecs.register::<BlocksVisibility>();
     gs.ecs.register::<Door>();
+    gs.ecs.register::<Quips>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();
