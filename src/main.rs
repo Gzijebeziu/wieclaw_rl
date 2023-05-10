@@ -38,6 +38,8 @@ pub mod map_builders;
 pub mod camera;
 pub mod raws;
 pub mod bystander_ai_system;
+mod gamesystem;
+pub use gamesystem::*;
 #[macro_use]
 extern crate lazy_static;
 
@@ -330,14 +332,8 @@ impl State {
         }
         self.generate_world_map(current_depth + 1);
 
-        let player_entity = self.ecs.fetch::<Entity>();
         let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
-        gamelog.entries.push("Wieclaw schodzi po schodach i odpoczywa chwile.".to_string());
-        let mut player_health_store = self.ecs.write_storage::<CombatStats>();
-        let player_health = player_health_store.get_mut(*player_entity);
-        if let Some(player_health) = player_health {
-            player_health.hp = i32::max(player_health.hp, player_health.max_hp / 2);
-        }
+        gamelog.entries.push("Wieclaw schodzi po schodach.".to_string());
     }
 
     fn game_over_cleanup(&mut self) {
@@ -425,7 +421,6 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Vendor>();
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
-    gs.ecs.register::<CombatStats>();
     gs.ecs.register::<WantsToMelee>();
     gs.ecs.register::<SufferDamage>();
     gs.ecs.register::<Item>();
@@ -457,6 +452,9 @@ fn main() -> rltk::BError {
     gs.ecs.register::<BlocksVisibility>();
     gs.ecs.register::<Door>();
     gs.ecs.register::<Quips>();
+    gs.ecs.register::<Attributes>();
+    gs.ecs.register::<Skills>();
+    gs.ecs.register::<Pools>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();

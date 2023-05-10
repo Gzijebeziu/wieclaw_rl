@@ -1,7 +1,7 @@
 use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
 use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, 
-            CombatStats, WantsToMelee, WantsToPickupItem, TileType, Monster, HungerClock, HungerState, EntityMoved,
+            Pools, WantsToMelee, WantsToPickupItem, TileType, Monster, HungerClock, HungerState, EntityMoved,
             Door, BlocksVisibility, BlocksTile, Renderable, Bystander, Vendor};
 use std::cmp::{min, max};
 
@@ -11,7 +11,7 @@ pub fn try_move_player(delta_x: i32, delta_y: i32, ecs: &mut World) {
     let players = ecs.write_storage::<Player>();
     let mut viewsheds = ecs.write_storage::<Viewshed>();
     let map = ecs.fetch::<Map>();
-    let combat_stats = ecs.read_storage::<CombatStats>();
+    let combat_stats = ecs.read_storage::<Pools>();
     let entities = ecs.entities();
     let mut wants_to_melee = ecs.write_storage::<WantsToMelee>();
     let mut entity_moved = ecs.write_storage::<EntityMoved>();
@@ -114,9 +114,9 @@ pub fn skip_turn(ecs: &mut World) -> RunState {
     }
 
     if can_heal {
-        let mut health_components = ecs.write_storage::<CombatStats>();
-        let player_hp = health_components.get_mut(*player_entity).unwrap();
-        player_hp.hp = i32::min(player_hp.hp + 1, player_hp.max_hp);
+        let mut health_components = ecs.write_storage::<Pools>();
+        let pools = health_components.get_mut(*player_entity).unwrap();
+        pools.hit_points.current = i32::min(pools.hit_points.current + 1, pools.hit_points.max);
     }
 
     RunState::PlayerTurn

@@ -193,14 +193,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 8,
-        "ai" : "melee"
+        "ai" : "melee",
+        "attributes" : {}
     },
 
     {
@@ -212,14 +207,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 8,
-            "hp" : 8,
-            "defense" : 1,
-            "power" : 3
-        },
         "vision_range" : 8,
-        "ai" : "melee"
+        "ai" : "melee",
+        "attributes" : {}
     },
 
     {
@@ -231,14 +221,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 4,
-            "hp" : 4,
-            "defense" : 0,
-            "power" : 2
-        },
         "vision_range" : 4,
-        "ai" : "melee"
+        "ai" : "melee",
+        "attributes" : {}
     },
 
     {
@@ -250,14 +235,14 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {
+            "intelligence" : 13
+        },
+        "skills" : {
+            "Melee" : 2
+        }
     },
 
     {
@@ -269,14 +254,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {}
     },
 
     {
@@ -288,15 +268,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power": 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["ueueueueueue", "Zjadlbym suróweczke.", "Nie tup tak tymi kaloszami.", "Witam szanownego pana."]
+        "quips" : ["ueueueueueue", "Zjadlbym suróweczke.", "Nie tup tak tymi kaloszami.", "Witam szanownego pana."],
+        "attributes" : {}
     },
 
     {
@@ -308,14 +283,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "bystander"
+        "ai" : "bystander",
+        "attributes" : {}
     },
 
     {
@@ -327,15 +297,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["Niech bedzie pochwalony Jerzy Bóg Slonca.", "I z grzybkiem twoim.", "Pan jest moim pasterzem."]
+        "quips" : ["Niech bedzie pochwalony Jerzy Bóg Slonca.", "I z grzybkiem twoim.", "Pan jest moim pasterzem."],
+        "attributes" : {}
     },
 
     {
@@ -347,14 +312,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {}
     },
 
     {
@@ -366,14 +326,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {}
     },
 
     {
@@ -385,14 +340,9 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
-        "ai" : "vendor"
+        "ai" : "vendor",
+        "attributes" : {}
     },
 
     {
@@ -404,15 +354,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 1312,
-            "hp" : 1312,
-            "defense" : 1312,
-            "power" : 1312
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["ook", "ooga", "ooga booga", "ook ook", "gunga ginga", "siema Więcław"]
+        "quips" : ["ook", "ooga", "ooga booga", "ook ook", "gunga ginga", "siema Więcław"],
+        "attributes" : {}
     },
 
     {
@@ -424,15 +369,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["Prosze wyjsc z mojego domu natychmiast.", "Idz mie stond.", "Dzien dobry."]
+        "quips" : ["Prosze wyjsc z mojego domu natychmiast.", "Idz mie stond.", "Dzien dobry."],
+        "attributes" : {}
     },
 
     {
@@ -444,14 +384,16 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 2,
-            "hp" : 2,
-            "defense" : 1,
-            "power" : 3
-        },
         "vision_range" : 8,
-        "ai" : "melee"
+        "ai" : "melee",
+        "attributes" : {
+            "Might" : 3,
+            "Fitness" : 3
+        },
+        "skills" : {
+            "Melee" : -1,
+            "Defense" : -1
+        }
     },
 
     {
@@ -463,15 +405,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["Ktos mi gwizdnal soczek.", "Dzien dobry.", "Zycie mnie swedzi."]
+        "quips" : ["Ktos mi gwizdnal soczek.", "Dzien dobry.", "Zycie mnie swedzi."],
+        "attributes" : {}
     },
 
     {
@@ -483,15 +420,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["Cicho, ryby ploszysz.", "Trzy maklowicze zlowilem dzisiaj!", "Chcesz zobaczyc moje splawiki?"]
+        "quips" : ["Cicho, ryby ploszysz.", "Trzy maklowicze zlowilem dzisiaj!", "Chcesz zobaczyc moje splawiki?"],
+        "attributes" : {}
     },
 
     {
@@ -503,15 +435,10 @@
             "order" : 1
         },
         "blocks_tile" : true,
-        "stats" : {
-            "max_hp" : 16,
-            "hp" : 16,
-            "defense" : 1,
-            "power" : 4
-        },
         "vision_range" : 4,
         "ai" : "bystander",
-        "quips" : ["ueueueueueue", "eueueueue", "ueueueueue", "eoeoeoeo", "EEEEEOOOEOEOEOE", "Chyba przesadzilem z berbelunia."]
+        "quips" : ["ueueueueueue", "eueueueue", "ueueueueue", "eoeoeoeo", "EEEEEOOOEOEOEOE", "Chyba przesadzilem z berbelunia."],
+        "attributes" : {}
     }
 ],
 
