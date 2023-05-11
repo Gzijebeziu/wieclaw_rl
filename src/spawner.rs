@@ -17,7 +17,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     skills.skills.insert(Skill::Defense, 1);
     skills.skills.insert(Skill::Magic, 1);
 
-    ecs
+    let player = ecs
         .create_entity()
         .with(Position{ x: player_x, y: player_y })
         .with(Renderable {
@@ -50,7 +50,16 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             level: 1
         })
         .marked::<SimpleMarker<SerializeMe>>()
-        .build()
+        .build();
+
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Dywan", SpawnType::Equipped{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Smardz", SpawnType::Carried{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Soczek marchewkowy", SpawnType::Carried{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Koszulka 'Baciary'", SpawnType::Equipped{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Obdarte pantalony", SpawnType::Equipped{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Papcie", SpawnType::Equipped{ by: player });
+
+    player
 }
 
 
@@ -103,7 +112,7 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     let y = (*spawn.0 / width) as i32;
     std::mem::drop(map);
 
-    let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs.create_entity(), &spawn.1, SpawnType::AtPosition { x, y });
+    let spawn_result = spawn_named_entity(&RAWS.lock().unwrap(), ecs, &spawn.1, SpawnType::AtPosition { x, y });
     if spawn_result.is_some() {
         return;
     }

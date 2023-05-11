@@ -124,7 +124,9 @@
         },
         "weapon" : {
             "range" : "melee",
-            "power_bonus" : 2
+            "attribute" : "Quickness",
+            "base_damage" : "1d4",
+            "hit_bonus" : 0
         }
     },
 
@@ -138,7 +140,9 @@
         },
         "weapon" : {
             "range" : "melee",
-            "power_bonus" : 4
+            "attribute" : "Quickness",
+            "base_damage" : "1d6",
+            "hit_bonus" : 1
         }
     },
     
@@ -152,7 +156,25 @@
         },
         "weapon" : {
             "range" : "melee",
-            "power_bonus" : 5
+            "attribute" : "Might",
+            "base_damage" : "1d8+1",
+            "hit_bonus" : 0
+        }
+    },
+
+    {
+        "name" : "Dywan",
+        "renderable" : {
+            "glyph" : "/",
+            "fg" : "#AA2A2A",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Might",
+            "base_damage" : "1d8-1",
+            "hit_bonus" : -1
         }
     },
 
@@ -164,8 +186,9 @@
             "bg" : "#000000",
             "order" : 2
         },
-        "armor" : {
-            "defense_bonus" : 1
+        "wearable" : {
+            "armor_class" : 1.0,
+            "slot" : "Feet"
         }
     },
 
@@ -177,8 +200,123 @@
             "bg" : "#000000",
             "order" : 2
         },
-        "armor" : {
-            "defense_bonus" : 3
+        "wearable" : {
+            "armor_class" : 3.0,
+            "slot" : "Feet"
+        }
+    },
+
+    {
+        "name" : "Smardz",
+        "renderable" : {
+            "glyph" : "%",
+            "fg" : "#C59833",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "food" : ""
+            }
+        }
+    },
+
+    {
+        "name" : "Soczek marchewkowy",
+        "renderable" : {
+            "glyph" : "¡",
+            "fg" : "#E1712D",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "provides_healing" : "4" }
+        }
+    },
+
+    {
+        "name" : "Koszulka 'Baciary'",
+        "renderable" : {
+            "glyph" : "╦",
+            "fg" : "#F38099",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 0.1
+        }
+    },
+
+    {
+        "name" : "Obdarte pantalony",
+        "renderable" : {
+            "glyph" : "╨",
+            "fg" : "#7E7E7E",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Legs",
+            "armor_class" : 0.1
+        }
+    },
+
+    {
+        "name" : "Papcie",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#F38099",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Feet",
+            "armor_class" : 0.1
+        }
+    },
+
+    {
+        "name" : "Pala",
+        "renderable" : {
+            "glyph" : "/",
+            "fg" : "#A52A2A",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Quickness",
+            "base_damage" : "1d4",
+            "hit_bonus" : 0
+        }
+    },
+
+    {
+        "name" : "Koszula elegancka",
+        "renderable" : {
+            "glyph" : "╦",
+            "fg" : "#20B2D9",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 0.1
+        }
+    },
+
+    {
+        "name" : "Spodnie eleganckie",
+        "renderable" : {
+            "glyph" : "╨",
+            "fg" : "#006FD7",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Legs",
+            "armor_class": 0.1
         }
     }
 ],
@@ -242,7 +380,8 @@
         },
         "skills" : {
             "Melee" : 2
-        }
+        },
+        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
     },
 
     {
@@ -256,7 +395,9 @@
         "blocks_tile" : true,
         "vision_range" : 4,
         "ai" : "vendor",
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
     },
 
     {
@@ -271,7 +412,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["ueueueueueue", "Zjadlbym suróweczke.", "Nie tup tak tymi kaloszami.", "Witam szanownego pana."],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Pala", "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
     },
 
     {
@@ -285,7 +428,9 @@
         "blocks_tile" : true,
         "vision_range" : 4,
         "ai" : "bystander",
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie", "Pastoral" ]
     },
 
     {
@@ -300,7 +445,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["Niech bedzie pochwalony Jerzy Bóg Slonca.", "I z grzybkiem twoim.", "Pan jest moim pasterzem."],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
     },
 
     {
@@ -314,7 +461,9 @@
         "blocks_tile" : true,
         "vision_range" : 4,
         "ai" : "vendor",
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ]
     },
 
     {
@@ -328,7 +477,9 @@
         "blocks_tile" : true,
         "vision_range" : 4,
         "ai" : "vendor",
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
     },
 
     {
@@ -342,7 +493,9 @@
         "blocks_tile" : true,
         "vision_range" : 4,
         "ai" : "vendor",
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
     },
 
     {
@@ -357,7 +510,8 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["ook", "ooga", "ooga booga", "ook ook", "gunga ginga", "siema Więcław"],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {}
     },
 
     {
@@ -372,7 +526,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["Prosze wyjsc z mojego domu natychmiast.", "Idz mie stond.", "Dzien dobry."],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ]
     },
 
     {
@@ -393,6 +549,12 @@
         "skills" : {
             "Melee" : -1,
             "Defense" : -1
+        },
+        "natural" : {
+            "armor_class" : 11,
+            "attacks" : [
+                { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
+            ]
         }
     },
 
@@ -408,7 +570,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["Ktos mi gwizdnal soczek.", "Dzien dobry.", "Zycie mnie swedzi."],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ]
     },
 
     {
@@ -423,7 +587,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["Cicho, ryby ploszysz.", "Trzy maklowicze zlowilem dzisiaj!", "Chcesz zobaczyc moje splawiki?"],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ]
     },
 
     {
@@ -438,7 +604,9 @@
         "vision_range" : 4,
         "ai" : "bystander",
         "quips" : ["ueueueueueue", "eueueueue", "ueueueueue", "eoeoeoeo", "EEEEEOOOEOEOEOE", "Chyba przesadzilem z berbelunia."],
-        "attributes" : {}
+        "attributes" : {},
+        "skills" : {},
+        "equipped" : [ "Obdarte pantalony" ]
     }
 ],
 
