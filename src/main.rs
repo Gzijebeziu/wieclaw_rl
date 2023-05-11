@@ -204,7 +204,7 @@ impl GameState for State {
                     gui::ItemMenuResult::NoResponse => {}
                     gui::ItemMenuResult::Selected => {
                         let mut intent = self.ecs.write_storage::<WantsToUseItem>();
-                        intent.insert(*self.ecs.fetch::<Entity>(), WantsToUseItem { item, target: result.1 }).expect("Unable to insert intnt");
+                        intent.insert(*self.ecs.fetch::<Entity>(), WantsToUseItem { item, target: result.1 }).expect("Unable to insert intent");
                         newrunstate = RunState::PlayerTurn;
                     }
                 }
@@ -400,7 +400,8 @@ fn main() -> rltk::BError {
         .with_tile_dimensions(16, 16)
         .with_resource_path("resources/")
         .with_font("curses_square_16x16.png", 16, 16)
-        .with_simple_console(80, 50, "curses_square_16x16.png")
+        .with_fancy_console(80, 60, "curses_square_16x16.png")
+        .with_dimensions(80, 60)
         .with_vsync(false)
         .build()?;
     
@@ -460,13 +461,13 @@ fn main() -> rltk::BError {
 
     raws::load_raws();
 
-    gs.ecs.insert(Map::new(1, 64, 64));
+    gs.ecs.insert(Map::new(1, 64, 64, "Nowa Mapa"));
     gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["Wieclaw wpadl do jakiejs dziury w ziemi czy cos i zgubil swoj Zloty Zombek!".to_string()]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["Wieclaw budzi sie w knajpie Pod Smierdzaca Pacha i zauwaza, ze zniknal jego Zloty Zombek!".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
