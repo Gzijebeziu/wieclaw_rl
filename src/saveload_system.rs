@@ -33,7 +33,7 @@ pub fn save_game(ecs : &mut World) {
             SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage, AreaOfEffect, Confusion, ProvidesHealing, InBackpack, 
             WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, 
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
-            BlocksVisibility, Door, Bystander, Vendor, Quips, Attributes, Skills, Pools, NaturalAttackDefense
+            BlocksVisibility, Door, Bystander, Vendor, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, Carnivore, Herbivore
         );
     }
 
@@ -80,7 +80,7 @@ pub fn load_game(ecs: &mut World) {
             SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage, AreaOfEffect, Confusion, ProvidesHealing, InBackpack,
             WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, 
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
-            BlocksVisibility, Door, Bystander, Vendor, Quips, Attributes, Skills, Pools, NaturalAttackDefense
+            BlocksVisibility, Door, Bystander, Vendor, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, Carnivore, Herbivore
         );
     }
 

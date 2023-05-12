@@ -38,6 +38,7 @@ pub mod map_builders;
 pub mod camera;
 pub mod raws;
 pub mod bystander_ai_system;
+pub mod animal_ai_system;
 mod gamesystem;
 pub use gamesystem::*;
 #[macro_use]
@@ -84,6 +85,8 @@ impl State {
         mapindex.run_now(&self.ecs);
         let mut bystander = bystander_ai_system::BystanderAI{};
         bystander.run_now(&self.ecs);
+        let mut animal = animal_ai_system::AnimalAI{};
+        animal.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem{};
         melee.run_now(&self.ecs);
         let mut damage = DamageSystem{};
@@ -457,6 +460,9 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Skills>();
     gs.ecs.register::<Pools>();
     gs.ecs.register::<NaturalAttackDefense>();
+    gs.ecs.register::<LootTable>();
+    gs.ecs.register::<Carnivore>();
+    gs.ecs.register::<Herbivore>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();
@@ -467,7 +473,7 @@ fn main() -> rltk::BError {
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["Wieclaw budzi sie w knajpie Pod Smierdzaca Pacha i zauwaza, ze zniknal jego Zloty Zombek!".to_string()]});
+    gs.ecs.insert(gamelog::GameLog{ entries : vec!["Zloty Zombek!".to_string(), "Wieclaw budzi sie w knajpie Pod Smierdzaca Pacha i zauwaza, ze zniknal jego".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 

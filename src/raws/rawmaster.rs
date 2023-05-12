@@ -49,16 +49,18 @@ pub struct RawMaster {
     raws : Raws,
     item_index : HashMap<String, usize>,
     mob_index : HashMap<String, usize>,
-    prop_index : HashMap<String, usize>
+    prop_index : HashMap<String, usize>,
+    loot_index : HashMap<String, usize>
 }
 
 impl RawMaster {
     pub fn empty() -> RawMaster {
         RawMaster {
-            raws : Raws{ items: Vec::new(), mobs: Vec::new(), props: Vec::new(), spawn_table: Vec::new() },
+            raws : Raws{ items: Vec::new(), mobs: Vec::new(), props: Vec::new(), spawn_table: Vec::new(), loot_tables: Vec::new() },
             item_index : HashMap::new(),
             mob_index : HashMap::new(),
-            prop_index : HashMap::new()
+            prop_index : HashMap::new(),
+            loot_index : HashMap::new()
         }
     }
 
@@ -91,6 +93,9 @@ impl RawMaster {
             if !used_names.contains(&spawn.name) {
                 rltk::console::log(format!("WARNING - Spawn tables references unspecified entity {}", spawn.name));
             }
+        }
+        for (i,loot) in self.raws.loot_tables.iter().enumerate() {
+            self.loot_index.insert(loot.name.clone(), i);
         }
     }
 }
@@ -213,6 +218,8 @@ pub fn spawn_named_mob(raws: &RawMaster, ecs: &mut World, key : &str, pos : Spaw
             "melee" => eb = eb.with(Monster{}),
             "bystander" => eb = eb.with(Bystander{}),
             "vendor" => eb = eb.with(Vendor{}),
+            "carnivore" => eb = eb.with(Carnivore{}),
+            "herbivore" => eb = eb.with(Herbivore{}),
             _ => {}
         }
 
@@ -298,6 +305,10 @@ pub fn spawn_named_mob(raws: &RawMaster, ecs: &mut World, key : &str, pos : Spaw
                 }
             }
             eb = eb.with(nature);
+        }
+
+        if let Some(loot) = &mob_template.loot_table {
+            eb = eb.with(LootTable{table: loot.clone()});
         }
 
         eb = eb.with(Viewshed{ visible_tiles : Vec::new(), range: mob_template.vision_range, dirty: true });
@@ -387,4 +398,17 @@ pub fn get_spawn_table_for_depth(raws: &RawMaster, depth: i32) -> RandomTable {
     }
 
     rt
+}
+
+pub fn get_item_drop(raws: &RawMaster, rng : &mut rltk::RandomNumberGenerator, table: &str) -> Option<String> {
+    if raws.loot_index.contains_key(table) {
+        let mut rt = RandomTable::new();
+        let available_options = &raws.raws.loot_tables[raws.loot_index[table]];
+        for item in available_options.drops.iter() {
+            rt = rt.add(item.name.clone(), item.weight);
+        }
+        return Some(rt.roll(rng));
+    }
+
+    None
 }

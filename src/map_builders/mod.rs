@@ -57,6 +57,8 @@ mod common;
 use common::*;
 mod town;
 use town::town_builder;
+mod forest;
+use forest::forest_builder;
 use specs::prelude::*;
 
 pub struct BuilderMap {
@@ -289,6 +291,7 @@ pub fn level_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator, wid
     rltk::console::log(format!("Pietro: {}", new_depth));
     match new_depth {
         1 => town_builder(new_depth, rng, width, height),
+        2 => forest_builder(new_depth, rng, width, height),
         _ => random_builder(new_depth, rng, width, height)
     }
 }
