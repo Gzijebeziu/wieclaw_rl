@@ -37,6 +37,7 @@ fn get_tile_glyph_default(idx: usize, map : &Map) -> (rltk::FontCharType, RGB, R
         TileType::ShallowWater => { glyph = rltk::to_cp437('≈'); fg = RGB::named(rltk::CYAN); }
         TileType::DeepWater => { glyph = rltk::to_cp437('≈'); fg = RGB::named(rltk::NAVY_BLUE); }
         TileType::Gravel => { glyph = rltk::to_cp437(';'); fg = RGB::named(rltk::GRAY); }
+        TileType::UpStairs => { glyph = rltk::to_cp437('<'); fg = RGB::from_f32(0., 1.0, 1.0); }
     }
 
     (glyph, fg, bg)
@@ -92,6 +93,7 @@ fn get_forest_glyph(idx: usize, map: &Map) -> (rltk::FontCharType, RGB, RGB) {
         TileType::DeepWater => { glyph = rltk::to_cp437('~'); fg = RGB::named(rltk::BLUE); }
         TileType::Gravel => { glyph = rltk::to_cp437(';'); fg = RGB::from_f32(0.5, 0.5, 0.5); }
         TileType::DownStairs => { glyph = rltk::to_cp437('>'); fg = RGB::from_f32(0., 1.0, 1.0); }
+        TileType::UpStairs => { glyph = rltk::to_cp437('<'); fg = RGB::from_f32(0., 1.0, 1.0); }
         _ => { glyph = rltk::to_cp437('"'); fg = RGB::from_f32(0.0, 0.6, 0.0); }
     }
 

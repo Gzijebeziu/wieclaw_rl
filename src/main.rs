@@ -6,6 +6,7 @@ mod components;
 pub use components::*;
 mod map;
 pub use map::*;
+use dungeon::*;
 mod player;
 pub use player::*;
 mod rect;
@@ -59,6 +60,7 @@ pub enum RunState { AwaitingInput,
     MainMenu { menu_selection : gui::MainMenuSelection },
     SaveGame,
     NextLevel,
+    PreviousLevel,
     ShowRemoveItem,
     GameOver,
     MagicMapReveal { row : i32 },
@@ -244,8 +246,14 @@ impl GameState for State {
                 newrunstate = RunState::MainMenu{ menu_selection : gui::MainMenuSelection::LoadGame };
             }
             RunState::NextLevel => {
-                self.goto_next_level();
-                newrunstate = RunState::PreRun;
+                self.goto_level(1);
+                self.mapgen_next_state = Some(RunState::PreRun);
+                newrunstate = RunState::MapGeneration;
+            }
+            RunState::PreviousLevel => {
+                self.goto_level(-1);
+                self.mapgen_next_state = Some(RunState::PreRun);
+                newrunstate = RunState::MapGeneration;
             }
             RunState::ShowRemoveItem => {
                 let result = gui::remove_item_menu(self, ctx);
@@ -322,21 +330,14 @@ impl State {
         to_delete
     }
 
-    fn goto_next_level(&mut self) {
-        let to_delete = self.entities_to_remove_on_level_change();
-        for target in to_delete {
-            self.ecs.delete_entity(target).expect("Unable to delete entity");
-        }
+    fn goto_level(&mut self, offset: i32) {
+        freeze_level_entities(&mut self.ecs);
 
-        let current_depth;
-        {
-            let worldmap_resource = self.ecs.fetch::<Map>();
-            current_depth = worldmap_resource.depth;
-        }
-        self.generate_world_map(current_depth + 1);
+        let current_depth = self.ecs.fetch::<Map>().depth;
+        self.generate_world_map(current_depth + offset, offset);
 
         let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
-        gamelog.entries.push("Wieclaw schodzi po schodach.".to_string());
+        gamelog.entries.push("Wieclaw przemieszcza sie.".to_string());
     }
 
     fn game_over_cleanup(&mut self) {
@@ -354,42 +355,20 @@ impl State {
             *player_entity_writer = player_entity;
         }
 
-        self.generate_world_map(1);
+        self.ecs.insert(MasterDungeonMap::new());
+
+        self.generate_world_map(1, 0);
     }
 
-    fn generate_world_map(&mut self, new_depth : i32) {
+    fn generate_world_map(&mut self, new_depth : i32, offset: i32) {
         self.mapgen_index = 0;
         self.mapgen_timer = 0.0;
         self.mapgen_history.clear();
-        let mut rng = self.ecs.write_resource::<rltk::RandomNumberGenerator>();
-        let mut builder = map_builders::level_builder(new_depth, &mut rng, 80, 50);
-        builder.build_map(&mut rng);
-        std::mem::drop(rng);
-        self.mapgen_history = builder.build_data.history.clone();
-        let player_start;
-        {
-            let mut worldmap_resource = self.ecs.write_resource::<Map>();
-            *worldmap_resource = builder.build_data.map.clone();
-            player_start = builder.build_data.starting_position.as_mut().unwrap().clone();
-        }
-
-        builder.spawn_entities(&mut self.ecs);
-
-        let (player_x, player_y) = (player_start.x, player_start.y);
-        let mut player_position = self.ecs.write_resource::<Point>();
-        *player_position = Point::new(player_x, player_y);
-        let mut position_components = self.ecs.write_storage::<Position>();
-        let player_entity = self.ecs.fetch::<Entity>();
-        let player_pos_comp = position_components.get_mut(*player_entity);
-        if let Some(player_pos_comp) = player_pos_comp {
-            player_pos_comp.x = player_x;
-            player_pos_comp.y = player_y;
-        }
-
-        let mut viewshed_components = self.ecs.write_storage::<Viewshed>();
-        let vs = viewshed_components.get_mut(*player_entity);
-        if let Some(vs) = vs {
-            vs.dirty = true;
+        let map_building_info = level_transition(&mut self.ecs, new_depth, offset);
+        if let Some(history) = map_building_info {
+            self.mapgen_history = history;
+        } else {
+            thaw_level_entities(&mut self.ecs);
         }
     }
 }
@@ -440,6 +419,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Confusion>();
     gs.ecs.register::<SimpleMarker<SerializeMe>>();
     gs.ecs.register::<SerializationHelper>();
+    gs.ecs.register::<DMSerializationHelper>();
     gs.ecs.register::<Equippable>();
     gs.ecs.register::<Equipped>();
     gs.ecs.register::<MeleeWeapon>();
@@ -463,10 +443,12 @@ fn main() -> rltk::BError {
     gs.ecs.register::<LootTable>();
     gs.ecs.register::<Carnivore>();
     gs.ecs.register::<Herbivore>();
+    gs.ecs.register::<OtherLevelPosition>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();
 
+    gs.ecs.insert(MasterDungeonMap::new());
     gs.ecs.insert(Map::new(1, 64, 64, "Nowa Mapa"));
     gs.ecs.insert(Point::new(0, 0));
     gs.ecs.insert(rltk::RandomNumberGenerator::new());
@@ -477,6 +459,6 @@ fn main() -> rltk::BError {
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    gs.generate_world_map(1);
+    gs.generate_world_map(1, 0);
     rltk::main_loop(context, gs)
 }
