@@ -42,7 +42,7 @@ impl<'a> System<'a> for TriggerSystem {
                             let damage = inflicts_damage.get(*entity_id);
                             if let Some(damage) = damage {
                                 particle_builder.request(pos.x, pos.y, rltk::RGB::named(rltk::ORANGE), rltk::RGB::named(rltk::BLACK), rltk::to_cp437('‼'), 200.0);
-                                SufferDamage::new_damage(&mut inflict_damage, entity, damage.damage);
+                                SufferDamage::new_damage(&mut inflict_damage, entity, damage.damage, false);
                             }
 
                             let sa = single_activation.get(*entity_id);

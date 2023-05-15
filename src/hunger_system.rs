@@ -63,7 +63,7 @@ impl<'a> System<'a> for HungerSystem {
                             if entity == *player_entity {
                                 log.entries.push("Wieclaw odczuwa bolesny skurcz zoladka i traci 1 HP!".to_string());
                             }
-                            SufferDamage::new_damage(&mut inflict_damage, entity, 1);
+                            SufferDamage::new_damage(&mut inflict_damage, entity, 1, false);
                         }
                     }
                 }

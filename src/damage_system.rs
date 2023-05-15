@@ -1,24 +1,71 @@
 use specs::prelude::*;
-use super::{Pools, SufferDamage, Player, gamelog::GameLog, Name, RunState, Position, Map, InBackpack, Equipped, LootTable};
+use super::{Pools, SufferDamage, Player, gamelog::GameLog, Name, RunState, Position, Map, InBackpack,
+    Equipped, LootTable, Attributes, gamesystem::{player_hp_at_level, mana_at_level}, particle_system::ParticleBuilder};
 
 pub struct DamageSystem {}
 
 impl<'a> System<'a> for DamageSystem {
+    #[allow(clippy::type_complexity)]
     type SystemData = ( WriteStorage<'a, Pools>, 
                         WriteStorage<'a, SufferDamage>,
                         ReadStorage<'a, Position>,
                         WriteExpect<'a, Map>,
-                        Entities<'a> );
+                        Entities<'a>,
+                        ReadExpect<'a, Entity>,
+                        ReadStorage<'a, Attributes>,
+                        WriteExpect<'a, GameLog>,
+                        WriteExpect<'a, ParticleBuilder>,
+                        ReadExpect<'a, rltk::Point> );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (mut stats, mut damage, positions, mut map, entities) = data;
+        let (mut stats, mut damage, positions, mut map, entities, player, attributes, mut log, mut particles,
+            player_pos) = data;
+        let mut xp_gain = 0;
 
         for (entity, mut stats, damage) in (&entities, &mut stats, &damage).join() {
-            stats.hit_points.current -= damage.amount.iter().sum::<i32>();
-            let pos = positions.get(entity);
-            if let Some(pos) = pos {
-                let idx = map.xy_idx(pos.x, pos.y);
-                map.bloodstains.insert(idx);
+            for dmg in damage.amount.iter() {
+                stats.hit_points.current -= dmg.0;
+                let pos = positions.get(entity);
+                if let Some(pos) = pos {
+                    let idx = map.xy_idx(pos.x, pos.y);
+                    map.bloodstains.insert(idx);
+                }
+
+                if stats.hit_points.current < 1 && dmg.1 {
+                    xp_gain += stats.level * 100;
+                }
+            }
+        }
+
+        if xp_gain != 0 {
+            let mut player_stats = stats.get_mut(*player).unwrap();
+            let player_attributes = attributes.get(*player).unwrap();
+            player_stats.xp += xp_gain;
+            if player_stats.xp >= player_stats.level * 1000 {
+                player_stats.level += 1;
+                player_stats.hit_points.max = player_hp_at_level(
+                    player_attributes.fitness.base + player_attributes.fitness.modifiers,
+                    player_stats.level
+                );
+                player_stats.hit_points.current = player_stats.hit_points.max;
+                player_stats.mana.max = mana_at_level(
+                    player_attributes.intelligence.base + player_attributes.intelligence.modifiers,
+                    player_stats.level
+                );
+                player_stats.mana.current = player_stats.mana.max;
+                log.entries.push(format!("Wieclaw ma teraz {}. poziom.", player_stats.level));
+
+                for i in 0..10 {
+                    if player_pos.y - i > 1 {
+                        particles.request(
+                            player_pos.x,
+                            player_pos.y - i,
+                            rltk::RGB::named(rltk::GOLD),
+                            rltk::RGB::named(rltk::BLACK),
+                            rltk::to_cp437('░'), 200.0
+                        );
+                    }
+                }
             }
         }
 
