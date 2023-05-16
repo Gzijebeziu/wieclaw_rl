@@ -312,6 +312,10 @@ pub fn spawn_named_mob(raws: &RawMaster, ecs: &mut World, key : &str, pos : Spaw
         }
 
         eb = eb.with(Viewshed{ visible_tiles : Vec::new(), range: mob_template.vision_range, dirty: true });
+        
+        if let Some(light) = &mob_template.light {
+            eb = eb.with(LightSource{ range: light.range, color: rltk::RGB::from_hex(&light.color).expect("Bad color") });
+        }
 
         let new_mob = eb.build();
 

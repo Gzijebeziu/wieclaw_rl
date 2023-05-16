@@ -15,12 +15,15 @@
     { "name" : "Zwój Malego Odkrywcy", "weight" : 2, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Stupkogryzarka", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Pastoral", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
-    { "name" : "Pastuszek", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Pastuszek", "weight" : 15, "min_depth" : 3, "max_depth" : 5 },
     { "name" : "Moris", "weight" : 15, "min_depth" : 2, "max_depth" : 3 },
-    { "name" : "Wilk", "weight" : 13, "min_depth" : 2, "max_depth" : 3 },
-    { "name" : "Maciora", "weight" : 15, "min_depth" : 2, "max_depth" : 3 },
-    { "name" : "Jelen", "weight" : 14, "min_depth" : 2, "max_depth" : 3 },
-    { "name" : "Hultaj", "weight" : 9, "min_depth" : 2, "max_depth" : 3 }
+    { "name" : "Wilk", "weight" : 13, "min_depth" : 2, "max_depth" : 2 },
+    { "name" : "Maciora", "weight" : 15, "min_depth" : 2, "max_depth" : 2 },
+    { "name" : "Jelen", "weight" : 14, "min_depth" : 2, "max_depth" : 2 },
+    { "name" : "Hultaj", "weight" : 9, "min_depth" : 2, "max_depth" : 3 },
+    { "name" : "Toperz", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Pajonczek", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 }
 ],
 
 "loot_tables" : [
@@ -738,7 +741,11 @@
         "ai" : "melee",
         "quips" : [ "Chodz na solo, paszteciarzu!", "Dawaj piniondze natychmiast!", "Tobie juz nic tu nie pomoze!" ],
         "attributes" : {},
-        "equipped" : [ "Ciupaga", "Plyta eternitu", "Koszula góralska", "Portki góralskie" ]
+        "equipped" : [ "Ciupaga", "Plyta eternitu", "Koszula góralska", "Portki góralskie" ],
+        "light" : {
+            "range" : 6,
+            "color" : "#FFFF55"
+        }
     },
 
     {
@@ -790,6 +797,79 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Obdarte pantalony" ]
+    },
+
+    {
+        "name" : "Toperz",
+        "renderable" : {
+            "glyph" : "t",
+            "fg" : "#995555",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "ai" : "herbivore",
+        "attributes" : {
+            "Might" : 3,
+            "Fitness" : 3
+        },
+        "skills" : {
+            "Melee" : -1,
+            "Defense" : -1
+        },
+        "natural" : {
+            "armor_class" : 11,
+            "attacks" : [
+                { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
+            ]
+        }
+    },
+
+    {
+        "name" : "Pajonczek",
+        "level" : 2,
+        "attributes" : {},
+        "renderable" : {
+            "glyph" : "P",
+            "fg" : "#222222",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "ai" : "carnivore",
+        "natural" : {
+            "armor_class" : 12,
+            "attacks" : [
+                { "name" : "bite", "hit_bonus" : 1, "damage" : "1d12" }
+            ]
+        }
+    },
+
+    {
+        "name" : "Bebok",
+        "level" : 2,
+        "attributes" : {},
+        "renderable" : {
+            "glyph" : "b",
+            "fg" : "#DD0000",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 4,
+        "ai" : "carnivore",
+        "natural" : {
+            "armor_class" : 12,
+            "attacks" : [
+                { "name" : "kick", "hit_bonus" : 0, "damage" : "1d8" }
+            ]
+        },
+        "light" : {
+            "range" : 4,
+            "color" : "#550000"
+        }
     }
 ],
 

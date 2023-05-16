@@ -42,6 +42,8 @@ pub mod bystander_ai_system;
 pub mod animal_ai_system;
 mod gamesystem;
 pub use gamesystem::*;
+mod lightning_system;
+use lightning_system::LightningSystem;
 #[macro_use]
 extern crate lazy_static;
 
@@ -64,7 +66,8 @@ pub enum RunState { AwaitingInput,
     ShowRemoveItem,
     GameOver,
     MagicMapReveal { row : i32 },
-    MapGeneration
+    MapGeneration,
+    ShowCheatMenu
 }
 
 pub struct State {
@@ -105,6 +108,8 @@ impl State {
         hunger.run_now(&self.ecs);
         let mut particles = ParticleSpawnSystem{};
         particles.run_now(&self.ecs);
+        let mut lightning = LightningSystem{};
+        lightning.run_now(&self.ecs);
 
         self.ecs.maintain();
     }
@@ -280,6 +285,18 @@ impl GameState for State {
                     newrunstate = RunState::MagicMapReveal{ row: row+1 };
                 }
             }
+            RunState::ShowCheatMenu => {
+                let result = gui::show_cheat_mode(self, ctx);
+                match result {
+                    gui::CheatMenuResult::Cancel => newrunstate = RunState::AwaitingInput,
+                    gui::CheatMenuResult::NoResponse => {}
+                    gui::CheatMenuResult::TeleportToExit => {
+                        self.goto_level(1);
+                        self.mapgen_next_state = Some(RunState::PreRun);
+                        newrunstate = RunState::MapGeneration;
+                    }
+                }
+            }
         }
 
         {
@@ -292,44 +309,6 @@ impl GameState for State {
 }
 
 impl State {
-    fn entities_to_remove_on_level_change(&mut self) -> Vec<Entity> {
-        let entities = self.ecs.entities();
-        let player = self.ecs.read_storage::<Player>();
-        let backpack = self.ecs.read_storage::<InBackpack>();
-        let player_entity = self.ecs.fetch::<Entity>();
-        let equipped = self.ecs.read_storage::<Equipped>();
-
-        let mut to_delete : Vec<Entity> = Vec::new();
-        for entity in entities.join() {
-            let mut should_delete = true;
-
-            let p = player.get(entity);
-            if let Some(_p) = p {
-                should_delete = false;
-            }
-
-            let bp = backpack.get(entity);
-            if let Some(bp) = bp {
-                if bp.owner == *player_entity {
-                    should_delete = false;
-                }
-            }
-
-            let eq = equipped.get(entity);
-            if let Some(eq) = eq {
-                if eq.owner == *player_entity {
-                    should_delete = false;
-                }
-            }
-
-            if should_delete {
-                to_delete.push(entity);
-            }
-        }
-
-        to_delete
-    }
-
     fn goto_level(&mut self, offset: i32) {
         freeze_level_entities(&mut self.ecs);
 
@@ -444,6 +423,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Carnivore>();
     gs.ecs.register::<Herbivore>();
     gs.ecs.register::<OtherLevelPosition>();
+    gs.ecs.register::<LightSource>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();

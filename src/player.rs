@@ -243,6 +243,8 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
 
             VirtualKeyCode::Escape => return RunState::SaveGame,
 
+            VirtualKeyCode::Backslash => return RunState::ShowCheatMenu,
+
             VirtualKeyCode::Period => {
                 if try_next_level(&mut gs.ecs) {
                     return RunState::NextLevel;
