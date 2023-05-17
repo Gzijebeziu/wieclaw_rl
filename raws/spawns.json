@@ -35,6 +35,17 @@
     }
 ],
 
+"faction_table" : [
+    { "name" : "Player", "responses": { }},
+    { "name" : "Mindless", "responses": { "Default" : "attack" } },
+    { "name" : "Townsfolk", "responses": { "Default" : "flee", "Player" : "ignore", "Townsfolk" : "ignore" } },
+    { "name" : "Bandits", "responses": { "Default" : "attack", "Bandits" : "ignore" } },
+    { "name" : "Cave Goblins", "responses": { "Default" : "attack", "Cave Goblins" : "ignore" } },
+    { "name" : "Carnivores", "responses": { "Default" : "attack", "Carnivores" : "ignore" } },
+    { "name" : "Herbivores", "responses": { "Default" : "flee", "Herbivores" : "ignore" } },
+    { "name" : "Hungry Rodents", "responses": { "Default" : "attack", "Hungry Rodents" : "ignore" } }
+],
+
 "items" : [
     {
         "name" : "Pasztecik",
@@ -419,8 +430,9 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "melee",
-        "attributes" : {}
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Cave Goblins"
     },
 
     {
@@ -433,8 +445,9 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "melee",
-        "attributes" : {}
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Cave Goblins"
     },
 
     {
@@ -447,8 +460,9 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "melee",
-        "attributes" : {}
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Cave Goblins"
     },
 
     {
@@ -461,14 +475,15 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "vendor",
+        "movement" : "static",
         "attributes" : {
             "intelligence" : 13
         },
         "skills" : {
             "Melee" : 2
         },
-        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
+        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -481,10 +496,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "vendor",
+        "movement" : "static",
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
+        "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -497,11 +513,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "random",
         "quips" : ["ueueueueueue", "Zjadlbym suróweczke.", "Nie tup tak tymi kaloszami.", "Witam szanownego pana."],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Pala", "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
+        "equipped" : [ "Pala", "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -514,10 +531,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "static",
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie", "Pastoral" ]
+        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie", "Pastoral" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -530,11 +548,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "static",
         "quips" : ["Niech bedzie pochwalony Jerzy Bóg Slonca.", "I z grzybkiem twoim.", "Pan jest moim pasterzem."],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
+        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -547,10 +566,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "vendor",
+        "movement" : "static",
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ]
+        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -563,10 +583,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "vendor",
+        "movement" : "static",
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie" ]
+        "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -579,10 +600,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "vendor",
+        "movement" : "static",
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ]
+        "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -595,10 +617,11 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "static",
         "quips" : ["ook", "ooga", "ooga booga", "ook ook", "gunga ginga", "siema Więcław"],
         "attributes" : {},
-        "skills" : {}
+        "skills" : {},
+        "faction" : "Townsfolk"
     },
 
     {
@@ -611,11 +634,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "random_waypoint",
         "quips" : ["Prosze wyjsc z mojego domu natychmiast.", "Idz mie stond.", "Dzien dobry."],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ]
+        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -628,7 +652,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "melee",
+        "movement" : "static",
         "attributes" : {
             "Might" : 3,
             "Fitness" : 3
@@ -642,7 +666,8 @@
             "attacks" : [
                 { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
             ]
-        }
+        },
+        "faction" : "Hungry Rodents"
     },
 
     {
@@ -655,7 +680,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "carnivore",
+        "movement" : "static",
         "attributes" : {
             "Might" : 3,
             "Fitness" : 3
@@ -670,7 +695,8 @@
                 { "name" : "bite", "hit_bonus" : 0, "damage" : "1d6" }
             ]
         },
-        "loot_table" : "Animal"
+        "loot_table" : "Animal",
+        "faction" : "Carnivores"
     },
 
     {
@@ -683,7 +709,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "melee",
+        "movement" : "static",
         "attributes" : {
             "Might" : 3,
             "Fitness" : 3
@@ -697,7 +723,8 @@
             "attacks" : [
                 { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
             ]
-        }
+        },
+        "faction" : "Carnivores"
     },
 
     {
@@ -710,7 +737,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 8,
-        "ai" : "herbivore",
+        "movement" : "random",
         "attributes" : {
             "Might" : 3,
             "Fitness" : 3
@@ -725,7 +752,8 @@
                 { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4"}
             ]
         },
-        "loot_table" : "Animal"
+        "loot_table" : "Animal",
+        "faction" : "Herbivores"
     },
 
     {
@@ -738,14 +766,15 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "melee",
+        "movement" : "random_waypoint",
         "quips" : [ "Chodz na solo, paszteciarzu!", "Dawaj piniondze natychmiast!", "Tobie juz nic tu nie pomoze!" ],
         "attributes" : {},
         "equipped" : [ "Ciupaga", "Plyta eternitu", "Koszula góralska", "Portki góralskie" ],
         "light" : {
             "range" : 6,
             "color" : "#FFFF55"
-        }
+        },
+        "faction" : "Bandits"
     },
 
     {
@@ -758,11 +787,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "random_waypoint",
         "quips" : ["Ktos mi gwizdnal soczek.", "Dzien dobry.", "Zycie mnie swedzi."],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ]
+        "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -775,11 +805,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "random_waypoint",
         "quips" : ["Cicho, ryby ploszysz.", "Trzy maklowicze zlowilem dzisiaj!", "Chcesz zobaczyc moje splawiki?"],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ]
+        "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -792,11 +823,12 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "bystander",
+        "movement" : "random",
         "quips" : ["ueueueueueue", "eueueueue", "ueueueueue", "eoeoeoeo", "EEEEEOOOEOEOEOE", "Chyba przesadzilem z berbelunia."],
         "attributes" : {},
         "skills" : {},
-        "equipped" : [ "Obdarte pantalony" ]
+        "equipped" : [ "Obdarte pantalony" ],
+        "faction" : "Townsfolk"
     },
 
     {
@@ -809,7 +841,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 6,
-        "ai" : "herbivore",
+        "movement" : "random",
         "attributes" : {
             "Might" : 3,
             "Fitness" : 3
@@ -823,7 +855,8 @@
             "attacks" : [
                 { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
             ]
-        }
+        },
+        "faction" : "Herbivores"
     },
 
     {
@@ -838,13 +871,14 @@
         },
         "blocks_tile" : true,
         "vision_range" : 6,
-        "ai" : "carnivore",
+        "movement" : "static",
         "natural" : {
             "armor_class" : 12,
             "attacks" : [
                 { "name" : "bite", "hit_bonus" : 1, "damage" : "1d12" }
             ]
-        }
+        },
+        "faction" : "Carnivores"
     },
 
     {
@@ -859,7 +893,7 @@
         },
         "blocks_tile" : true,
         "vision_range" : 4,
-        "ai" : "carnivore",
+        "movement" : "static",
         "natural" : {
             "armor_class" : 12,
             "attacks" : [

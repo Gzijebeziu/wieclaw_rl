@@ -2,7 +2,8 @@ use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{Player, Map, TileType, Renderable, Name, Position, Viewshed, Rect, 
             SerializeMe, random_table::RandomTable, HungerState, HungerClock, raws::*, Attributes,
-            Attribute, attr_bonus, Skills, Skill, Pools, Pool, player_hp_at_level, mana_at_level, LightSource};
+            Attribute, attr_bonus, Skills, Skill, Pools, Pool, player_hp_at_level, mana_at_level, LightSource,
+            Initiative, Faction};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -50,6 +51,8 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
             level: 1
         })
         .with(LightSource{ color: rltk::RGB::from_f32(1.0, 1.0, 0.5), range: 8 })
+        .with(Initiative{ current: 0 })
+        .with(Faction{name : "Player".to_string()})
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 
