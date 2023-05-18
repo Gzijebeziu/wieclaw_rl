@@ -41,6 +41,7 @@ mod gamesystem;
 pub use gamesystem::*;
 mod lightning_system;
 use lightning_system::LightningSystem;
+pub mod spatial;
 #[macro_use]
 extern crate lazy_static;
 
