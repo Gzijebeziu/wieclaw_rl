@@ -8,13 +8,14 @@
     { "name" : "Zwój z Waznym Pytaniem", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
     { "name" : "Zwój Rzutu Kartoflem", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Klapek", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Sandalki", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Pokrywa smietnika", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Laczek", "weight" : 1, "min_depth" : 3, "max_depth" : 100 },
-    { "name" : "Kalosze", "weight" : 1, "min_depth" : 3, "max_depth" : 100 },
+    { "name" : "Drzwi wychodka", "weight" : 1, "min_depth" : 3, "max_depth" : 100 },
+    { "name" : "Ciupaga", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
     { "name" : "Surówka Grzeskowiak", "weight" : 10, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Zwój Malego Odkrywcy", "weight" : 2, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Stupkogryzarka", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Pastoral", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
+    { "name" : "Pastoral", "weight" : 1, "min_depth" : 5, "max_depth" : 100 },
     { "name" : "Pastuszek", "weight" : 15, "min_depth" : 3, "max_depth" : 5 },
     { "name" : "Moris", "weight" : 15, "min_depth" : 2, "max_depth" : 3 },
     { "name" : "Wilk", "weight" : 13, "min_depth" : 2, "max_depth" : 2 },
@@ -60,7 +61,10 @@
                 "provides_healing" : "8",
                 "food" : ""
             }
-        }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
     },
 
     {
@@ -76,7 +80,10 @@
                 "ranged" : "6",
                 "damage" : "8"
             }
-        }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
     },
 
     {
@@ -93,7 +100,10 @@
                 "damage" : "20",
                 "area_of_effect" : "3"
             }
-        }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 100.0,
+        "vendor_category" : "alchemy"
     },
 
     {
@@ -109,7 +119,10 @@
                 "ranged" : "6",
                 "confusion" : "4"
             }
-        }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 75.0,
+        "vendor_category" : "alchemy"
     },
 
     {
@@ -124,7 +137,10 @@
             "effects" : {
                 "magic_mapping" : ""
             }
-        }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
     },
 
     {
@@ -139,7 +155,10 @@
             "effects" : {
                 "food" : ""
             }
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 0.5,
+        "vendor_category" : "food"
     },
 
     {
@@ -155,7 +174,11 @@
             "attribute" : "Quickness",
             "base_damage" : "1d4",
             "hit_bonus" : 0
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 2.0,
+        "initiative_penalty" : 0,
+        "vendor_category" : "weapon"
     },
 
     {
@@ -171,7 +194,11 @@
             "attribute" : "Quickness",
             "base_damage" : "1d6",
             "hit_bonus" : 1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0,
+        "vendor_category" : "weapon"
     },
     
     {
@@ -187,7 +214,11 @@
             "attribute" : "Might",
             "base_damage" : "1d8+1",
             "hit_bonus" : 0
-        }
+        },
+        "weight_kg" : 2.0,
+        "base_value" : 10.0,
+        "initiative_penalty" : 2,
+        "vendor_category" : "weapon"
     },
 
     {
@@ -203,35 +234,47 @@
             "attribute" : "Might",
             "base_damage" : "1d8-1",
             "hit_bonus" : -1
-        }
+        },
+        "weight_kg" : 2.0,
+        "base_value" : 10.0,
+        "initiative_penalty" : 2,
+        "vendor_category" : "junk"
     },
 
     {
-        "name" : "Sandalki",
+        "name" : "Pokrywa smietnika",
         "renderable" : {
-            "glyph" : "╚",
-            "fg" : "#FF0483",
+            "glyph" : "█",
+            "fg" : "#C0C0C0",
             "bg" : "#000000",
             "order" : 2
         },
         "wearable" : {
             "armor_class" : 1.0,
-            "slot" : "Feet"
-        }
+            "slot" : "Shield"
+        },
+        "weight_kg" : 2.5,
+        "base_value" : 3.0,
+        "initiative_penalty" : 0.5,
+        "vendor_category" : "armor"
     },
 
     {
-        "name" : "Kalosze",
+        "name" : "Drzwi wychodka",
         "renderable" : {
-            "glyph" : "╚",
-            "fg" : "#35D9EA",
+            "glyph" : "█",
+            "fg" : "#8E3E00",
             "bg" : "#000000",
             "order" : 2
         },
         "wearable" : {
             "armor_class" : 3.0,
-            "slot" : "Feet"
-        }
+            "slot" : "Shield"
+        },
+        "weight_kg" : 22.0,
+        "base_value" : 20.0,
+        "initiative_penalty" : 1.0,
+        "vendor_category" : "armor"
     },
 
     {
@@ -246,7 +289,9 @@
             "effects" : {
                 "food" : ""
             }
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 0.5
     },
 
     {
@@ -259,7 +304,10 @@
         },
         "consumable" : {
             "effects" : { "provides_healing" : "4" }
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 0.5,
+        "vendor_category" : "food"
     },
 
     {
@@ -273,7 +321,11 @@
         "wearable" : {
             "slot" : "Torso",
             "armor_class" : 0.1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "junk"
     },
 
     {
@@ -287,7 +339,11 @@
         "wearable" : {
             "slot" : "Legs",
             "armor_class" : 0.1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "junk"
     },
 
     {
@@ -301,7 +357,11 @@
         "wearable" : {
             "slot" : "Feet",
             "armor_class" : 0.1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "junk"
     },
 
     {
@@ -317,7 +377,11 @@
             "attribute" : "Quickness",
             "base_damage" : "1d4",
             "hit_bonus" : 0
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 0.1,
+        "initiative_penalty" : 2,
+        "vendor_category" : "junk"
     },
 
     {
@@ -331,7 +395,11 @@
         "wearable" : {
             "slot" : "Torso",
             "armor_class" : 0.1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "clothes"
     },
 
     {
@@ -345,7 +413,11 @@
         "wearable" : {
             "slot" : "Legs",
             "armor_class": 0.1
-        }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "clothes"
     },
 
     {
@@ -360,7 +432,10 @@
             "effects" : {
                 "food" : ""
             }
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 0.5,
+        "vendor_category" : "food"
     },
 
     {
@@ -370,7 +445,9 @@
             "fg" : "#A52A2A",
             "bg" : "#000000",
             "order" : 2
-        }
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 5.0
     },
 
     {
@@ -384,9 +461,13 @@
         "weapon" : {
             "range" : "melee",
             "attribute" : "Might",
-            "base_damage" : "1d6",
+            "base_damage" : "1d8",
             "hit_bonus" : 0
-        }
+        },
+        "weight_kg" : 1.5,
+        "base_value" : 15.0,
+        "initiative_penalty" : 2,
+        "vendor_category" : "weapon"
     },
 
     {
@@ -400,7 +481,11 @@
         "wearable" : {
             "slot" : "Torso",
             "armor_class" : 1.0
-        }
+        },
+        "weight_kg" : 7.0,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.5,
+        "vendor_category" : "clothes"
     },
 
     {
@@ -413,8 +498,12 @@
         },
         "wearable" : {
             "slot" : "Legs",
-            "armor_class" : 0.2
-        }
+            "armor_class" : 1.0
+        },
+        "weight_kg" : 7.0,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.5,
+        "vendor_category" : "clothes"
     }
     
 ],
@@ -432,7 +521,8 @@
         "vision_range" : 8,
         "movement" : "static",
         "attributes" : {},
-        "faction" : "Cave Goblins"
+        "faction" : "Cave Goblins",
+        "gold" : "1d8"
     },
 
     {
@@ -447,7 +537,8 @@
         "vision_range" : 8,
         "movement" : "static",
         "attributes" : {},
-        "faction" : "Cave Goblins"
+        "faction" : "Cave Goblins",
+        "gold" : "1d6"
     },
 
     {
@@ -462,7 +553,8 @@
         "vision_range" : 4,
         "movement" : "static",
         "attributes" : {},
-        "faction" : "Cave Goblins"
+        "faction" : "Cave Goblins",
+        "gold" : "1d4"
     },
 
     {
@@ -483,7 +575,9 @@
             "Melee" : 2
         },
         "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6",
+        "vendor" : [ "food" ]
     },
 
     {
@@ -500,7 +594,9 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Pala", "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6",
+        "vendor" : [ "junk" ]
     },
 
     {
@@ -518,7 +614,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Pala", "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d4"
     },
 
     {
@@ -535,7 +632,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie", "Pastoral" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6"
     },
 
     {
@@ -553,7 +651,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d4"
     },
 
     {
@@ -570,7 +669,9 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6",
+        "vendor" : [ "armor", "weapon" ]
     },
 
     {
@@ -587,11 +688,13 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszula elegancka", "Spodnie eleganckie", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6",
+        "vendor" : [ "clothes" ]
     },
 
     {
-        "name" : "Alchemik",
+        "name" : "Piekarz",
         "renderable": {
             "glyph" : "☻",
             "fg" : "#EE82EE",
@@ -604,7 +707,9 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszula elegancka", "Obdarte pantalony", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6",
+        "vendor" : [ "alchemy" ]
     },
 
     {
@@ -621,7 +726,8 @@
         "quips" : ["ook", "ooga", "ooga booga", "ook ook", "gunga ginga", "siema Więcław"],
         "attributes" : {},
         "skills" : {},
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "2d6"
     },
 
     {
@@ -639,7 +745,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d2"
     },
 
     {
@@ -769,12 +876,13 @@
         "movement" : "random_waypoint",
         "quips" : [ "Chodz na solo, paszteciarzu!", "Dawaj piniondze natychmiast!", "Tobie juz nic tu nie pomoze!" ],
         "attributes" : {},
-        "equipped" : [ "Ciupaga", "Plyta eternitu", "Koszula góralska", "Portki góralskie" ],
+        "equipped" : [ "Klapek", "Pokrywa smietnika", "Koszula góralska", "Portki góralskie" ],
         "light" : {
             "range" : 6,
             "color" : "#FFFF55"
         },
-        "faction" : "Bandits"
+        "faction" : "Bandits",
+        "gold" : "1d6"
     },
 
     {
@@ -792,7 +900,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Obdarte pantalony", "Papcie", "Pala" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d2"
     },
 
     {
@@ -810,7 +919,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Koszulka 'Baciary'", "Obdarte pantalony", "Papcie" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d2"
     },
 
     {
@@ -828,7 +938,8 @@
         "attributes" : {},
         "skills" : {},
         "equipped" : [ "Obdarte pantalony" ],
-        "faction" : "Townsfolk"
+        "faction" : "Townsfolk",
+        "gold" : "1d2"
     },
 
     {
@@ -903,7 +1014,8 @@
         "light" : {
             "range" : 4,
             "color" : "#550000"
-        }
+        },
+        "gold" : "1d2"
     }
 ],
 
@@ -1028,10 +1140,10 @@
     },
 
     {
-        "name" : "Zestaw Chemiczny",
+        "name" : "Piec kamienny",
         "renderable": {
-            "glyph" : "δ",
-            "fg" : "#00FFFF",
+            "glyph" : "◙",
+            "fg" : "#555555",
             "bg" : "#000000",
             "order" : 2
         },

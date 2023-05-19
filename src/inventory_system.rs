@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem, ProvidesHealing,
+use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem, ProvidesHealing, EquipmentChanged,
             WantsToDropItem, Consumable, Pools, InflictsDamage, SufferDamage, Map, AreaOfEffect, Confusion,
             Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder, ProvidesFood, HungerClock, HungerState, MagicMapper, RunState};
 
@@ -12,15 +12,17 @@ impl<'a> System<'a> for ItemCollectionSystem {
                         WriteStorage<'a, WantsToPickupItem>,
                         WriteStorage<'a, Position>,
                         ReadStorage<'a, Name>,
-                        WriteStorage<'a, InBackpack>
+                        WriteStorage<'a, InBackpack>,
+                        WriteStorage<'a, EquipmentChanged>
                     );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (player_entity, mut gamelog, mut wants_pickup, mut positions, names, mut backpack) = data;
+        let (player_entity, mut gamelog, mut wants_pickup, mut positions, names, mut backpack, mut dirty) = data;
 
         for pickup in wants_pickup.join() {
             positions.remove(pickup.item);
             backpack.insert(pickup.item, InBackpack{ owner: pickup.collected_by }).expect("Unable to insert backpack entry");
+            dirty.insert(pickup.collected_by, EquipmentChanged{}).expect("Unable to insert ");
 
             if pickup.collected_by == *player_entity {
                 gamelog.entries.push(format!("Wieclaw podniosl {}.", names.get(pickup.item).unwrap().name));
@@ -57,15 +59,18 @@ impl<'a> System<'a> for ItemUseSystem {
                         ReadStorage<'a, ProvidesFood>,
                         WriteStorage<'a, HungerClock>,
                         ReadStorage<'a, MagicMapper>,
-                        WriteExpect<'a, RunState>
+                        WriteExpect<'a, RunState>,
+                        WriteStorage<'a, EquipmentChanged>
                     );
 
+    #[allow(clippy::cognitive_complexity)]
     fn run(&mut self, data : Self::SystemData) {
         let (player_entity, mut gamelog, map, entities, mut wants_use, names, consumables, healing,
             mut combat_stats, inflict_damage, mut suffer_damage, aoe, mut confused, equippable, mut equipped, 
-            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks, magic_mapper, mut runstate) = data;
+            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks, magic_mapper, mut runstate, mut dirty) = data;
 
         for (entity, useitem) in (&entities, &wants_use).join() {
+            dirty.insert(entity, EquipmentChanged{}).expect("Unable to insert");
             let mut used_item = true;
 
             let mut targets : Vec<Entity> = Vec::new();
@@ -242,11 +247,12 @@ impl<'a> System<'a> for ItemDropSystem {
                         WriteStorage<'a, WantsToDropItem>,
                         ReadStorage<'a, Name>,
                         WriteStorage<'a, Position>,
-                        WriteStorage<'a, InBackpack>
+                        WriteStorage<'a, InBackpack>,
+                        WriteStorage<'a, EquipmentChanged>
                     );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (player_entity, mut gamelog, entities, mut wants_drop, names, mut positions, mut backpack) = data;
+        let (player_entity, mut gamelog, entities, mut wants_drop, names, mut positions, mut backpack, mut dirty) = data;
 
         for (entity, to_drop) in (&entities, &wants_drop).join() {
             let mut dropper_pos : Position = Position{x:0, y:0};
@@ -257,6 +263,7 @@ impl<'a> System<'a> for ItemDropSystem {
             }
             positions.insert(to_drop.item, Position{ x : dropper_pos.x, y : dropper_pos.y}).expect("Unable to insert position");
             backpack.remove(to_drop.item);
+            dirty.insert(entity, EquipmentChanged{}).expect("Unable to insert");
 
             if entity == *player_entity {
                 gamelog.entries.push(format!("{} wypada z kieszeni Wieclawa.", names.get(to_drop.item).unwrap().name));
