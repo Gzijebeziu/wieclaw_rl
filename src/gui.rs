@@ -14,7 +14,7 @@ pub enum MainMenuResult { NoSelection{ selected : MainMenuSelection }, Selected{
 pub enum ItemMenuResult { Cancel, NoResponse, Selected }
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum CheatMenuResult { NoResponse, Cancel, TeleportToExit }
+pub enum CheatMenuResult { NoResponse, Cancel, TeleportToExit, Heal, Revive, GodMode }
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum VendorResult { NoResponse, Cancel, Sell, BuyMode, SellMode, Buy }
@@ -562,8 +562,8 @@ pub fn game_over(ctx : &mut Rltk) -> GameOverResult {
 }
 
 pub fn show_cheat_mode(_gs : &mut State, ctx : &mut Rltk) -> CheatMenuResult {
-    let count = 2;
-    let y = (25 - (count / 2)) as i32;
+    let count = 4;
+    let mut y = (25 - (count / 2)) as i32;
     ctx.draw_box(15, y-2, 31, (count+3) as i32, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK));
     ctx.print_color(18, y-2, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Nieladnie");
     ctx.print_color(18, y+count as i32+1, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "ESCAPE - wyjscie");
@@ -571,14 +571,34 @@ pub fn show_cheat_mode(_gs : &mut State, ctx : &mut Rltk) -> CheatMenuResult {
     ctx.set(17, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437('('));
     ctx.set(18, y, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), rltk::to_cp437('T'));
     ctx.set(19, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437(')'));
-
     ctx.print(21, y, "Teleport do wyjscia");
+
+    y += 1;
+    ctx.set(17, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437('('));
+    ctx.set(18, y, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), rltk::to_cp437('H'));
+    ctx.set(19, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437(')'));
+    ctx.print(21, y, "Calkowite wyleczenie");
+
+    y += 1;
+    ctx.set(17, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437('('));
+    ctx.set(18, y, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), rltk::to_cp437('R'));
+    ctx.set(19, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437(')'));
+    ctx.print(21, y, "Odsloniecie mapy");
+
+    y += 1;
+    ctx.set(17, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437('('));
+    ctx.set(18, y, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), rltk::to_cp437('G'));
+    ctx.set(19, y, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), rltk::to_cp437(')'));
+    ctx.print(21, y, "Niesmiertelnosc");
 
     match ctx.key {
         None => CheatMenuResult::NoResponse,
         Some(key) => {
             match key {
                 VirtualKeyCode::T => CheatMenuResult::TeleportToExit,
+                VirtualKeyCode::H => CheatMenuResult::Heal,
+                VirtualKeyCode::R => CheatMenuResult::Revive,
+                VirtualKeyCode::G => CheatMenuResult::GodMode,
                 VirtualKeyCode::Escape => CheatMenuResult::Cancel,
                 _ => CheatMenuResult::NoResponse
             }

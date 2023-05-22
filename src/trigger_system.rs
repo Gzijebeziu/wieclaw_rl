@@ -34,7 +34,7 @@ impl<'a> System<'a> for TriggerSystem {
                         Some(_trigger) => {
                             let name = names.get(entity_id);
                             if let Some(name) = name {
-                                log.entries.push(format!("{} zostala zdeptana!", &name.name));
+                                log.entries.push(format!("Zdeptano: {}!", &name.name));
                             }
 
                             hidden.remove(entity_id);

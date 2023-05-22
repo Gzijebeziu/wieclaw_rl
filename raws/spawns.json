@@ -1,8 +1,8 @@
 {
 
 "spawn_table" : [
-    { "name" : "Gnomon", "weight" : 10, "min_depth" : 3, "max_depth" : 100 },
-    { "name" : "Golem Zoledny", "weight" : 1, "min_depth" : 3, "max_depth" : 100, "add_map_depth_to_weight" : true },
+    { "name" : "Gnomon", "weight" : 10, "min_depth" : 3, "max_depth" : 5 },
+    { "name" : "Golem Zoledny", "weight" : 1, "min_depth" : 4, "max_depth" : 100},
     { "name" : "Pasztecik", "weight" : 7, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Zwój Saznistego Pierdniecia", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
     { "name" : "Zwój z Waznym Pytaniem", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
@@ -16,15 +16,19 @@
     { "name" : "Zwój Malego Odkrywcy", "weight" : 2, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Stupkogryzarka", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Pastoral", "weight" : 1, "min_depth" : 5, "max_depth" : 100 },
-    { "name" : "Pastuszek", "weight" : 15, "min_depth" : 3, "max_depth" : 5 },
-    { "name" : "Moris", "weight" : 15, "min_depth" : 2, "max_depth" : 3 },
+    { "name" : "Pastuszek", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Moris", "weight" : 15, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Wilk", "weight" : 13, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Maciora", "weight" : 15, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Jelen", "weight" : 14, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Hultaj", "weight" : 9, "min_depth" : 2, "max_depth" : 3 },
     { "name" : "Toperz", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Pajonczek", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
-    { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 }
+    { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Koszula góralska", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
+    { "name" : "Portki góralskie", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
+    { "name" : "Koszula z kapsli", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Molibdenowy beret", "weight" : 1, "min_depth" : 4, "max_depth" : 100 }
 ],
 
 "loot_tables" : [
@@ -504,6 +508,42 @@
         "base_value" : 10.0,
         "initiative_penalty" : 0.5,
         "vendor_category" : "clothes"
+    },
+
+    {
+        "name" : "Koszula z kapsli",
+        "renderable" : {
+            "glyph" : "╦",
+            "fg" : "#EEEEEE",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 2.0
+        },
+        "weight_kg" : 10.0,
+        "base_value" : 50.0,
+        "initiative_penalty" : 1.0,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Molibdenowy beret",
+        "renderable" : {
+            "glyph" : "∩",
+            "fg" : "#EEEEEE",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 1.0
+        },
+        "weight_kg" : 2.5,
+        "base_value" : 20.0,
+        "initiative_penalty" : 0.5,
+        "vendor_category" : "armor"
     }
     
 ],
@@ -529,7 +569,7 @@
         "name" : "Gnomon",
         "renderable" : {
             "glyph" : "g",
-            "fg" : "#23613B",
+            "fg" : "#48B070",
             "bg" : "#000000",
             "order" : 1
         },
@@ -1016,6 +1056,24 @@
             "color" : "#550000"
         },
         "gold" : "1d2"
+    },
+
+    {
+        "name" : "Arcygnomon",
+        "renderable": {
+            "glyph" : "A",
+            "fg" : "#48B070",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Cave Goblins",
+        "gold" : "3d8",
+        "equipped" : [ "Pastoral", "Drzwi wychodka", "Koszula góralska", "Portki góralskie" ],
+        "level" : 2
     }
 ],
 
@@ -1192,6 +1250,26 @@
             "order" : 2
         },
         "hidden" : false
+    },
+
+    {
+        "name" : "Ognisko",
+        "renderable": {
+            "glyph" : "☼",
+            "fg" : "#FFFF55",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false,
+        "light" : {
+            "range" : 6,
+            "color" : "#FFFF55"
+        },
+        "entry_trigger" : {
+            "effects" : {
+                "damage" : "6"
+            }
+        }
     }
 ]
 }

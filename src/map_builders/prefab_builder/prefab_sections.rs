@@ -69,3 +69,28 @@ const RIGHT_FORT : &str = "
   #######      
      #         
 ";
+
+#[allow(dead_code)]
+pub const GNOM_CAMP : PrefabSection = PrefabSection{
+    template : GNOM_CAMP_TXT,
+    width: 12,
+    height: 12,
+    placement: ( HorizontalPlacement::Center, VerticalPlacement::Center )
+};
+
+#[allow(dead_code)]
+const GNOM_CAMP_TXT : &str = "
+            
+ ≈≈≈≈G≈≈≈≈≈ 
+ ≈☼      ☼≈ 
+ ≈ g      ≈ 
+ ≈        ≈ 
+ ≈    g   ≈ 
+ G   A    G 
+ ≈        ≈ 
+ ≈ g      ≈ 
+ ≈     g  ≈ 
+ ≈☼      ☼≈ 
+ ≈≈≈≈G≈≈≈≈≈ 
+            
+";

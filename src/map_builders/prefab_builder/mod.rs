@@ -109,6 +109,15 @@ impl PrefabBuilder {
                 build_data.map.tiles[idx] = TileType::Floor;
                 build_data.spawn_list.push((idx, "Pasztecik".to_string()));
             }
+            '≈' => build_data.map.tiles[idx] = TileType::DeepWater,
+            'A' => {
+                build_data.map.tiles[idx] = TileType::Floor;
+                build_data.spawn_list.push((idx, "Arcygnomon".to_string()));
+            }
+            '☼' => {
+                build_data.map.tiles[idx] = TileType::Floor;
+                build_data.spawn_list.push((idx, "Ognisko".to_string()));
+            }
             _ => {
                 rltk::console::log(format!("Unknown glyph loading map: {}", (ch as u8) as char));
             }
