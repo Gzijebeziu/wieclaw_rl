@@ -25,8 +25,10 @@ mod room_based_starting_position;
 use room_based_starting_position::RoomBasedStartingPosition;
 mod room_based_stairs;
 use room_based_stairs::RoomBasedStairs;
-mod area_starting_points;
-use area_starting_points::*;
+mod area_starting_point;
+use area_starting_point::*;
+mod area_ending_point;
+use area_ending_point::*;
 mod cull_unreachable;
 use cull_unreachable::CullUnreachable;
 mod voronoi_spawning;
@@ -296,6 +298,7 @@ pub fn level_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator, wid
         2 => forest_builder(new_depth, rng, width, height),
         3 => limestone_cavern_builder(new_depth, rng, width, height),
         4 => limestone_deep_cavern_builder(new_depth, rng, width, height),
+        5 => limestone_transition_builder(new_depth, rng, width, height),
         _ => random_builder(new_depth, rng, width, height)
     }
 }

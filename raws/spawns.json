@@ -28,7 +28,16 @@
     { "name" : "Koszula góralska", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Portki góralskie", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Koszula z kapsli", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
-    { "name" : "Molibdenowy beret", "weight" : 1, "min_depth" : 4, "max_depth" : 100 }
+    { "name" : "Molibdenowy beret", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Biskup tarnowski", "weight" : 1, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Prezbiter tarnowski", "weight" : 4, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Diakon tarnowski", "weight" : 10, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Karmelitanka bosa", "weight" : 4, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Pulapka kamakawiwolska", "weight" : 4, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Krzywa mina", "weight" : 1, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Sutanna", "weight" : 7, "min_depth" : 5, "max_depth" : 7},
+    { "name" : "Pastoral tarnowski", "weight" : 7, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Mucet", "weight" : 1, "min_depth" : 5, "max_depth" : 7 }
 ],
 
 "loot_tables" : [
@@ -37,6 +46,13 @@
         { "name" : "Skóra", "weight" : 10 },
         { "name" : "Mieso", "weight" : 10 }
       ] 
+    },
+
+    { "name" : "Biskupi",
+      "drops" : [
+        { "name" : "Piuska", "weight" : 10 },
+        { "name" : "Mieso", "weight" : 10 }
+      ]
     }
 ],
 
@@ -48,7 +64,9 @@
     { "name" : "Cave Goblins", "responses": { "Default" : "attack", "Cave Goblins" : "ignore" } },
     { "name" : "Carnivores", "responses": { "Default" : "attack", "Carnivores" : "ignore" } },
     { "name" : "Herbivores", "responses": { "Default" : "flee", "Herbivores" : "ignore" } },
-    { "name" : "Hungry Rodents", "responses": { "Default" : "attack", "Hungry Rodents" : "ignore" } }
+    { "name" : "Hungry Rodents", "responses": { "Default" : "attack", "Hungry Rodents" : "ignore" } },
+    { "name" : "Biskupi", "responses": { "Default" : "attack", "Biskupi" : "ignore" } },
+    { "name" : "Karmelitanki", "responses" : { "Default" : "attack", "Player" : "ignore", "Karmelitanki" : "ignore" } }
 ],
 
 "items" : [
@@ -544,8 +562,80 @@
         "base_value" : 20.0,
         "initiative_penalty" : 0.5,
         "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Piuska",
+        "renderable" : {
+            "glyph" : "∩",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 0.0
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 75.0
+    },
+
+    {
+        "name" : "Sutanna",
+        "renderable": {
+            "glyph" : "╦",
+            "fg" : "#666666",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 3.0
+        },
+        "weight_kg" : 12.5,
+        "base_value" : 100.0,
+        "initiative_penalty" : 2,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Mucet",
+        "renderable": {
+            "glyph" : "╦",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 3.0
+        },
+        "weight_kg" : 2.5,
+        "base_value" : 500.0,
+        "initiative_penalty" : 0.0,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Pastoral tarnowski",
+        "renderable": {
+            "glyph" : "¶",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Might",
+            "base_damage" : "1d12",
+            "hit_bonus" : 0
+        },
+        "weight_kg" : 2.0,
+        "base_value" : 100.0,
+        "initiative_penalty" : 2,
+        "vendor_category" : "weapon"
     }
-    
+
 ],
 
 "mobs" : [
@@ -801,8 +891,8 @@
         "vision_range" : 8,
         "movement" : "static",
         "attributes" : {
-            "Might" : 3,
-            "Fitness" : 3
+            "might" : 3,
+            "fitness" : 3
         },
         "skills" : {
             "Melee" : -1,
@@ -1074,6 +1164,87 @@
         "gold" : "3d8",
         "equipped" : [ "Pastoral", "Drzwi wychodka", "Koszula góralska", "Portki góralskie" ],
         "level" : 2
+    },
+
+    {
+        "name" : "Biskup tarnowski",
+        "renderable": {
+            "glyph" : "B",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 12,
+        "movement" : "random_waypoint",
+        "attributes": {
+            "might" : 3,
+            "fitness" : 3
+        },
+        "skills" : {
+            "Melee" : 15,
+            "Defense" : 14
+        },
+        "natural" : {
+            "armor_class" : 15,
+            "attacks" : [
+                { "name" : "hit", "hit_bonus" : 4, "damage" : "1d10+2" }
+            ]
+        },
+        "loot_table" : "Biskupi",
+        "faction" : "Biskupi",
+        "level" : 3,
+        "gold" : "3d6"
+    },
+
+    {
+        "name" : "Prezbiter tarnowski",
+        "renderable": {
+            "glyph" : "P",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 4,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "faction" : "Biskupi",
+        "gold" : "1d16",
+        "level" : 2
+    },
+
+    {
+        "name" : "Diakon tarnowski",
+        "renderable": {
+            "glyph" : "D",
+            "fg" : "#AB3ABD",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 4,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "faction" : "Biskupi",
+        "gold" : "1d12",
+        "level" : 2
+    },
+
+    {
+        "name" : "Karmelitanka bosa",
+        "renderable": {
+            "glyph" : "k",
+            "fg" : "#AAAAAA",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "faction" : "Karmelitanki",
+        "level" : 3
     }
 ],
 
@@ -1268,6 +1439,40 @@
         "entry_trigger" : {
             "effects" : {
                 "damage" : "6"
+            }
+        }
+    },
+
+    {
+        "name" : "Pulapka kamakawiwolska",
+        "renderable": {
+            "glyph" : "^",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : true,
+        "entry_trigger" : {
+            "effects" : {
+                "damage" : "12",
+                "single_activation" : "1"
+            }
+        }
+    },
+
+    {
+        "name" : "Krzywa mina",
+        "renderable": {
+            "glyph" : "^",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : true,
+        "entry_trigger" : {
+            "effects" : {
+                "damage" : "18",
+                "single_activation" : "1"
             }
         }
     }
