@@ -1,6 +1,6 @@
 use specs::prelude::*;
 use super::{WantsToPickupItem, Name, InBackpack, Position, gamelog::GameLog, WantsToUseItem, ProvidesHealing, EquipmentChanged,
-            WantsToDropItem, Consumable, Pools, InflictsDamage, SufferDamage, Map, AreaOfEffect, Confusion,
+            WantsToDropItem, Consumable, Pools, InflictsDamage, SufferDamage, Map, AreaOfEffect, Confusion, TownPortal,
             Equippable, Equipped, WantsToRemoveItem, particle_system::ParticleBuilder, ProvidesFood, HungerClock, HungerState, MagicMapper, RunState};
 
 pub struct ItemCollectionSystem {}
@@ -60,14 +60,15 @@ impl<'a> System<'a> for ItemUseSystem {
                         WriteStorage<'a, HungerClock>,
                         ReadStorage<'a, MagicMapper>,
                         WriteExpect<'a, RunState>,
-                        WriteStorage<'a, EquipmentChanged>
+                        WriteStorage<'a, EquipmentChanged>,
+                        ReadStorage<'a, TownPortal>
                     );
 
     #[allow(clippy::cognitive_complexity)]
     fn run(&mut self, data : Self::SystemData) {
         let (player_entity, mut gamelog, map, entities, mut wants_use, names, consumables, healing,
             mut combat_stats, inflict_damage, mut suffer_damage, aoe, mut confused, equippable, mut equipped, 
-            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks, magic_mapper, mut runstate, mut dirty) = data;
+            mut backpack, mut particle_builder, positions, provides_food, mut hunger_clocks, magic_mapper, mut runstate, mut dirty, town_portal) = data;
 
         for (entity, useitem) in (&entities, &wants_use).join() {
             dirty.insert(entity, EquipmentChanged{}).expect("Unable to insert");
@@ -220,6 +221,16 @@ impl<'a> System<'a> for ItemUseSystem {
                     used_item = true;
                     gamelog.entries.push("Wieclaw odkryl cala mape!".to_string());
                     *runstate = RunState::MagicMapReveal{ row : 0};
+                }
+            }
+
+            if let Some(_townportal) = town_portal.get(useitem.item) {
+                if map.depth == 1 {
+                    gamelog.entries.push("Wieclaw juz jest w miescie, wiec zwój nie dziala.".to_string());
+                } else {
+                    used_item = true;
+                    gamelog.entries.push("Wieclaw teleportuje sie do miasta!".to_string());
+                    *runstate = RunState::TownPortal;
                 }
             }
 

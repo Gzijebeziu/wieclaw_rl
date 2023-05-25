@@ -37,10 +37,11 @@ pub fn save_game(ecs : &mut World) {
         let mut serializer = serde_json::Serializer::new(writer);
         serialize_individually!(ecs, serializer, data, Position, Renderable, Player, Viewshed, Name, BlocksTile, 
             SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage, AreaOfEffect, Confusion, ProvidesHealing, InBackpack, 
-            WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, 
+            WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, TownPortal,
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
-            BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor,
-            OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing
+            BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
+            OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
+            ApplyMove, ApplyTeleport
         );
     }
 
@@ -86,10 +87,11 @@ pub fn load_game(ecs: &mut World) {
         
         deserialize_individually!(ecs, de, d, Position, Renderable, Player, Viewshed, Name, BlocksTile,
             SufferDamage, WantsToMelee, Item, Consumable, Ranged, InflictsDamage, AreaOfEffect, Confusion, ProvidesHealing, InBackpack,
-            WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, 
+            WantsToPickupItem, WantsToUseItem, WantsToDropItem, SerializationHelper, Equippable, Equipped, MeleeWeapon, Wearable, TownPortal,
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
-            BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor,
-            OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing
+            BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
+            OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
+            ApplyMove, ApplyTeleport
         );
     }
 

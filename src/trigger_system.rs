@@ -1,6 +1,6 @@
 use specs::prelude::*;
 use super::{EntityMoved, Position, EntryTrigger, Hidden, Map, Name, gamelog::GameLog, InflictsDamage, particle_system::ParticleBuilder,
-            SufferDamage, SingleActivation};
+            SufferDamage, SingleActivation, TeleportTo, ApplyTeleport};
 
 pub struct TriggerSystem {}
 
@@ -17,11 +17,14 @@ impl<'a> System<'a> for TriggerSystem {
                         ReadStorage<'a, InflictsDamage>,
                         WriteExpect<'a, ParticleBuilder>,
                         WriteStorage<'a, SufferDamage>,
-                        ReadStorage<'a, SingleActivation>);
+                        ReadStorage<'a, SingleActivation>,
+                        ReadStorage<'a, TeleportTo>,
+                        WriteStorage<'a, ApplyTeleport>,
+                        ReadExpect<'a, Entity>);
 
     fn run(&mut self, data : Self::SystemData) {
         let (map, mut entity_moved, position, entry_trigger, mut hidden, names, entities, mut log, inflicts_damage, mut particle_builder,
-            mut inflict_damage, single_activation) = data;
+            mut inflict_damage, single_activation, teleporters, mut apply_teleport, player_entity) = data;
 
         let mut remove_entities : Vec<Entity> = Vec::new();
         for (entity, mut _entity_moved, pos) in (&entities, &mut entity_moved, &position).join() {
@@ -48,6 +51,16 @@ impl<'a> System<'a> for TriggerSystem {
                             let sa = single_activation.get(entity_id);
                             if let Some(_sa) = sa {
                                 remove_entities.push(entity_id);
+                            }
+
+                            if let Some(teleport) = teleporters.get(entity_id) {
+                                if (teleport.player_only && entity == *player_entity) || !teleport.player_only {
+                                    apply_teleport.insert(entity, ApplyTeleport{
+                                        dest_x : teleport.x,
+                                        dest_y : teleport.y,
+                                        dest_depth : teleport.depth,
+                                    }).expect("Unable to insert");
+                                }
                             }
                         }
                     }
