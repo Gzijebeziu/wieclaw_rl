@@ -38,7 +38,8 @@
     { "name" : "Sutanna", "weight" : 7, "min_depth" : 5, "max_depth" : 7},
     { "name" : "Pastoral tarnowski", "weight" : 7, "min_depth" : 5, "max_depth" : 7 },
     { "name" : "Mucet", "weight" : 1, "min_depth" : 5, "max_depth" : 7 },
-    { "name" : "Zwój Drzwi Bez Domu", "weight" : 4, "min_depth" : 0, "max_depth" : 100 }
+    { "name" : "Zwój Drzwi Bez Domu", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Ciupaga +1", "weight" : 1, "min_depth" : 3, "max_depth" : 100 }
 ],
 
 "loot_tables" : [
@@ -87,14 +88,15 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 50.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "potion" }
     },
 
     {
         "name" : "Zwój Rzutu Kartoflem",
         "renderable" : {
             "glyph" : "π",
-            "fg" : "#AF825A",
+            "fg" : "#AAAAFF",
             "bg" : "#000000",
             "order" : 2
         },
@@ -106,14 +108,15 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 50.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
     },
 
     {
         "name" : "Zwój Saznistego Pierdniecia",
         "renderable" : {
             "glyph" : "π",
-            "fg" : "#FFA500",
+            "fg" : "#AAAAFF",
             "bg" : "#000000",
             "order" : 2
         },
@@ -126,14 +129,15 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 100.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
     },
 
     {
         "name" : "Zwój z Waznym Pytaniem",
         "renderable" : {
             "glyph" : "π",
-            "fg" : "#FFAAAA",
+            "fg" : "#AAAAFF",
             "bg" : "#000000",
             "order" : 2
         },
@@ -145,7 +149,8 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 75.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
     },
 
     {
@@ -163,7 +168,8 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 50.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
     },
 
     {
@@ -494,6 +500,27 @@
     },
 
     {
+        "name" : "Ciupaga +1",
+        "renderable" : {
+            "glyph" : "¶",
+            "fg" : "#642A20",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Might",
+            "base_damage" : "1d8+1",
+            "hit_bonus" : 1
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 100.0,
+        "initiative_penalty" : 1,
+        "vendor_category" : "weapon",
+        "magic" : { "class" : "common", "naming" : "Niezidentyfikowana ciupaga" }
+    },
+
+    {
         "name" : "Koszula góralska",
         "renderable" : {
             "glyph" : "╦",
@@ -652,7 +679,8 @@
         },
         "weight_kg" : 0.25,
         "base_value" : 20.0,
-        "vendor_category" : "alchemy"
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
     }
 
 ],
