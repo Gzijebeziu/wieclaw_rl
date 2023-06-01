@@ -19,7 +19,6 @@ use map_indexing_system::MapIndexingSystem;
 mod melee_combat_system;
 use melee_combat_system::MeleeCombatSystem;
 mod damage_system;
-use damage_system::DamageSystem;
 mod gui;
 mod gamelog;
 mod spawner;
@@ -43,6 +42,7 @@ mod lightning_system;
 use lightning_system::LightningSystem;
 mod movement_system;
 pub mod spatial;
+pub mod effects;
 #[macro_use]
 extern crate lazy_static;
 
@@ -114,10 +114,10 @@ impl State {
         triggers.run_now(&self.ecs);
         let mut melee = MeleeCombatSystem{};
         melee.run_now(&self.ecs);
-        let mut damage = DamageSystem{};
-        damage.run_now(&self.ecs);
         let mut pickup = ItemCollectionSystem{};
         pickup.run_now(&self.ecs);
+        let mut itemequip = inventory_system::ItemEquipOnUse{};
+        itemequip.run_now(&self.ecs);
         let mut itemuse = ItemUseSystem{};
         itemuse.run_now(&self.ecs);
         let mut item_id = ItemIdentificationSystem{};
@@ -128,6 +128,7 @@ impl State {
         item_remove.run_now(&self.ecs);
         let mut hunger = HungerSystem{};
         hunger.run_now(&self.ecs);
+        effects::run_effects_queue(&mut self.ecs);
         let mut particles = ParticleSpawnSystem{};
         particles.run_now(&self.ecs);
         let mut lightning = LightningSystem{};
@@ -458,7 +459,7 @@ fn main() -> rltk::BError {
         .with_tile_dimensions(16, 16)
         .with_resource_path("resources/")
         .with_font("curses_square_16x16.png", 16, 16)
-        .with_fancy_console(80, 60, "curses_square_16x16.png")
+        .with_simple_console(80, 60, "curses_square_16x16.png")
         .with_dimensions(80, 60)
         .with_vsync(false)
         .build()?;
@@ -478,7 +479,6 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Name>();
     gs.ecs.register::<BlocksTile>();
     gs.ecs.register::<WantsToMelee>();
-    gs.ecs.register::<SufferDamage>();
     gs.ecs.register::<Item>();
     gs.ecs.register::<ProvidesHealing>();
     gs.ecs.register::<InBackpack>();
@@ -532,6 +532,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<MagicItem>();
     gs.ecs.register::<ObfuscatedName>();
     gs.ecs.register::<IdentifiedItem>();
+    gs.ecs.register::<SpawnParticleLine>();
+    gs.ecs.register::<SpawnParticleBurst>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();

@@ -337,7 +337,7 @@ impl TownBuilder {
         build_data: &mut BuilderMap,
         rng: &mut rltk::RandomNumberGenerator)
     {
-        let mut to_place : Vec<&str> = vec!["Kaplan", "Wierny", "Wierny", "Krzeslo", "Krzeslo", "Swieca", "Swieca"];
+        let mut to_place : Vec<&str> = vec!["Kaplan", "Oltarz", "Wierny", "Wierny", "Krzeslo", "Krzeslo", "Swieca", "Swieca"];
         self.random_building_spawn(building, build_data, rng, &mut to_place, 0);
     }
 

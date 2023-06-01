@@ -104,3 +104,8 @@ pub fn remove_entity(entity: Entity, idx: usize) {
     lock.tile_content[idx].iter().for_each(|(_,blocks)| if *blocks { from_blocked = true; } );
     lock.blocked[idx].1 = from_blocked;
 }
+
+pub fn get_tile_content_clone(idx: usize) -> Vec<Entity> {
+    let lock = SPATIAL_MAP.lock().unwrap();
+    lock.tile_content[idx].iter().map(|(e,_)| *e).collect()
+}

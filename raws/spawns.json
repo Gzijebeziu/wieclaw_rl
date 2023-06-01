@@ -103,7 +103,8 @@
         "consumable" : {
             "effects" : {
                 "ranged" : "6",
-                "damage" : "8"
+                "damage" : "8",
+                "particle_line" : "*;#5E3207;200.0"
             }
         },
         "weight_kg" : 0.25,
@@ -124,7 +125,8 @@
             "effects" : {
                 "ranged" : "6",
                 "damage" : "20",
-                "area_of_effect" : "3"
+                "area_of_effect" : "3",
+                "particle" : "*;#FFA500;200.0"
             }
         },
         "weight_kg" : 0.25,
@@ -1520,6 +1522,22 @@
             "effects" : {
                 "damage" : "18",
                 "single_activation" : "1"
+            }
+        }
+    },
+
+    {
+        "name" : "Oltarz",
+        "renderable": {
+            "glyph" : "╫",
+            "fg" : "#55FF55",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "hidden" : false,
+        "entry_trigger" : {
+            "effects" : {
+                "provides_healing" : "100"
             }
         }
     }
