@@ -1,7 +1,7 @@
 use specs::prelude::*;
 use super::{Targets, add_effect, EffectType, entity_position, targeting};
-use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing,
-            InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst};
+use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing, ProvidesIdentification,
+            InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst, ProvidesRemoveCurse};
 
 pub fn item_trigger(creator: Option<Entity>, item: Entity, targets: &Targets, ecs: &mut World) {
     let did_something = event_trigger(creator, item, targets, ecs);
@@ -60,6 +60,18 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
         let mut runstate = ecs.fetch_mut::<RunState>();
         gamelog.entries.push("Wieclaw odkryl cala mape!".to_string());
         *runstate = RunState::MagicMapReveal{row: 0};
+        did_something = true;
+    }
+
+    if ecs.read_storage::<ProvidesIdentification>().get(entity).is_some() {
+        let mut runstate = ecs.fetch_mut::<RunState>();
+        *runstate = RunState::ShowIdentify;
+        did_something = true;
+    }
+
+    if ecs.read_storage::<ProvidesRemoveCurse>().get(entity).is_some() {
+        let mut runstate = ecs.fetch_mut::<RunState>();
+        *runstate = RunState::ShowRemoveCurse;
         did_something = true;
     }
 
