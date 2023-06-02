@@ -1,6 +1,7 @@
-use specs::prelude::*;
+use specs::{prelude::*, saveload::{SimpleMarker, MarkedBuilder}};
 use super::*;
-use crate::{Pools, Map, Attributes, Player, gamelog::GameLog, player_hp_at_level, mana_at_level, Confusion};
+use crate::{Pools, Map, Attributes, Player, gamelog::GameLog, player_hp_at_level, mana_at_level, Confusion, StatusEffect, Duration,
+            SerializeMe, Name, EquipmentChanged};
 
 pub fn inflict_damage(ecs: &mut World, damage: &EffectSpawner, target: Entity) {
     let mut pools = ecs.write_storage::<Pools>();
@@ -100,7 +101,7 @@ pub fn heal_damage(ecs: &mut World, heal: &EffectSpawner, target: Entity) {
             pool.hit_points.current = i32::min(pool.hit_points.max, pool.hit_points.current + amount);
             add_effect(None,
                 EffectType::Particle{
-                    glyph: rltk::to_cp437('‼'),
+                    glyph: rltk::to_cp437('♥'),
                     fg: rltk::RGB::named(rltk::GREEN),
                     bg: rltk::RGB::named(rltk::BLACK),
                     lifespan: 200.0
@@ -113,6 +114,25 @@ pub fn heal_damage(ecs: &mut World, heal: &EffectSpawner, target: Entity) {
 
 pub fn add_confusion(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
     if let EffectType::Confusion{turns} = &effect.effect_type {
-        ecs.write_storage::<Confusion>().insert(target, Confusion{ turns: *turns }).expect("Unable to insert status");
+        ecs.create_entity()
+            .with(StatusEffect{ target })
+            .with(Confusion{})
+            .with(Duration{ turns : *turns })
+            .with(Name{ name : "Konfuzja".to_string() })
+            .marked::<SimpleMarker<SerializeMe>>()
+            .build();
+    }
+}
+
+pub fn attribute_effect(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
+    if let EffectType::AttributeEffect{bonus, name, duration} = &effect.effect_type {
+        ecs.create_entity()
+            .with(StatusEffect{ target })
+            .with(bonus.clone())
+            .with(Duration{ turns : *duration })
+            .with(Name { name : name.clone() })
+            .marked::<SimpleMarker<SerializeMe>>()
+            .build();
+        ecs.write_storage::<EquipmentChanged>().insert(target, EquipmentChanged{}).expect("Insert failed");
     }
 }

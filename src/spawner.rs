@@ -3,7 +3,7 @@ use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{Player, Map, TileType, Renderable, Name, Position, Viewshed, Rect, MasterDungeonMap, OtherLevelPosition,
             SerializeMe, random_table::RandomTable, HungerState, HungerClock, raws::*, Attributes, EntryTrigger, SingleActivation,
             Attribute, attr_bonus, Skills, Skill, Pools, Pool, player_hp_at_level, mana_at_level, LightSource, TeleportTo,
-            Initiative, Faction, EquipmentChanged};
+            Initiative, Faction, EquipmentChanged, StatusEffect, Duration, AttributeBonus};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -67,6 +67,20 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Koszulka 'Baciary'", SpawnType::Equipped{ by: player });
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Obdarte pantalony", SpawnType::Equipped{ by: player });
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Papcie", SpawnType::Equipped{ by: player });
+    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Goferek", SpawnType::Carried{ by: player });
+
+    ecs.create_entity()
+        .with(StatusEffect{ target: player })
+        .with(Duration{ turns: 10 })
+        .with(Name{ name: "Pan Kacy".to_string() })
+        .with(AttributeBonus{
+            might : Some(-1),
+            fitness : None,
+            quickness : Some(-1),
+            intelligence : Some(-1)
+        })
+        .marked::<SimpleMarker<SerializeMe>>()
+        .build();
 
     player
 }

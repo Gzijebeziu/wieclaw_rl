@@ -2,7 +2,7 @@ use rltk::{ RGB, Rltk, VirtualKeyCode };
 use specs::prelude::*;
 use super::{Pools, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item,
             Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets, Hidden, camera, Consumable, Vendor,
-            MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap};
+            MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap, StatusEffect, Duration};
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -44,11 +44,19 @@ pub fn get_item_display_name(ecs: &World, item : Entity) -> String {
         if ecs.read_storage::<MagicItem>().get(item).is_some() {
             let dm = ecs.fetch::<crate::map::dungeon::MasterDungeonMap>();
             if dm.identified_items.contains(&name.name) {
-                name.name.clone()
+                if let Some(c) = ecs.read_storage::<Consumable>().get(item) {
+                    if c.max_charges > 1 {
+                        format!("{} ({})", name.name.clone(), c.charges).to_string()
+                    } else {
+                        name.name.clone()
+                    }
+                } else {
+                    name.name.clone()
+                }
             } else if let Some(obfuscated) = ecs.read_storage::<ObfuscatedName>().get(item) {
                 obfuscated.name.clone()
             } else {
-                "Niezidentyfikowany przedmiot".to_string()
+                "Nierozpoznany przedmiot".to_string()
             }
         } else {
             name.name.clone()
@@ -164,13 +172,29 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
         }
     }
 
+    let mut y = 44;
     let hunger = ecs.read_storage::<HungerClock>();
     let hc = hunger.get(*player_entity).unwrap();
     match hc.state {
-        HungerState::WellFed => ctx.print_color(50, 44, RGB::named(rltk::GREEN), RGB::named(rltk::BLACK), "Najedzony"),
+        HungerState::WellFed => { ctx.print_color(50, y, RGB::named(rltk::GREEN), RGB::named(rltk::BLACK), "Najedzony"); y -= 1; },
         HungerState::Normal => {}
-        HungerState::Hungry => ctx.print_color(50, 44, RGB::named(rltk::ORANGE), RGB::named(rltk::BLACK), "Glodny"),
-        HungerState::Starving => ctx.print_color(50, 44, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Wyglodzony"),
+        HungerState::Hungry => { ctx.print_color(50, y, RGB::named(rltk::ORANGE), RGB::named(rltk::BLACK), "Glodny"); y -= 1; },
+        HungerState::Starving => { ctx.print_color(50, y, RGB::named(rltk::RED), RGB::named(rltk::BLACK), "Wyglodzony"); y -= 1; }
+    }
+    let statuses = ecs.read_storage::<StatusEffect>();
+    let durations = ecs.read_storage::<Duration>();
+    let names = ecs.read_storage::<Name>();
+    for (status, duration, name) in (&statuses, &durations, &names).join() {
+        if status.target == *player_entity {
+            ctx.print_color(
+                50,
+                y,
+                RGB::named(rltk::RED),
+                RGB::named(rltk::BLACK),
+                &format!("{} ({})", name.name, duration.turns)
+            );
+            y -= 1;
+        }
     }
 
     let log = ecs.fetch::<GameLog>();
@@ -271,6 +295,15 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
             let stat = pools.get(entity);
             if let Some(stat) = stat {
                 tip.add(format!("Poziom: {}", stat.level));
+            }
+
+            let statuses = ecs.read_storage::<StatusEffect>();
+            let durations = ecs.read_storage::<Duration>();
+            let names = ecs.read_storage::<Name>();
+            for (status, duration, name) in (&statuses, &durations, &names).join() {
+                if status.target == entity {
+                    tip.add(format!("{} ({})", name.name, duration.turns));
+                }
             }
 
             tip_boxes.push(tip);

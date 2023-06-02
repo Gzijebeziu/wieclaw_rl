@@ -1,13 +1,28 @@
 use specs::prelude::*;
 use super::{Targets, add_effect, EffectType, entity_position, targeting};
 use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing, ProvidesIdentification,
-            InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst, ProvidesRemoveCurse};
+            InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst, ProvidesRemoveCurse, Duration,
+            AttributeBonus};
 
 pub fn item_trigger(creator: Option<Entity>, item: Entity, targets: &Targets, ecs: &mut World) {
+    if let Some(c) = ecs.write_storage::<Consumable>().get_mut(item) {
+        if c.charges < 1 {
+            let mut gamelog = ecs.fetch_mut::<GameLog>();
+            gamelog.entries.push(format!("{} nie ma juz ladunków!", ecs.read_storage::<Name>().get(item).unwrap().name));
+            return;
+        } else {
+            c.charges -= 1;
+        }
+    }
+
     let did_something = event_trigger(creator, item, targets, ecs);
 
-    if did_something && ecs.read_storage::<Consumable>().get(item).is_some() {
-        ecs.entities().delete(item).expect("Delete failed");
+    if did_something {
+        if let Some(c) = ecs.read_storage::<Consumable>().get(item) {
+            if c.charges == 0 {
+                ecs.entities().delete(item).expect("Delete failed");
+            }
+        }
     }
 }
 
@@ -89,6 +104,8 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
 
     if let Some(heal) = ecs.read_storage::<ProvidesHealing>().get(entity) {
         add_effect(creator, EffectType::Healing{amount: heal.heal_amount}, targets.clone());
+        let names = ecs.read_storage::<Name>();
+        gamelog.entries.push(format!("Wieclaw konsumuje {} i odzyskuje {} HP.", names.get(entity).unwrap().name, heal.heal_amount));
         did_something = true;
     }
 
@@ -97,9 +114,12 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
         did_something = true;
     }
 
-    if let Some(confusion) = ecs.read_storage::<Confusion>().get(entity) {
-        add_effect(creator, EffectType::Confusion{ turns: confusion.turns }, targets.clone());
-        did_something = true;
+    if let Some(_confusion) = ecs.read_storage::<Confusion>().get(entity) {
+        if let Some(duration) = ecs.read_storage::<Duration>().get(entity) {
+            add_effect(creator, EffectType::Confusion{ turns: duration.turns }, targets.clone());
+            did_something = true;
+        }
+
     }
 
     if let Some(teleport) = ecs.read_storage::<TeleportTo>().get(entity) {
@@ -110,6 +130,19 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
                 y: teleport.y,
                 depth: teleport.depth,
                 player_only: teleport.player_only
+            },
+            targets.clone()
+        );
+        did_something = true;
+    }
+
+    if let Some(attr) = ecs.read_storage::<AttributeBonus>().get(entity) {
+        add_effect(
+            creator,
+            EffectType::AttributeEffect{
+                bonus : attr.clone(),
+                duration : 10,
+                name : ecs.read_storage::<Name>().get(entity).unwrap().name.clone()
             },
             targets.clone()
         );

@@ -184,8 +184,11 @@ macro_rules! apply_effects {
                 "ranged" => $eb = $eb.with(Ranged{ range: effect.1.parse::<i32>().unwrap() }),
                 "damage" => $eb = $eb.with(InflictsDamage{ damage : effect.1.parse::<i32>().unwrap() }),
                 "area_of_effect" => $eb = $eb.with(AreaOfEffect{ radius: effect.1.parse::<i32>().unwrap() }),
-                "confusion" => $eb = $eb.with(Confusion{ turns: effect.1.parse::<i32>().unwrap() }),
-                "magic_mapper" => $eb = $eb.with(MagicMapper{}),
+                "confusion" => {
+                    $eb = $eb.with(Confusion{});
+                    $eb = $eb.with(Duration{ turns: effect.1.parse::<i32>().unwrap() });
+                },
+                "magic_mapping" => $eb = $eb.with(MagicMapper{}),
                 "town_portal" => $eb = $eb.with(TownPortal{}),
                 "food" => $eb = $eb.with(ProvidesFood{}),
                 "single_activation" => $eb = $eb.with(SingleActivation{}),
@@ -224,7 +227,8 @@ pub fn spawn_named_item(raws: &RawMaster, ecs: &mut World, key : &str, pos : Spa
         });
 
         if let Some(consumable) = &item_template.consumable {
-            eb = eb.with(crate::components::Consumable{});
+            let max_charges = consumable.charges.unwrap_or(1);
+            eb = eb.with(crate::components::Consumable{ max_charges, charges : max_charges });
             apply_effects!(consumable.effects, eb);
         }
 
@@ -276,6 +280,15 @@ pub fn spawn_named_item(raws: &RawMaster, ecs: &mut World, key : &str, pos : Spa
             if let Some(cursed) = magic.cursed {
                 if cursed { eb = eb.with(CursedItem{}); }
             }
+        }
+
+        if let Some(ab) = &item_template.attributes {
+            eb = eb.with(AttributeBonus{
+                might : ab.might,
+                fitness : ab.fitness,
+                quickness : ab.quickness,
+                intelligence : ab.intelligence
+            });
         }
 
         return Some(eb.build());

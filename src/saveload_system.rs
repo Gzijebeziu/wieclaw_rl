@@ -41,7 +41,8 @@ pub fn save_game(ecs : &mut World) {
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
             BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
             OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
-            ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification
+            ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification,
+            AttributeBonus, Duration, StatusEffect
         );
     }
 
@@ -91,7 +92,8 @@ pub fn load_game(ecs: &mut World) {
             WantsToRemoveItem, ParticleLifetime, HungerClock, ProvidesFood, MagicMapper, Hidden, EntryTrigger, EntityMoved, SingleActivation,
             BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
             OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
-            ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification
+            ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification,
+            AttributeBonus, Duration, StatusEffect
         );
     }
 
