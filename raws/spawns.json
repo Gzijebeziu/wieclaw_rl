@@ -23,7 +23,7 @@
     { "name" : "Jelen", "weight" : 14, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Hultaj", "weight" : 9, "min_depth" : 2, "max_depth" : 3 },
     { "name" : "Toperz", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
-    { "name" : "Pajonczek", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
+    { "name" : "Pajonczek", "weight" : 300, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Koszula góralska", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
     { "name" : "Portki góralskie", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
@@ -44,7 +44,18 @@
     { "name" : "Zwój Zdejmowania Heksa", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Zwój Rozpoznania", "weight" : 4, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Rekawice golockie", "weight" : 1, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Rózdzka Pierdzaca", "weight" : 1, "min_depth" : 0, "max_depth" : 100 }
+    { "name" : "Rózdzka Pierdziuszka", "weight" : 1, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Goferek", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Ptysiek", "weight" : 7, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Inkantacje Ciamciucha", "weight" : 5, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Zakalec", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Bardzo Ostre Chaczapuri", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Pierniczek", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Zwój Obstrukcji", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Rózdzka Bieguszka", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Inkantacje Winakejp'aha", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Inkantacje jalapenskie", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Jutti", "weight" : 2, "min_depth" : 0, "max_depth" : 100 }
 ],
 
 "loot_tables" : [
@@ -771,7 +782,7 @@
     },
     
     {
-        "name" : "Rózdzka Pierdzaca",
+        "name" : "Rózdzka Pierdziuszka",
         "renderable" : {
             "glyph" : "/",
             "fg" : "#AAAAFF",
@@ -809,6 +820,190 @@
         "vendor_category" : "alchemy",
         "magic" : { "class" : "common", "naming" : "potion" },
         "attributes" : { "might" : 5 }
+    },
+
+    {
+        "name" : "Ptysiek",
+        "renderable" : {
+            "glyph" : "∞",
+            "fg" : "#B47D00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "provides_mana" : "4" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "potion" }
+    },
+
+    {
+        "name" : "Inkantacje Ciamciucha",
+        "renderable" : {
+            "glyph" : "æ",
+            "fg" : "#FF00FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "teach_spell" : "Ciamk" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
+    },
+
+    {
+        "name" : "Bardzo Ostre Chaczapuri",
+        "renderable" : {
+            "glyph" : "∞",
+            "fg" : "#B47D00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "damage_over_time" : "2" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "potion" }
+    },
+
+    {
+        "name" : "Zakalec",
+        "renderable" : {
+            "glyph" : "∞",
+            "fg" : "#B47D00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "slow" : "2.0" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "potion" }
+    },
+
+    {
+        "name" : "Pierniczek",
+        "renderable" : {
+            "glyph" : "∞",
+            "fg" : "#B47D00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "slow" : "-2.0" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 100.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "potion" }
+    },
+
+    {
+        "name" : "Zwój Obstrukcji",
+        "renderable" : {
+            "glyph" : "π",
+            "fg" : "#AAAAFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "slow" : "10.0",
+                "area_of_effect" : "3",
+                "particle_line" : "☼;#FFFFFF;200.0"
+            }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 500.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "scroll" }
+    },
+
+    {
+        "name" : "Rózdzka Bieguszka",
+        "renderable" : {
+            "glyph" : "/",
+            "fg" : "#AAAAFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : {
+                "ranged" : "6",
+                "damage_over_time" : "1",
+                "particle_line" : "▓;#00FF00;200.0"
+            },
+            "charges" : 5
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 500.0,
+        "vendor_category" : "alchemy",
+        "magic" : { "class" : "common", "naming" : "Nierozpoznana rózdzka" }
+    },
+
+    {
+        "name" : "Inkantacje Winakejp'aha",
+        "renderable" : {
+            "glyph" : "æ",
+            "fg" : "#FF00FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "teach_spell" : "Obstrukcja" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
+    },
+    
+    {
+        "name" : "Inkantacje jalapenskie",
+        "renderable" : {
+            "glyph" : "æ",
+            "fg" : "#FF00FF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "consumable" : {
+            "effects" : { "teach_spell" : "Biegunka" }
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 50.0,
+        "vendor_category" : "alchemy"
+    },
+
+    {
+        "name" : "Jutti",
+        "renderable" : {
+            "glyph" : "Θ",
+            "fg" : "#BDBC38",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Quickness",
+            "base_damage" : "1d4+1",
+            "hit_bonus" : 1,
+            "proc_chance" : 0.5,
+            "proc_target" : "Target",
+            "proc_effect" : { "damage_over_time" : "2" }
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 2.0,
+        "initiative_penalty" : -1,
+        "vendor_category" : "weapon",
+        "magic" : { "class" : "common", "naming" : "Nierozpoznany klapek" }
     }
 
 ],
@@ -1294,6 +1489,9 @@
                 { "name" : "bite", "hit_bonus" : 1, "damage" : "1d12" }
             ]
         },
+        "abilities" : [
+            { "spell" : "Obstrukcja", "chance" : 0.2, "range": 6.0, "min_range" : 3.0 }
+        ],
         "faction" : "Carnivores"
     },
 
@@ -1665,6 +1863,39 @@
             "effects" : {
                 "provides_healing" : "100"
             }
+        }
+    }
+],
+
+"spells" : [
+    {
+        "name" : "Ciamk",
+        "mana_cost" : 1,
+        "effects" : {
+            "ranged" : "6",
+            "damage" : "5",
+            "particle_line" : "▓;#00FFFF;200.0"
+        }
+    },
+
+    {
+        "name" : "Obstrukcja",
+        "mana_cost" : 2,
+        "effects" : {
+            "ranged" : "6",
+            "slow" : "10",
+            "area_of_effect" : "3",
+            "particle_line" : "☼;#FFFFFF;400.0"
+        }
+    },
+
+    {
+        "name" : "Biegunka",
+        "mana_cost" : 2,
+        "effects" : {
+            "ranged" : "6",
+            "damage_over_time" : "4",
+            "particle_line" : "▓;#5E3207;400.0"
         }
     }
 ]

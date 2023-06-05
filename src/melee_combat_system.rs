@@ -37,7 +37,9 @@ impl<'a> System<'a> for MeleeCombatSystem {
                     hit_bonus: 0,
                     damage_n_dice: 1,
                     damage_die_type: 4,
-                    damage_bonus: 0
+                    damage_bonus: 0,
+                    proc_chance: None,
+                    proc_target: None
                 };
 
                 if let Some(nat) = natural.get(entity) {
@@ -47,6 +49,14 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         weapon_info.damage_n_dice = nat.attacks[attack_index].damage_n_dice;
                         weapon_info.damage_die_type = nat.attacks[attack_index].damage_die_type;
                         weapon_info.damage_bonus = nat.attacks[attack_index].damage_bonus;
+                    }
+                }
+
+                let mut weapon_entity : Option<Entity> = None;
+                for (weaponentity,wielded,melee) in (&entities, &equipped_items, &meleeweapons).join() {
+                    if wielded.owner == entity && wielded.slot == EquipmentSlot::Melee {
+                        weapon_info = melee.clone();
+                        weapon_entity = Some(weaponentity);
                     }
                 }
 
@@ -101,6 +111,21 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         Targets::Single{ target: wants_melee.target }
                     );
                     log.entries.push(format!("{} trafia {} za {} HP.", &name.name, &target_name.name, damage));
+
+                    if let Some(chance) = &weapon_info.proc_chance {
+                        if rng.roll_dice(1, 100) <= (chance * 100.0) as i32 {
+                            let effect_target = if weapon_info.proc_target.unwrap() == "Self" {
+                                Targets::Single{ target: entity }
+                            } else {
+                                Targets::Single{ target: wants_melee.target }
+                            };
+                            add_effect(
+                                Some(entity),
+                                EffectType::ItemUse{ item: weapon_entity.unwrap() },
+                                effect_target
+                            )
+                        }
+                    }
                 } else if natural_roll == 1 {
                     log.entries.push(format!("{} chce zaatakowac {}, ale potyka sie o wlasne nogi.", name.name, target_name.name));
                     add_effect(

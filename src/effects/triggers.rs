@@ -2,7 +2,7 @@ use specs::prelude::*;
 use super::{Targets, add_effect, EffectType, entity_position, targeting};
 use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing, ProvidesIdentification,
             InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst, ProvidesRemoveCurse, Duration,
-            AttributeBonus};
+            AttributeBonus, SpellTemplate, Pools, ProvidesMana, TeachesSpell, KnownSpells, KnownSpell, Slow, DamageOverTime};
 
 pub fn item_trigger(creator: Option<Entity>, item: Entity, targets: &Targets, ecs: &mut World) {
     if let Some(c) = ecs.write_storage::<Consumable>().get_mut(item) {
@@ -26,12 +26,26 @@ pub fn item_trigger(creator: Option<Entity>, item: Entity, targets: &Targets, ec
     }
 }
 
+pub fn spell_trigger(creator : Option<Entity>, spell: Entity, targets : &Targets, ecs: &mut World) {
+    if let Some(template) = ecs.read_storage::<SpellTemplate>().get(spell) {
+        let mut pools = ecs.write_storage::<Pools>();
+        if let Some(caster) = creator {
+            if let Some(pool) = pools.get_mut(caster) {
+                if template.mana_cost <= pool.mana.current {
+                    pool.mana.current -= template.mana_cost;
+                }
+            }
+        }
+    }
+    event_trigger(creator, spell, targets, ecs);
+}
+
 fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs: &mut World) -> bool {
     let mut did_something = false;
     let mut gamelog = ecs.fetch_mut::<GameLog>();
 
     if let Some(part) = ecs.read_storage::<SpawnParticleLine>().get(entity) {
-        if let Some(start_pos) = targeting::find_item_position(ecs, entity) {
+        if let Some(start_pos) = targeting::find_item_position(ecs, entity, creator) {
             match targets {
                 Targets::Tile{tile_idx} => spawn_line_particles(ecs, start_pos, *tile_idx, part),
                 Targets::Tiles{tiles} => tiles.iter().for_each(|tile_idx| spawn_line_particles(ecs, start_pos, *tile_idx, part)),
@@ -109,6 +123,13 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
         did_something = true;
     }
 
+    if let Some(mana) = ecs.read_storage::<ProvidesMana>().get(entity) {
+        add_effect(creator, EffectType::Mana{amount: mana.mana_amount}, targets.clone());
+        let names = ecs.read_storage::<Name>();
+        gamelog.entries.push(format!("Wieclaw konsumuje {} i odzyskuje {} MP.", names.get(entity).unwrap().name, mana.mana_amount));
+        did_something = true;
+    }
+
     if let Some(damage) = ecs.read_storage::<InflictsDamage>().get(entity) {
         add_effect(creator, EffectType::Damage{amount: damage.damage}, targets.clone());
         did_something = true;
@@ -146,6 +167,32 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
             },
             targets.clone()
         );
+        did_something = true;
+    }
+
+    if let Some(spell) = ecs.read_storage::<TeachesSpell>().get(entity) {
+        if let Some(known) = ecs.write_storage::<KnownSpells>().get_mut(creator.unwrap()) {
+            if let Some(spell_entity) = crate::raws::find_spell_entity(ecs, &spell.spell) {
+                if let Some(spell_info) = ecs.read_storage::<SpellTemplate>().get(spell_entity) {
+                    let mut already_known = false;
+                    known.spells.iter().for_each(|s| if s.display_name == spell.spell { already_known = true });
+                    if !already_known {
+                        known.spells.push(KnownSpell{ display_name: spell.spell.clone(), mana_cost : spell_info.mana_cost });
+                    }
+                }
+            }
+        }
+
+        did_something = true;
+    }
+
+    if let Some(slow) = ecs.read_storage::<Slow>().get(entity) {
+        add_effect(creator, EffectType::Slow{ initiative_penalty : slow.initiative_penalty }, targets.clone());
+        did_something = true;
+    }
+
+    if let Some(damage) = ecs.read_storage::<DamageOverTime>().get(entity) {
+        add_effect(creator, EffectType::DamageOverTime{ damage: damage.damage }, targets.clone());
         did_something = true;
     }
 

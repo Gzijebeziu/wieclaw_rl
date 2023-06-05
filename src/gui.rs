@@ -2,7 +2,7 @@ use rltk::{ RGB, Rltk, VirtualKeyCode };
 use specs::prelude::*;
 use super::{Pools, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item,
             Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets, Hidden, camera, Consumable, Vendor,
-            MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap, StatusEffect, Duration};
+            MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap, StatusEffect, Duration, KnownSpells};
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -170,6 +170,18 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
             y += 1;
             index += 1;
         }
+    }
+
+    y += 1;
+    let blue = RGB::named(rltk::CYAN);
+    let known_spells_storage = ecs.read_storage::<KnownSpells>();
+    let known_spells = &known_spells_storage.get(*player_entity).unwrap().spells;
+    let mut index = 1;
+    for spell in known_spells.iter() {
+        ctx.print_color(50, y, blue, black, &format!("^{}", index));
+        ctx.print_color(53, y, blue, black, &format!("{} ({})", spell.display_name, spell.mana_cost));
+        index += 1;
+        y += 1;
     }
 
     let mut y = 44;

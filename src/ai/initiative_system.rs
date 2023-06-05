@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use crate::{Initiative, Position, MyTurn, Attributes, RunState, Pools, Duration, EquipmentChanged, StatusEffect};
+use crate::{Initiative, Position, MyTurn, Attributes, RunState, Pools, Duration, EquipmentChanged, StatusEffect, DamageOverTime};
 
 pub struct InitiativeSystem {}
 
@@ -17,11 +17,12 @@ impl<'a> System<'a> for InitiativeSystem {
                         ReadStorage<'a, Pools>,
                         WriteStorage<'a, Duration>,
                         WriteStorage<'a, EquipmentChanged>,
-                        ReadStorage<'a, StatusEffect>);
+                        ReadStorage<'a, StatusEffect>,
+                        ReadStorage<'a, DamageOverTime>);
 
     fn run(&mut self, data : Self::SystemData) {
         let (mut initiatives, positions, mut turns, entities, mut rng, attributes,
-            mut runstate, player, player_pos, pools, mut durations, mut dirty, statuses) = data;
+            mut runstate, player, player_pos, pools, mut durations, mut dirty, statuses, dots) = data;
 
         if *runstate != RunState::Ticking { return; }
 
@@ -58,11 +59,21 @@ impl<'a> System<'a> for InitiativeSystem {
         }
 
         if *runstate == RunState::AwaitingInput {
+            use crate::effects::*;
             for (effect_entity, duration, status) in (&entities, &mut durations, &statuses).join() {
-                duration.turns -= 1;
-                if duration.turns < 1 {
-                    dirty.insert(status.target, EquipmentChanged{}).expect("Unable to insert");
-                    entities.delete(effect_entity).expect("Unable to delete");
+                if entities.is_alive(status.target) {
+                    duration.turns -= 1;
+                    if let Some(dot) = dots.get(effect_entity) {
+                        add_effect(
+                            None,
+                            EffectType::Damage{ amount : dot.damage },
+                            Targets::Single{ target : status.target }
+                        );
+                    }
+                    if duration.turns < 1 {
+                        dirty.insert(status.target, EquipmentChanged{}).expect("Unable to insert");
+                        entities.delete(effect_entity).expect("Unable to delete");
+                    }
                 }
             }
         }

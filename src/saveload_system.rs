@@ -42,7 +42,8 @@ pub fn save_game(ecs : &mut World) {
             BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
             OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
             ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification,
-            AttributeBonus, Duration, StatusEffect
+            AttributeBonus, Duration, StatusEffect, KnownSpells, SpellTemplate, WantsToCastSpell, ProvidesMana, TeachesSpell, Slow, DamageOverTime,
+            SpecialAbilities
         );
     }
 
@@ -59,7 +60,7 @@ macro_rules! deserialize_individually {
         $(
         DeserializeComponents::<Infallible, _>::deserialize(
             &mut ( &mut $ecs.write_storage::<$type>(), ),
-            &mut $data.0,
+            &$data.0,
             &mut $data.1,
             &mut $data.2,
             &mut $de,
@@ -93,7 +94,8 @@ pub fn load_game(ecs: &mut World) {
             BlocksVisibility, Door, Quips, Attributes, Skills, Pools, NaturalAttackDefense, LootTable, EquipmentChanged, Vendor, TeleportTo,
             OtherLevelPosition, DMSerializationHelper, LightSource, Initiative, MyTurn, Faction, WantsToApproach, WantsToFlee, MoveMode, Chasing,
             ApplyMove, ApplyTeleport, MagicItem, ObfuscatedName, IdentifiedItem, CursedItem, ProvidesRemoveCurse, ProvidesIdentification,
-            AttributeBonus, Duration, StatusEffect
+            AttributeBonus, Duration, StatusEffect, KnownSpells, SpellTemplate, WantsToCastSpell, ProvidesMana, TeachesSpell, Slow, DamageOverTime,
+            SpecialAbilities
         );
     }
 

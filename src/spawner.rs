@@ -3,7 +3,7 @@ use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{Player, Map, TileType, Renderable, Name, Position, Viewshed, Rect, MasterDungeonMap, OtherLevelPosition,
             SerializeMe, random_table::RandomTable, HungerState, HungerClock, raws::*, Attributes, EntryTrigger, SingleActivation,
             Attribute, attr_bonus, Skills, Skill, Pools, Pool, player_hp_at_level, mana_at_level, LightSource, TeleportTo,
-            Initiative, Faction, EquipmentChanged, StatusEffect, Duration, AttributeBonus};
+            Initiative, Faction, EquipmentChanged, StatusEffect, Duration, AttributeBonus, KnownSpells};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
@@ -13,6 +13,7 @@ fn room_table(map_depth: i32) -> RandomTable {
 }
 
 pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
+    spawn_all_spells(ecs);
     let mut skills = Skills{ skills: HashMap::new() };
     skills.skills.insert(Skill::Melee, 1);
     skills.skills.insert(Skill::Defense, 1);
@@ -58,6 +59,7 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
         .with(Initiative{ current: 0 })
         .with(Faction{name : "Player".to_string()})
         .with(EquipmentChanged{})
+        .with(KnownSpells{ spells : Vec::new() })
         .marked::<SimpleMarker<SerializeMe>>()
         .build();
 
@@ -67,7 +69,6 @@ pub fn player(ecs : &mut World, player_x : i32, player_y : i32) -> Entity {
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Koszulka 'Baciary'", SpawnType::Equipped{ by: player });
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Obdarte pantalony", SpawnType::Equipped{ by: player });
     spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Papcie", SpawnType::Equipped{ by: player });
-    spawn_named_entity(&RAWS.lock().unwrap(), ecs, "Goferek", SpawnType::Carried{ by: player });
 
     ecs.create_entity()
         .with(StatusEffect{ target: player })
