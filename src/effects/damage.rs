@@ -1,12 +1,17 @@
 use specs::{prelude::*, saveload::{SimpleMarker, MarkedBuilder}};
 use super::*;
 use crate::{Pools, Map, Attributes, Player, gamelog::GameLog, player_hp_at_level, mana_at_level, Confusion, StatusEffect, Duration,
-            SerializeMe, Name, EquipmentChanged, Slow, DamageOverTime};
+            SerializeMe, Name, EquipmentChanged, Slow, DamageOverTime, Skills};
 
 pub fn inflict_damage(ecs: &mut World, damage: &EffectSpawner, target: Entity) {
     let mut pools = ecs.write_storage::<Pools>();
     if let Some(pool) = pools.get_mut(target) {
         if !pool.god_mode {
+            if let Some(creator) = damage.creator {
+                if creator == target {
+                    return;
+                }
+            }
             if let EffectType::Damage{amount} = damage.effect_type {
                 pool.hit_points.current -= amount;
                 if let Some(tile_idx) = entity_position(ecs, target) {
@@ -40,7 +45,7 @@ pub fn death(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
     let mut gold_gain = 0.0f32;
 
     let mut pools = ecs.write_storage::<Pools>();
-    let attributes = ecs.read_storage::<Attributes>();
+    let mut attributes = ecs.write_storage::<Attributes>();
 
     if let Some(pos) = entity_position(ecs, target) {
         crate::spatial::remove_entity(target, pos as usize);
@@ -56,12 +61,45 @@ pub fn death(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
             if xp_gain != 0 || gold_gain != 0.0 {
                 let mut log = ecs.fetch_mut::<GameLog>();
                 let mut player_stats = pools.get_mut(source).unwrap();
-                let player_attributes = attributes.get(source).unwrap();
+                let mut player_attributes = attributes.get_mut(source).unwrap();
                 player_stats.xp += xp_gain;
                 player_stats.gold += gold_gain;
                 if player_stats.xp >= player_stats.level * 1000 {
                     player_stats.level += 1;
                     log.entries.push(format!("Wieclaw ma teraz {}. poziom.", player_stats.level));
+
+                    let mut rng = ecs.fetch_mut::<rltk::RandomNumberGenerator>();
+                    let attr_to_boost = rng.roll_dice(1, 4);
+                    match attr_to_boost {
+                        1 => {
+                            player_attributes.might.base += 1;
+                            log.entries.push("Wieclaw jest silniejszy!".to_string());
+                        }
+                        2 => {
+                            player_attributes.fitness.base += 1;
+                            log.entries.push("Wieclaw jest zdrowszy!".to_string());
+                        }
+                        3 => {
+                            player_attributes.quickness.base += 1;
+                            log.entries.push("Wieclaw jest zwinniejszy!".to_string());
+                        }
+                        _ => {
+                            player_attributes.intelligence.base += 1;
+                            log.entries.push("Wieclaw jest bystrzejszy!".to_string());
+                        }
+                    }
+
+                    let mut skills = ecs.write_storage::<Skills>();
+                    let player_skills = skills.get_mut(*ecs.fetch::<Entity>()).unwrap();
+                    for sk in player_skills.skills.iter_mut() {
+                        *sk.1 += 1;
+                    }
+                    ecs.write_storage::<EquipmentChanged>()
+                        .insert(
+                            *ecs.fetch::<Entity>(),
+                            EquipmentChanged{})
+                        .expect("Insert failed");
+                    
                     player_stats.hit_points.max = player_hp_at_level(
                         player_attributes.fitness.base + player_attributes.fitness.modifiers,
                         player_stats.level

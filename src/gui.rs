@@ -1,6 +1,6 @@
 use rltk::{ RGB, Rltk, VirtualKeyCode };
 use specs::prelude::*;
-use super::{Pools, gamelog::GameLog, Map, Name, Position, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item,
+use super::{Pools, gamelog::GameLog, Map, Name, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item,
             Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets, Hidden, camera, Consumable, Vendor,
             MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap, StatusEffect, Duration, KnownSpells};
 
@@ -259,14 +259,13 @@ impl Tooltip {
 
 fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
     use rltk::to_cp437;
+    use rltk::Algorithm2D;
 
     let (min_x, _max_x, min_y, _max_y) = camera::get_screen_bounds(ecs, ctx);
     let map = ecs.fetch::<Map>();
-    let positions = ecs.read_storage::<Position>();
     let hidden = ecs.read_storage::<Hidden>();
     let attributes = ecs.read_storage::<Attributes>();
     let pools = ecs.read_storage::<Pools>();
-    let entities = ecs.entities();
 
     let mouse_pos = ctx.mouse_pos();
     let mut mouse_map_pos = mouse_pos;
@@ -279,48 +278,50 @@ fn draw_tooltips(ecs: &World, ctx : &mut Rltk) {
     {
         return;
     }
-    if !map.visible_tiles[map.xy_idx(mouse_map_pos.0, mouse_map_pos.1)] { return; }
+    if !map.in_bounds(rltk::Point::new(mouse_map_pos.0, mouse_map_pos.1)) { return; }
+    let mouse_idx = map.xy_idx(mouse_map_pos.0, mouse_map_pos.1);
+    if !map.visible_tiles[mouse_idx] { return; }
 
     let mut tip_boxes : Vec<Tooltip> = Vec::new();
-    for (entity, position, _hidden) in (&entities, &positions, !&hidden).join() {
-        if position.x == mouse_map_pos.0 && position.y == mouse_map_pos.1 {
-            let mut tip = Tooltip::new();
-            tip.add(get_item_display_name(ecs, entity));
+    crate::spatial::for_each_tile_content(mouse_idx, |entity| {
+        if hidden.get(entity).is_some() { return; }
+        let mut tip = Tooltip::new();
+        tip.add(get_item_display_name(ecs, entity));
 
-            let attr = attributes.get(entity);
-            if let Some(attr) = attr {
-                let mut s = "".to_string();
-                if attr.might.bonus < 0 { s += "Slaby. " };
-                if attr.might.bonus > 0 { s += "Silny. " };
-                if attr.quickness.bonus < 0 { s += "Niezgrabny. " };
-                if attr.quickness.bonus > 0 { s += "Zwinny. " };
-                if attr.fitness.bonus < 0 { s += "Niezdrowy. " };
-                if attr.fitness.bonus > 0 { s += "Zdrowy. " };
-                if attr.intelligence.bonus < 0 { s += "Glupi. " };
-                if attr.intelligence.bonus > 0 { s += "Bystry. " };
-                if s.is_empty() {
-                    s = "Calkiem przecietny.".to_string();
-                }
-                tip.add(s);
+        let attr = attributes.get(entity);
+        if let Some(attr) = attr {
+            let mut s = "".to_string();
+            if attr.might.bonus < 0 { s += "Slaby. " };
+            if attr.might.bonus > 0 { s += "Silny. " };
+            if attr.quickness.bonus < 0 { s += "Niezgrabny. " };
+            if attr.quickness.bonus > 0 { s += "Zwinny. " };
+            if attr.fitness.bonus < 0 { s += "Niezdrowy. " };
+            if attr.fitness.bonus > 0 { s += "Zdrowy. " };
+            if attr.intelligence.bonus < 0 { s += "Glupi. " };
+            if attr.intelligence.bonus > 0 { s += "Bystry. " };
+            if s.is_empty() {
+                s = "Calkiem przecietny.".to_string();
             }
-
-            let stat = pools.get(entity);
-            if let Some(stat) = stat {
-                tip.add(format!("Poziom: {}", stat.level));
-            }
-
-            let statuses = ecs.read_storage::<StatusEffect>();
-            let durations = ecs.read_storage::<Duration>();
-            let names = ecs.read_storage::<Name>();
-            for (status, duration, name) in (&statuses, &durations, &names).join() {
-                if status.target == entity {
-                    tip.add(format!("{} ({})", name.name, duration.turns));
-                }
-            }
-
-            tip_boxes.push(tip);
+            tip.add(s);
         }
-    }
+
+        let stat = pools.get(entity);
+        if let Some(stat) = stat {
+            tip.add(format!("Poziom: {}", stat.level));
+        }
+
+        let statuses = ecs.read_storage::<StatusEffect>();
+        let durations = ecs.read_storage::<Duration>();
+        let names = ecs.read_storage::<Name>();
+        for (status, duration, name) in (&statuses, &durations, &names).join() {
+            if status.target == entity {
+                tip.add(format!("{} ({})", name.name, duration.turns));
+            }
+        }
+
+        tip_boxes.push(tip);
+    });
+
     if tip_boxes.is_empty() { return; }
 
     let box_gray : RGB = RGB::from_hex("#999999").expect("Oops");

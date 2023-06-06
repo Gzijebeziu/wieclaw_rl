@@ -47,7 +47,7 @@ pub mod effects;
 extern crate lazy_static;
 
 
-const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_MAPGEN_VISUALIZER : bool = true;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -587,6 +587,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Slow>();
     gs.ecs.register::<DamageOverTime>();
     gs.ecs.register::<SpecialAbilities>();
+    gs.ecs.register::<TileSize>();
     gs.ecs.insert(SimpleMarkerAllocator::<SerializeMe>::new());
 
     raws::load_raws();

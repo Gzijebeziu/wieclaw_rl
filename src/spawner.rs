@@ -1,14 +1,14 @@
 use rltk::{ RGB, RandomNumberGenerator };
 use specs::{prelude::*, saveload::{MarkedBuilder, SimpleMarker}};
 use super::{Player, Map, TileType, Renderable, Name, Position, Viewshed, Rect, MasterDungeonMap, OtherLevelPosition,
-            SerializeMe, random_table::RandomTable, HungerState, HungerClock, raws::*, Attributes, EntryTrigger, SingleActivation,
+            SerializeMe, random_table::MasterTable, HungerState, HungerClock, raws::*, Attributes, EntryTrigger, SingleActivation,
             Attribute, attr_bonus, Skills, Skill, Pools, Pool, player_hp_at_level, mana_at_level, LightSource, TeleportTo,
             Initiative, Faction, EquipmentChanged, StatusEffect, Duration, AttributeBonus, KnownSpells};
 use std::collections::HashMap;
 
 const MAX_MONSTERS : i32 = 4;
 
-fn room_table(map_depth: i32) -> RandomTable {
+fn room_table(map_depth: i32) -> MasterTable {
     get_spawn_table_for_depth(&RAWS.lock().unwrap(), map_depth)
 }
 
