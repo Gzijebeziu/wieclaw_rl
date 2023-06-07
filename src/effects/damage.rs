@@ -201,9 +201,9 @@ pub fn slow(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
             .with(Duration{ turns : 5 })
             .with(
                 if *initiative_penalty > 0.0 {
-                    Name{ name : "Zatwardzenie".to_string() }
+                    Name{ name : "Spowolnienie".to_string() }
                 } else {
-                    Name{ name : "Ulga".to_string() }
+                    Name{ name : "Przyspieszenie".to_string() }
                 }
             )
             .marked::<SimpleMarker<SerializeMe>>()
@@ -217,7 +217,7 @@ pub fn damage_over_time(ecs: &mut World, effect: &EffectSpawner, target: Entity)
             .with(StatusEffect{ target })
             .with(DamageOverTime{ damage: *damage })
             .with(Duration{ turns: 5 })
-            .with(Name{ name: "Rozwolnienie".to_string() })
+            .with(Name{ name: "Obrazenia".to_string() })
             .marked::<SimpleMarker<SerializeMe>>()
             .build();
     }

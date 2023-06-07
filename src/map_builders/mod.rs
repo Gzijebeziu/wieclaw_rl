@@ -65,6 +65,8 @@ mod limestone_cavern;
 use limestone_cavern::*;
 mod fort;
 use fort::fort_builder;
+mod mushroom_forest;
+use mushroom_forest::*;
 use specs::prelude::*;
 
 pub struct BuilderMap {
@@ -302,6 +304,7 @@ pub fn level_builder(new_depth : i32, rng: &mut rltk::RandomNumberGenerator, wid
         4 => limestone_deep_cavern_builder(new_depth, rng, width, height),
         5 => limestone_transition_builder(new_depth, rng, width, height),
         6 => fort_builder(new_depth, rng, width, height),
+        7 => mushroom_entrance(new_depth, rng, width, height),
         _ => random_builder(new_depth, rng, width, height)
     }
 }

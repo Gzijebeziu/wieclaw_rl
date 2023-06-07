@@ -2,7 +2,7 @@
 
 "spawn_table" : [
     { "name" : "Gnomon", "weight" : 10, "min_depth" : 3, "max_depth" : 5 },
-    { "name" : "Golem Zoledny", "weight" : 1, "min_depth" : 4, "max_depth" : 100},
+    { "name" : "Golem Zoledny", "weight" : 1, "min_depth" : 4, "max_depth" : 5},
     { "name" : "Pasztecik", "weight" : 15, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Zwój Saznistego Pierdniecia", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
     { "name" : "Zwój z Waznym Pytaniem", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
@@ -26,10 +26,15 @@
     { "name" : "Pajonczek", "weight" : 300, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Koszula góralska", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
-    { "name" : "Portki góralskie", "weight" : 1, "min_depth" : 2, "max_depth" : 100 },
+    { "name" : "Portki góralskie", "weight" : 5, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Manganowe rajstopy", "weight" : 4, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Mosiezny kilt", "weight" : 3, "min_depth" : 5, "max_depth" : 100 },
     { "name" : "Koszula z kapsli", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
-    { "name" : "Molibdenowy beret", "weight" : 1, "min_depth" : 4, "max_depth" : 100 },
-    { "name" : "Biskup tarnowski", "weight" : 1, "min_depth" : 5, "max_depth" : 7 },
+    { "name" : "Melonik", "weight" : 5, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Klobuk góralski", "weight" : 4, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Molibdenowy beret", "weight" : 3, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Saturno", "weight" : 2, "min_depth" : 4, "max_depth" : 100 },
+    { "name" : "Biskup tarnowski", "weight" : 1, "min_depth" : 5, "max_depth" : 6 },
     { "name" : "Prezbiter tarnowski", "weight" : 4, "min_depth" : 5, "max_depth" : 7 },
     { "name" : "Diakon tarnowski", "weight" : 10, "min_depth" : 5, "max_depth" : 7 },
     { "name" : "Karmelitanka bosa", "weight" : 4, "min_depth" : 5, "max_depth" : 7 },
@@ -55,7 +60,24 @@
     { "name" : "Rózdzka Bieguszka", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Inkantacje Winakejp'aha", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Inkantacje jalapenskie", "weight" : 3, "min_depth" : 0, "max_depth" : 100 },
-    { "name" : "Jutti", "weight" : 2, "min_depth" : 0, "max_depth" : 100 }
+    { "name" : "Jutti", "weight" : 2, "min_depth" : 0, "max_depth" : 100 },
+    { "name" : "Smardz", "weight" : 1, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Lycoperdon", "weight" : 10, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Entoloma", "weight" : 10, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Amanita", "weight" : 7, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Grzybiarz", "weight" : 8, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Fanatyk grzybobrania", "weight" : 7, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Pies grzybiarza", "weight" : 9, "min_depth" : 7, "max_depth" : 9 },
+    { "name" : "Ciupaga +2", "weight" : 1, "min_depth" : 7, "max_depth" : 100 },
+    { "name" : "Sutanna +1", "weight" : 1, "min_depth" : 7, "max_depth" : 100 },
+    { "name" : "Drzwi wychodka +1", "weight" : 1, "min_depth" : 7, "max_depth" : 100 },
+    { "name" : "Sandalki", "weight" : 5, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Chodaki", "weight" : 4, "min_depth" : 3, "max_depth" : 100},
+    { "name" : "Kalosze", "weight" : 2, "min_depth" : 5, "max_depth" : 100 },
+    { "name" : "Owijki", "weight" : 6, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Rekawice skórzane", "weight" : 5, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Rekawice puchowe", "weight" : 3, "min_depth" : 1, "max_depth" : 100 },
+    { "name" : "Rekawice bokserskie", "weight" : 2, "min_depth" : 5, "max_depth" : 100 }
 ],
 
 "loot_tables" : [
@@ -79,12 +101,13 @@
     { "name" : "Mindless", "responses": { "Default" : "attack" } },
     { "name" : "Townsfolk", "responses": { "Default" : "flee", "Player" : "ignore", "Townsfolk" : "ignore" } },
     { "name" : "Bandits", "responses": { "Default" : "attack", "Bandits" : "ignore" } },
-    { "name" : "Cave Goblins", "responses": { "Default" : "attack", "Cave Goblins" : "ignore" } },
+    { "name" : "Cave Goblins", "responses": { "Default" : "attack", "Cave Goblins" : "ignore", "Fungi" : "ignore" } },
     { "name" : "Carnivores", "responses": { "Default" : "attack", "Carnivores" : "ignore" } },
     { "name" : "Herbivores", "responses": { "Default" : "flee", "Herbivores" : "ignore" } },
     { "name" : "Hungry Rodents", "responses": { "Default" : "attack", "Hungry Rodents" : "ignore" } },
-    { "name" : "Biskupi", "responses": { "Default" : "attack", "Biskupi" : "ignore" } },
-    { "name" : "Karmelitanki", "responses" : { "Default" : "attack", "Player" : "ignore", "Karmelitanki" : "ignore" } }
+    { "name" : "Biskupi", "responses": { "Default" : "attack", "Biskupi" : "ignore", "Fungi" : "ignore" } },
+    { "name" : "Karmelitanki", "responses" : { "Default" : "attack", "Player" : "ignore", "Karmelitanki" : "ignore" } },
+    { "name" : "Fungi", "responses" : { "Default" : "attack", "Fungi" : "ignore", "Biskupi" : "ignore", "Cave Goblins" : "ignore" } }
 ],
 
 "items" : [
@@ -587,11 +610,11 @@
         },
         "wearable" : {
             "slot" : "Legs",
-            "armor_class" : 1.0
+            "armor_class" : 0.2
         },
-        "weight_kg" : 7.0,
-        "base_value" : 10.0,
-        "initiative_penalty" : 0.5,
+        "weight_kg" : 2.5,
+        "base_value" : 25.0,
+        "initiative_penalty" : 0.2,
         "vendor_category" : "clothes"
     },
 
@@ -1004,6 +1027,280 @@
         "initiative_penalty" : -1,
         "vendor_category" : "weapon",
         "magic" : { "class" : "common", "naming" : "Nierozpoznany klapek" }
+    },
+
+    {
+        "name" : "Ciupaga +2",
+        "renderable" : {
+            "glyph" : "¶",
+            "fg" : "#642A20",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "melee",
+            "attribute" : "Might",
+            "base_damage" : "1d8+2",
+            "hit_bonus" : 2
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 100.0,
+        "initiative_penalty" : 0,
+        "vendor_category" : "weapon",
+        "magic" : { "class" : "common", "naming" : "Nierozpoznana ciupaga" }
+    },
+
+    {
+        "name" : "Sutanna +1",
+        "renderable" : {
+            "glyph" : "╦",
+            "fg" : "#666666",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Torso",
+            "armor_class" : 4.0
+        },
+        "weight_kg" : 10.0,
+        "base_value" : 200.0,
+        "initiative_penalty" : 1.0,
+        "vendor_category" : "armor",
+        "magic" : { "class" : "common", "naming" : "Nierozpoznana sutanna" }
+    },
+
+    {
+        "name" : "Drzwi wychodka +1",
+        "renderable" : {
+            "glyph" : "█",
+            "fg" : "#8E3E00",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Shield",
+            "armor_class" : 3.0
+        },
+        "weight_kg" : 22.5,
+        "base_value" : 30.0,
+        "initiative_penalty" : 0.0,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Melonik",
+        "renderable" : {
+            "glyph" : "∩",
+            "fg" : "#999999",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 0.2
+        },
+        "weight_kg" : 0.125,
+        "base_value" : 5.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Klobuk góralski",
+        "renderable" : {
+            "glyph" : "∩",
+            "fg" : "#BBBBBB",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 0.4
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.2,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Saturno",
+        "renderable" : {
+            "glyph" : "∩",
+            "fg" : "#DD0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 2.0
+        },
+        "weight_kg" : 7.5,
+        "base_value" : 100.0,
+        "initiative_penalty" : 1.0,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Manganowe rajstopy",
+        "renderable" : {
+            "glyph" : "╨",
+            "fg" : "#CCCCCC",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Legs",
+            "armor_class" : 0.3
+        },
+        "weight_kg" : 5.0,
+        "base_value" : 50.0,
+        "initiative_penalty" : 0.3,
+        "vendor_category" : "clothes"
+    },
+
+    {
+        "name" : "Mosiezny kilt",
+        "renderable" : {
+            "glyph" : "╨",
+            "fg" : "#C8AA6A",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Legs",
+            "armor_class" : 0.5
+        },
+        "weight_kg" : 10.0,
+        "base_value" : 100.0,
+        "initiative_penalty" : 0.5,
+        "vendor_category" : "clothes"
+    },
+    
+    {
+        "name" : "Sandalki",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#FF0483",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Feet",
+            "armor_class" : 0.2
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 5.0,
+        "initiative_penalty" : 0.25,
+        "vendor_category" : "clothes"
+    },
+
+    {
+        "name" : "Chodaki",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#642A20",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Feet",
+            "armor_class" : 0.3
+        },
+        "weight_kg" : 1.5,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.25,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Kalosze",
+        "renderable" : {
+            "glyph" : "╚",
+            "fg" : "#37D8EA",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Feet",
+            "armor_class" : 0.5
+        },
+        "weight_kg" : 2.5,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.4,
+        "vendor_category" : "armor"
+    },
+
+    {
+        "name" : "Owijki",
+        "renderable" : {
+            "glyph" : "ε",
+            "fg" : "#999999",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Hands",
+            "armor_class" : 0.1
+        },
+        "weight_kg" : 0.25,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "clothes"
+    },
+    
+    {
+        "name" : "Rekawice skórzane",
+        "renderable" : {
+            "glyph" : "ε",
+            "fg" : "#666666",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Hands",
+            "armor_class" : 0.2
+        },
+        "weight_kg" : 0.5,
+        "base_value" : 1.0,
+        "initiative_penalty" : 0.1,
+        "vendor_category" : "clothes"
+    },
+
+    {
+        "name" : "Rekawice puchowe",
+        "renderable" : {
+            "glyph" : "ε",
+            "fg" : "#AAFFFF",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Hands",
+            "armor_class" : 0.3
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.2,
+        "vendor_category" : "clothes"
+    },
+
+    {
+        "name" : "Rekawice bokserskie",
+        "renderable" : {
+            "glyph" : "ε",
+            "fg" : "#DD0000",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Hands",
+            "armor_class" : 0.5
+        },
+        "weight_kg" : 2.5,
+        "base_value" : 10.0,
+        "initiative_penalty" : 0.3,
+        "vendor_category" : "clothes"
     }
 
 ],
@@ -1656,6 +1953,128 @@
         "abilities" : [
             { "spell" : "Kwas tarnowski", "chance" : 0.2, "range" : 8.0, "min_range" : 2.0 }
         ]
+    },
+
+    {
+        "name" : "Lycoperdon",
+        "renderable" : {
+            "glyph" : "♠",
+            "fg" : "#EEEEEE",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 3,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Fungi",
+        "level" : 1,
+        "abilities" : [
+            { "spell" : "Barabuch", "chance" : 1.0, "range" : 3.0, "min_range" : 0.0 }
+        ],
+        "on_death" : [
+            { "spell" : "Barabuch", "chance" : 1.0, "range" : 0.0, "min_range" : 0.0 }
+        ]
+    },
+
+    {
+        "name" : "Entoloma",
+        "renderable" : {
+            "glyph" : "♠",
+            "fg" : "#00AAFF",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 3,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Fungi",
+        "level" : 1,
+        "abilities" : [
+            { "spell" : "Chmura konfuzji", "chance" : 1.0, "range" : 3.0, "min_range" : 0.0 }
+        ],
+        "on_death" : [
+            { "spell" : "Chmura konfuzji", "chance" : 1.0, "range" : 0.0, "min_range" : 0.0 }
+        ]
+    },
+
+    {
+        "name" : "Amanita",
+        "renderable" : {
+            "glyph" : "♠",
+            "fg" : "#55FF55",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 3,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Fungi",
+        "level" : 1,
+        "abilities" : [
+            { "spell" : "Chmura trujaca", "chance" : 1.0, "range" : 3.0, "min_range" : 0.0 }
+        ],
+        "on_death" : [
+            { "spell" : "Chmura trujaca", "chance" : 1.0, "range" : 3.0, "min_range" : 0.0 }
+        ]
+    },
+
+    {
+        "name" : "Grzybiarz",
+        "renderable" : {
+            "glyph" : "☻",
+            "fg" : "#C59833",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "faction" : "Fungi",
+        "gold" : "2d8",
+        "level" : 4,
+        "loot_table" : "Animal"
+    },
+
+    {
+        "name" : "Fanatyk grzybobrania",
+        "renderable" : {
+            "glyph" : "f",
+            "fg" : "#C59833",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "faction" : "Fungi",
+        "gold" : "2d8",
+        "level" : 5
+    },
+
+    {
+        "name" : "Pies grzybiarza",
+        "renderable" : {
+            "glyph" : "p",
+            "fg" : "#C59833",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "movement" : "random",
+        "attributes" : {},
+        "natural" : {
+            "armor_class" : 11,
+            "attacks" : [
+                { "name" : "bite", "hit_bonus" : 0, "damage" : "1d4" }
+            ]
+        },
+        "faction" : "Fungi"
     }
 ],
 
@@ -1945,6 +2364,45 @@
             "damage" : "10",
             "area_of_effect" : "3",
             "particle" : "☼;#00FF00;400.0"
+        }
+    },
+
+    {
+        "name" : "Barabuch",
+        "mana_cost" : 1,
+        "effects" : {
+            "ranged" : "3",
+            "damage" : "20",
+            "area_of_effect" : "3",
+            "particle" : "▓;#FFA500;400.0",
+            "single_activation" : "1",
+            "target_self" : "1"
+        }
+    },
+    
+    {
+        "name" : "Chmura konfuzji",
+        "mana_cost" : 1,
+        "effects" : {
+            "ranged" : "3",
+            "confusion" : "4",
+            "area_of_effect" : "3",
+            "particle" : "?;#FFFF00;400.0",
+            "single_activation" : "1",
+            "target_self" : "1"
+        }
+    },
+
+    {
+        "name" : "Chmura trujaca",
+        "mana_cost" : 1,
+        "effects" : {
+            "ranged" : "3",
+            "damage_over_time" : "4",
+            "area_of_effect" : "3",
+            "particle" : "*;#00FF00;400.0",
+            "single_activation" : "1",
+            "target_self" : "1"
         }
     }
 ]
