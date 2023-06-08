@@ -97,6 +97,14 @@ impl PrefabBuilder {
                 build_data.map.tiles[idx] = TileType::Floor;
                 build_data.spawn_list.push((idx, "Golem Zoledny".to_string()));
             }
+            'D' => {
+                build_data.map.tiles[idx] = TileType::Floor;
+                build_data.spawn_list.push((idx, "Diakon tarnowski".to_string()));
+            }
+            'B' => {
+                build_data.map.tiles[idx] = TileType::Floor;
+                build_data.spawn_list.push((idx, "Buhaj".to_string()));
+            }
             '^' => {
                 build_data.map.tiles[idx] = TileType::Floor;
                 build_data.spawn_list.push((idx, "Stupkogryzarka".to_string()));

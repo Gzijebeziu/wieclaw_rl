@@ -1,6 +1,6 @@
 use specs::prelude::*;
 use crate::{MyTurn, Faction, Position, Map, raws::Reaction, Viewshed, WantsToFlee, WantsToApproach, Chasing,
-            SpecialAbilities, WantsToCastSpell, Name, SpellTemplate};
+            SpecialAbilities, WantsToCastSpell, Name, SpellTemplate, Stationary};
 
 pub struct VisibleAI {}
 
@@ -21,12 +21,13 @@ impl<'a> System<'a> for VisibleAI {
         WriteExpect<'a, rltk::RandomNumberGenerator>,
         WriteStorage<'a, WantsToCastSpell>,
         ReadStorage<'a, Name>,
-        ReadStorage<'a, SpellTemplate>
+        ReadStorage<'a, SpellTemplate>,
+        ReadStorage<'a, Stationary>
     );
 
     fn run(&mut self, data : Self::SystemData) {
         let (turns, factions, positions, map, mut want_approach, mut want_flee, entities, player, viewsheds, mut chasing,
-            abilities, mut rng, mut casting, names, spells) = data;
+            abilities, mut rng, mut casting, names, spells, stationary) = data;
 
         for (entity, _turn, my_faction, pos, viewshed) in (&entities, &turns, &factions, &positions, &viewsheds).join() {
             if entity != *player {
@@ -51,7 +52,7 @@ impl<'a> System<'a> for VisibleAI {
                                 );
                                 for ability in abilities.abilities.iter() {
                                     if range >= ability.min_range && range <= ability.range &&
-                                        rng.roll_dice(1,100) >= (ability.chance * 100.0) as i32
+                                        rng.roll_dice(1,100) <= (ability.chance * 100.0) as i32
                                     {
                                         use crate::raws::find_spell_entity_by_name;
                                         casting.insert(
@@ -65,7 +66,7 @@ impl<'a> System<'a> for VisibleAI {
                                 }
                             }
 
-                            if !done {
+                            if !done && stationary.get(entity).is_none() {
                                 want_approach.insert(entity, WantsToApproach{ idx: reaction.0 as i32 }).expect("Unable to insert");
                                 chasing.insert(entity, Chasing{ target: reaction.2 }).expect("Unable to insert");
                                 done = true;

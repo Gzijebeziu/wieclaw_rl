@@ -29,7 +29,7 @@ const RIGHT_FORT : &str = "
   #######      
   #     #      
   #     #######
-  # g         #
+  # D         #
   #     #######
   #     #      
   ### ###      
@@ -46,7 +46,7 @@ const RIGHT_FORT : &str = "
   ### ###      
   #     #      
   #     #      
-  #  g  #      
+  #  D  #      
   #     #      
   #     #      
   ### ###      
@@ -63,7 +63,7 @@ const RIGHT_FORT : &str = "
   ### ###      
   #     #      
   #     #######
-  #  g        #
+  #  D        #
   #     #######
   #     #      
   #######      
@@ -92,5 +92,27 @@ const GNOM_CAMP_TXT : &str = "
  ≈     g  ≈ 
  ≈☼      ☼≈ 
  ≈≈≈≈G≈≈≈≈≈ 
+            
+";
+
+#[allow(dead_code)]
+pub const BUHAJ_ENTRY : PrefabSection = PrefabSection{
+  template : BUHAJ_ENTRY_TXT,
+  width: 12,
+  height: 10,
+  placement: ( HorizontalPlacement::Center, VerticalPlacement::Center )
+};
+
+#[allow(dead_code)]
+const BUHAJ_ENTRY_TXT : &str = "
+            
+ ########## 
+ #        # 
+ #   >    # 
+ #        # 
+ #B       # 
+    B     # 
+ #B       # 
+ ########## 
             
 ";
