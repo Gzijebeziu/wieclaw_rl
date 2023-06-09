@@ -115,16 +115,18 @@ impl<'a> System<'a> for MeleeCombatSystem {
 
                     if let Some(chance) = &weapon_info.proc_chance {
                         if rng.roll_dice(1, 100) <= (chance * 100.0) as i32 {
-                            let effect_target = if weapon_info.proc_target.unwrap() == "Self" {
-                                Targets::Single{ target: entity }
-                            } else {
-                                Targets::Single{ target: wants_melee.target }
-                            };
-                            add_effect(
-                                Some(entity),
-                                EffectType::ItemUse{ item: weapon_entity.unwrap() },
-                                effect_target
-                            )
+                            if let Some(target) = &weapon_info.proc_target {
+                                let effect_target = if target == "Self" {
+                                    Targets::Single{ target: entity }
+                                } else {
+                                    Targets::Single{ target: wants_melee.target }
+                                };
+                                add_effect(
+                                    Some(entity),
+                                    EffectType::ItemUse{ item: weapon_entity.unwrap() },
+                                    effect_target
+                                )
+                            }
                         }
                     }
                 } else if natural_roll == 1 {

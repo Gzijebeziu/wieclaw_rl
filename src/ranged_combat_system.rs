@@ -138,16 +138,18 @@ impl<'a> System<'a> for RangedCombatSystem {
                         //println!("Roll {}, Chance {}, roll, chance");
                         if roll <= (chance * 100.0) as i32 {
                             //println!("Proc");
-                            let effect_target = if weapon_info.proc_target.unwrap() == "Self" {
-                                Targets::Single{ target: entity }
-                            } else {
-                                Targets::Single{ target: wants_shoot.target }
-                            };
-                            add_effect(
-                                Some(entity),
-                                EffectType::ItemUse{ item: weapon_entity.unwrap() },
-                                effect_target
-                            )
+                            if let Some(target) = &weapon_info.proc_target {
+                                let effect_target = if target == "Self" {
+                                    Targets::Single{ target: entity }
+                                } else {
+                                    Targets::Single{ target: wants_shoot.target }
+                                };
+                                add_effect(
+                                    Some(entity),
+                                    EffectType::ItemUse{ item: weapon_entity.unwrap() },
+                                    effect_target
+                                )
+                            }
                         }
                     }
                 } else if natural_roll == 1 {
