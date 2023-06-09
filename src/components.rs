@@ -1,7 +1,7 @@
 #[allow(deprecated)]
 use specs::{prelude::*, saveload::{Marker, ConvertSaveload}, error::NoError};
 use specs_derive::*;
-use rltk::{RGB};
+use rltk::{RGB, Point};
 use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
 
@@ -147,7 +147,8 @@ pub struct Equipped {
 pub enum WeaponAttribute { Might, Quickness }
 
 #[derive(Component, Serialize, Deserialize, Clone)]
-pub struct MeleeWeapon {
+pub struct Weapon {
+    pub range : Option<i32>,
     pub attribute : WeaponAttribute,
     pub damage_n_dice : i32,
     pub damage_die_type : i32,
@@ -168,9 +169,18 @@ pub struct WantsToRemoveItem {
     pub item : Entity
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+pub struct ParticleAnimation {
+    pub step_time : f32,
+    pub path : Vec<Point>,
+    pub current_step : usize,
+    pub timer : f32
+}
+
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct ParticleLifetime {
-    pub lifetime_ms : f32
+    pub lifetime_ms : f32,
+    pub animation : Option<ParticleAnimation>
 }
 
 #[derive(Serialize, Deserialize, Copy, Clone, PartialEq)]
@@ -478,3 +488,11 @@ pub struct AlwaysTargetsSelf {}
 
 #[derive(Component, Debug, Serialize, Deserialize, Clone)]
 pub struct Stationary {}
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Target {}
+
+#[derive(Component, Debug, ConvertSaveload, Clone)]
+pub struct WantsToShoot {
+    pub target : Entity
+}

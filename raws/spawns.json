@@ -2,6 +2,7 @@
 
 "spawn_table" : [
     { "name" : "Gnomon", "weight" : 10, "min_depth" : 3, "max_depth" : 5 },
+    { "name" : "Gnomon strzelec", "weight" : 10, "min_depth" : 3, "max_depth" : 5 },
     { "name" : "Golem Zoledny", "weight" : 1, "min_depth" : 4, "max_depth" : 5},
     { "name" : "Pasztecik", "weight" : 15, "min_depth" : 0, "max_depth" : 100 },
     { "name" : "Zwój Saznistego Pierdniecia", "weight" : 2, "min_depth" : 0, "max_depth" : 100, "add_map_depth_to_weight" : true },
@@ -22,6 +23,7 @@
     { "name" : "Maciora", "weight" : 15, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Jelen", "weight" : 1, "min_depth" : 2, "max_depth" : 2 },
     { "name" : "Hultaj", "weight" : 9, "min_depth" : 2, "max_depth" : 3 },
+    { "name" : "Hultaj strzelec", "weight" : 9, "min_depth" : 2, "max_depth" : 3 },
     { "name" : "Toperz", "weight" : 15, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Pajonczek", "weight" : 300, "min_depth" : 3, "max_depth" : 3 },
     { "name" : "Bebok", "weight" : 3, "min_depth" : 3, "max_depth" : 3 },
@@ -72,7 +74,9 @@
     { "name" : "Owijki", "weight" : 6, "min_depth" : 1, "max_depth" : 100 },
     { "name" : "Rekawice skórzane", "weight" : 5, "min_depth" : 1, "max_depth" : 100 },
     { "name" : "Rekawice puchowe", "weight" : 3, "min_depth" : 1, "max_depth" : 100 },
-    { "name" : "Rekawice bokserskie", "weight" : 2, "min_depth" : 5, "max_depth" : 100 }
+    { "name" : "Rekawice bokserskie", "weight" : 2, "min_depth" : 5, "max_depth" : 100 },
+    { "name" : "Kapiszonowiec", "weight" : 2, "min_depth" : 3, "max_depth" : 100 },
+    { "name" : "Wolej", "weight" : 2, "min_depth" : 9, "max_depth" : 11 }
 ],
 
 "loot_tables" : [
@@ -1451,6 +1455,58 @@
             "bonus_max" : 5,
             "include_cursed" : true
         }
+    },
+
+    {
+        "name" : "Kapiszonowiec",
+        "renderable" : {
+            "glyph" : "┌",
+            "fg" : "#C3C3C3",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "4",
+            "attribute" : "Quickness",
+            "base_damage" : "1d4",
+            "hit_bonus" : 0
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 5.0,
+        "initiative_penalty" : 1,
+        "vendor_category" : "weapon",
+        "template_magic" : {
+            "unidentified_name" : "Nierozpoznany pistolet",
+            "bonus_min" : 1,
+            "bonus_max" : 5,
+            "include_cursed" : true
+        }
+    },
+    
+    {
+        "name" : "Wolej",
+        "renderable" : {
+            "glyph" : "┌",
+            "fg" : "#A38E8E",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "weapon" : {
+            "range" : "6",
+            "attribute" : "Quickness",
+            "base_damage" : "1d6",
+            "hit_bonus" : 0
+        },
+        "weight_kg" : 1.0,
+        "base_value" : 5.0,
+        "initiative_penalty" : 1,
+        "vendor_category" : "weapon",
+        "template_magic" : {
+            "unidentified_name" : "Nierozpoznany pistolet",
+            "bonus_min" : 1,
+            "bonus_max" : 5,
+            "include_cursed" : true
+        }
     }
 
 ],
@@ -1486,6 +1542,23 @@
         "attributes" : {},
         "faction" : "Cave Goblins",
         "gold" : "1d6"
+    },
+
+    {
+        "name" : "Gnomon strzelec",
+        "renderable" : {
+            "glyph" : "g",
+            "fg" : "#98B070",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "Cave Goblins",
+        "gold" : "1d6",
+        "equipped" : [ "Kapiszonowiec", "Koszula góralska", "Portki góralskie" ]
     },
 
     {
@@ -1824,6 +1897,28 @@
         "quips" : [ "Chodz na solo, paszteciarzu!", "Dawaj piniondze natychmiast!", "Tobie juz nic tu nie pomoze!" ],
         "attributes" : {},
         "equipped" : [ "Klapek", "Pokrywa smietnika", "Koszula góralska", "Portki góralskie" ],
+        "light" : {
+            "range" : 6,
+            "color" : "#FFFF55"
+        },
+        "faction" : "Bandits",
+        "gold" : "1d6"
+    },
+
+    {
+        "name" : "Hultaj strzelec",
+        "renderable" : {
+            "glyph" : "☻",
+            "fg" : "#FF5500",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "movement" : "random_waypoint",
+        "quips" : [ "Chodz na solo, paszteciarzu!", "Dawaj piniondze natychmiast!", "Tobie juz nic tu nie pomoze!" ],
+        "attributes" : {},
+        "equipped" : [ "Kapiszonowiec", "Pokrywa smietnika", "Koszula góralska", "Portki góralskie" ],
         "light" : {
             "range" : 6,
             "color" : "#FFFF55"
@@ -2242,7 +2337,7 @@
         "vision_range" : 8,
         "movement" : "random_waypoint",
         "attributes" : {},
-        "equipped" : [ "Fokos", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "equipped" : [ "Wolej", "Fokos", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
         "faction" : "Buhaje",
         "gold" : "3d6",
         "level" : 6
