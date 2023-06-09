@@ -616,6 +616,6 @@ fn main() -> rltk::BError {
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
-    gs.generate_world_map(9, 0);
+    gs.generate_world_map(1, 0);
     rltk::main_loop(context, gs)
 }
