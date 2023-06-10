@@ -289,11 +289,10 @@ impl PrefabBuilder {
                 let chunk_y = pos.y;
 
                 let width = build_data.map.width;
-                let height = build_data.map.height;
                 build_data.spawn_list.retain(|e| {
                     let idx = e.0 as i32;
                     let x = idx % width;
-                    let y = idx / height;
+                    let y = idx / width;
                     x < chunk_x || x > chunk_x + vault.width as i32 || y < chunk_y || y > chunk_y + vault.height as i32
                 });
 
