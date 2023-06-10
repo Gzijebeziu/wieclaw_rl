@@ -268,7 +268,10 @@ impl GameState for State {
                     gui::MainMenuResult::NoSelection{ selected } => newrunstate = RunState::MainMenu{ menu_selection: selected },
                     gui::MainMenuResult::Selected{ selected } => {
                         match selected {
-                            gui::MainMenuSelection::NewGame => newrunstate = RunState::PreRun,
+                            gui::MainMenuSelection::NewGame => {
+                                self.game_over_cleanup();
+                                newrunstate = RunState::PreRun;
+                            }
                             gui::MainMenuSelection::LoadGame => {
                                 saveload_system::load_game(&mut self.ecs);
                                 newrunstate = RunState::AwaitingInput;
