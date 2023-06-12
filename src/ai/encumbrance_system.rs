@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use crate::{EquipmentChanged, Item, InBackpack, Equipped, Pools, Attributes, gamelog::GameLog, AttributeBonus, gamesystem::attr_bonus,
+use crate::{EquipmentChanged, Item, InBackpack, Equipped, Pools, Attributes, AttributeBonus, gamesystem::attr_bonus,
             StatusEffect, Slow};
 use std::collections::HashMap;
 
@@ -16,7 +16,6 @@ impl<'a> System<'a> for EncumbranceSystem {
         WriteStorage<'a, Pools>,
         WriteStorage<'a, Attributes>,
         ReadExpect<'a, Entity>,
-        WriteExpect<'a, GameLog>,
         ReadStorage<'a, AttributeBonus>,
         ReadStorage<'a, StatusEffect>,
         ReadStorage<'a, Slow>
@@ -24,7 +23,7 @@ impl<'a> System<'a> for EncumbranceSystem {
 
     fn run(&mut self, data : Self::SystemData) {
         let (mut equip_dirty, entities, items, backpacks, wielded,
-            mut pools, mut attributes, player, mut gamelog, attrbonus, statuses, slowed) = data;
+            mut pools, mut attributes, player, attrbonus, statuses, slowed) = data;
 
         if equip_dirty.is_empty() { return; }
 
@@ -102,7 +101,10 @@ impl<'a> System<'a> for EncumbranceSystem {
                     if pool.total_weight as i32 > carry_capacity_kg {
                         pool.total_initiative_penalty += 4.0;
                         if *entity == *player {
-                            gamelog.entries.push("Wieclaw jest przeciazony, przez co jest wolniejszy.".to_string());
+                            crate::gamelog::Logger::new()
+                                .color(rltk::ORANGE)
+                                .append("Wieclaw jest przeciazony, przez co jest wolniejszy.")
+                                .log();
                         }
                     }
                 }

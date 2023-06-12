@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{Attributes, Skills, WantsToShoot, Name, gamelog::GameLog, HungerClock, HungerState, Pools, skill_bonus,
+use super::{Attributes, Skills, WantsToShoot, Name, HungerClock, HungerState, Pools, skill_bonus,
     Skill, Equipped, Weapon, EquipmentSlot, WeaponAttribute, Wearable, NaturalAttackDefense, effects::*, Map, Position};
 use rltk::{to_cp437, RGB, Point};
 
@@ -8,7 +8,6 @@ pub struct RangedCombatSystem {}
 impl<'a> System<'a> for RangedCombatSystem {
     #[allow(clippy::type_complexity)]
     type SystemData = ( Entities<'a>,
-                        WriteExpect<'a, GameLog>,
                         WriteStorage<'a, WantsToShoot>,
                         ReadStorage<'a, Name>,
                         ReadStorage<'a, Attributes>,
@@ -25,7 +24,7 @@ impl<'a> System<'a> for RangedCombatSystem {
                     );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (entities, mut log, mut wants_shoot, names, attributes, skills, hunger_clock,
+        let (entities, mut wants_shoot, names, attributes, skills, hunger_clock,
             pools, mut rng, equipped_items, weapon, wearables, natural, positions, map) = data;
 
         for (entity, wants_shoot, name, attacker_attributes, attacker_skills, attacker_pools) in (&entities, &wants_shoot, &names, &attributes, &skills, &pools).join() {
@@ -131,7 +130,14 @@ impl<'a> System<'a> for RangedCombatSystem {
                         EffectType::Damage{ amount: damage },
                         Targets::Single{ target: wants_shoot.target }
                     );
-                    log.entries.push(format!("{} trafia {} za {} HP.", &name.name, &target_name.name, damage));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("trafia:")
+                        .npc_name(&target_name.name)
+                        .append("za")
+                        .damage(damage)
+                        .append("HP.")
+                        .log();
 
                     if let Some(chance) = &weapon_info.proc_chance {
                         let roll = rng.roll_dice(1, 100);
@@ -153,14 +159,24 @@ impl<'a> System<'a> for RangedCombatSystem {
                         }
                     }
                 } else if natural_roll == 1 {
-                    log.entries.push(format!("{} chce strzelic w: {}, ale za pózno reaguje.", name.name, target_name.name));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("chce strzelic w:")
+                        .npc_name(&target_name.name)
+                        .append("ale za pózno reaguje.")
+                        .log();
                     add_effect(
                         None,
                         EffectType::Particle{ glyph: rltk::to_cp437('‼'), fg: rltk::RGB::named(rltk::BLUE), bg: rltk::RGB::named(rltk::BLACK), lifespan: 200.0 },
                         Targets::Single{ target: wants_shoot.target }
                     );
                 } else {
-                    log.entries.push(format!("{} atakuje: {}, ale nie trafia.", name.name, target_name.name));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("atakuje:")
+                        .npc_name(&target_name.name)
+                        .append("ale nie trafia.")
+                        .log();
                     add_effect(
                         None,
                         EffectType::Particle{ glyph: rltk::to_cp437('‼'), fg: rltk::RGB::named(rltk::CYAN), bg: rltk::RGB::named(rltk::BLACK), lifespan: 200.0 },

@@ -192,6 +192,9 @@ impl GameState for State {
             }
             RunState::AwaitingInput => {
                 newrunstate = player_input(self, ctx);
+                if newrunstate != RunState::AwaitingInput {
+                    crate::gamelog::record_event("Turn", 1);
+                }
             }
             RunState::Ticking => {
                 let mut should_change_target = false;
@@ -463,8 +466,7 @@ impl State {
         let current_depth = self.ecs.fetch::<Map>().depth;
         self.generate_world_map(current_depth + offset, offset);
 
-        let mut gamelog = self.ecs.fetch_mut::<gamelog::GameLog>();
-        gamelog.entries.push("Wieclaw przemieszcza sie.".to_string());
+        crate::gamelog::Logger::new().append("Wieclaw przemieszcza sie.").log();
     }
 
     fn game_over_cleanup(&mut self) {
@@ -497,6 +499,15 @@ impl State {
         } else {
             thaw_level_entities(&mut self.ecs);
         }
+
+        gamelog::clear_log();
+        gamelog::Logger::new()
+            .append("Wieclaw budzi sie w knajpie Pod Smierdzaca Pacha i zauwaza, ze zniknal jego")
+            .color(rltk::GOLD)
+            .append("Zloty Zombek!")
+            .log();
+
+        gamelog::clear_events();
     }
 }
 
@@ -615,7 +626,6 @@ fn main() -> rltk::BError {
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(gamelog::GameLog{ entries : vec!["Zloty Zombek!".to_string(), "Wieclaw budzi sie w knajpie Pod Smierdzaca Pacha i zauwaza, ze zniknal jego".to_string()]});
     gs.ecs.insert(particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 

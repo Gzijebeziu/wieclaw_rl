@@ -1,6 +1,6 @@
-use rltk::{ RGB, Rltk, VirtualKeyCode };
+use rltk::{ RGB, Rltk, VirtualKeyCode, TextBlock };
 use specs::prelude::*;
-use super::{Pools, gamelog::GameLog, Map, Name, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item, Weapon,
+use super::{Pools, Map, Name, Point, State, InBackpack, Attribute, Attributes, VendorMode, Item, Weapon, gamelog,
             Viewshed, RunState, Equipped, HungerClock, HungerState, rex_assets::RexAssets, Hidden, camera, Consumable, Vendor,
             MagicItem, MagicItemClass, ObfuscatedName, CursedItem, MasterDungeonMap, StatusEffect, Duration, KnownSpells};
 
@@ -228,12 +228,9 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk) {
         }
     }
 
-    let log = ecs.fetch::<GameLog>();
-    let mut y = 46;
-    for s in log.entries.iter().rev() {
-        if y < 59 { ctx.print(2, y, s); }
-        y += 1;
-    }
+    let mut block = TextBlock::new(1, 46, 79, 58);
+    block.print(&gamelog::log_display()).expect("Unable to print");
+    block.render(&mut rltk::BACKEND_INTERNAL.lock().consoles[0].console);
 
     draw_tooltips(ecs, ctx);
 }
@@ -523,6 +520,7 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     let save_exists = super::saveload_system::does_save_exist();
     let runstate = gs.ecs.fetch::<RunState>();
 
+    ctx.print(1, 51, "v0.1.0");
     ctx.draw_box_double(24, 18, 31, 10, RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK));
     ctx.print_color_centered(20, RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK), "Wieclaw Roguelike");
     ctx.print_color_centered(21, RGB::named(rltk::CYAN), RGB::named(rltk::BLACK), "Zebyr Zyjgames");
@@ -657,7 +655,11 @@ pub fn game_over(ctx : &mut Rltk) -> GameOverResult {
     ctx.print_color_centered(17, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "Ale nie martw sie, karetka juz go zabrala i wkrótce");
     ctx.print_color_centered(18, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), "znów bedzie mógl udac sie na wyprawe po Zombek.");
 
-    ctx.print_color_centered(20, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Wcisnij dowolny klawisz by wyjsc do menu.");
+    ctx.print_color_centered(19, RGB::named(rltk::WHITE), RGB::named(rltk::BLACK), &format!("Wieclaw przetrwal {} tur.", crate::gamelog::get_event_count("Turn")));
+    ctx.print_color_centered(20, RGB::named(rltk::RED), RGB::named(rltk::BLACK), &format!("Otrzymane obrazenia: {}.", crate::gamelog::get_event_count("Damage Taken")));
+    ctx.print_color_centered(21, RGB::named(rltk::RED), RGB::named(rltk::BLACK), &format!("Zadane obrazenia: {}.", crate::gamelog::get_event_count("Damage Inflicted")));
+
+    ctx.print_color_centered(23, RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK), "Wcisnij dowolny klawisz by wyjsc do menu.");
 
     match ctx.key {
         None => GameOverResult::NoSelection,

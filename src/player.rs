@@ -2,7 +2,7 @@ use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
 use crate::raws::find_spell_entity;
 
-use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, gamelog::GameLog, WantsToCastSpell, WantsToShoot,
+use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, WantsToCastSpell, WantsToShoot,
             Pools, WantsToMelee, WantsToPickupItem, TileType, HungerClock, HungerState, EntityMoved, Equipped, Weapon,
             Door, BlocksVisibility, BlocksTile, Renderable, Faction, raws::Reaction, Vendor, VendorMode, Target, Name};
 use std::cmp::{min, max};
@@ -175,8 +175,7 @@ pub fn try_next_level(ecs: &mut World) -> bool {
     if map.tiles[player_idx] == TileType::DownStairs {
         true
     } else {
-        let mut gamelog = ecs.fetch_mut::<GameLog>();
-        gamelog.entries.push("Tedy nie zejdziesz.".to_string());
+        crate::gamelog::Logger::new().append("Tedy nie zejdziesz.").log();
         false
     }
 }
@@ -188,8 +187,7 @@ pub fn try_previous_level(ecs: &mut World) -> bool {
     if map.tiles[player_idx] == TileType::UpStairs {
         true
     } else {
-        let mut gamelog = ecs.fetch_mut::<GameLog>();
-        gamelog.entries.push("Tedy nie wrócisz.".to_string());
+        crate::gamelog::Logger::new().append("Tedy nie wrócisz.").log();
         false
     }
 }
@@ -200,7 +198,6 @@ fn get_item(ecs: &mut World) {
     let entities = ecs.entities();
     let items = ecs.read_storage::<Item>();
     let positions = ecs.read_storage::<Position>();
-    let mut gamelog = ecs.fetch_mut::<GameLog>();
 
     let mut target_item : Option<Entity> = None;
     for (item_entity, _item, position) in (&entities, &items, &positions).join() {
@@ -210,7 +207,7 @@ fn get_item(ecs: &mut World) {
     }
 
     match target_item {
-        None => gamelog.entries.push("Nie ma tu niczego do podniesienia.".to_string()),
+        None => crate::gamelog::Logger::new().append("Nie ma tu niczego do podniesienia.").log(),
         Some(item) => {
             let mut pickup = ecs.write_storage::<WantsToPickupItem>();
             pickup.insert(*player_entity, WantsToPickupItem { collected_by: *player_entity, item }).expect("Unable to insert want to pickup");
@@ -379,8 +376,7 @@ fn use_spell_hotkey(gs: &mut State, key: i32) -> RunState {
                 return RunState::Ticking;
             }
         } else {
-            let mut gamelog = gs.ecs.fetch_mut::<GameLog>();
-            gamelog.entries.push("Wieclaw nie ma many na te inkantacje.".to_string());
+            crate::gamelog::Logger::new().append("Wieclaw nie ma many na te inkantacje.").log();
         }
     }
 
@@ -464,7 +460,6 @@ fn fire_on_target(ecs: &mut World) -> RunState {
     let targets = ecs.write_storage::<Target>();
     let entities = ecs.entities();
     let mut current_target : Option<Entity> = None;
-    let mut log = ecs.fetch_mut::<GameLog>();
 
     for (e,_t) in (&entities, &targets).join() {
         current_target = Some(e);
@@ -475,13 +470,16 @@ fn fire_on_target(ecs: &mut World) -> RunState {
         let mut shoot_store = ecs.write_storage::<WantsToShoot>();
         let names = ecs.read_storage::<Name>();
         if let Some(name) = names.get(target) {
-            log.entries.push(format!("Wieclaw strzela w: {}", name.name));
+            crate::gamelog::Logger::new()
+                .append("Wieclaw strzela w:")
+                .npc_name(format!("{}.", name.name))
+                .log();
         }
         shoot_store.insert(*player_entity, WantsToShoot{ target }).expect("Insert fail");
 
         RunState::Ticking
     } else {
-        log.entries.push("Wieclaw nie ma do kogo strzelac!".to_string());
+        crate::gamelog::Logger::new().append("Wieclaw nie ma do kogo strzelac!").log();
         RunState::AwaitingInput
     }
 }

@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{Attributes, Skills, WantsToMelee, Name, gamelog::GameLog, Weapon, WeaponAttribute, EquipmentSlot,
+use super::{Attributes, Skills, WantsToMelee, Name, Weapon, WeaponAttribute, EquipmentSlot,
             HungerClock, HungerState, Pools, skill_bonus, Skill, Equipped, Wearable, NaturalAttackDefense, effects::*};
 
 pub struct MeleeCombatSystem {}
@@ -7,7 +7,6 @@ pub struct MeleeCombatSystem {}
 impl<'a> System<'a> for MeleeCombatSystem {
     #[allow(clippy::type_complexity)]
     type SystemData = ( Entities<'a>,
-                        WriteExpect<'a, GameLog>,
                         WriteStorage<'a, WantsToMelee>, 
                         ReadStorage<'a, Name>, 
                         ReadStorage<'a, Attributes>,
@@ -22,7 +21,7 @@ impl<'a> System<'a> for MeleeCombatSystem {
                     );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (entities, mut log, mut wants_melee, names, attributes, skills, hunger_clock, 
+        let (entities, mut wants_melee, names, attributes, skills, hunger_clock, 
             pools, mut rng, equipped_items, meleeweapons, wearables, natural) = data;
 
         for (entity, wants_melee, name, attacker_attributes, attacker_skills, attacker_pools) in (&entities, &wants_melee, &names, &attributes, &skills, &pools).join() {
@@ -111,7 +110,14 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         EffectType::Damage{ amount: damage },
                         Targets::Single{ target: wants_melee.target }
                     );
-                    log.entries.push(format!("{} trafia {} za {} HP.", &name.name, &target_name.name, damage));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("trafia:")
+                        .npc_name(&target_name.name)
+                        .append("za")
+                        .damage(damage)
+                        .append("HP.")
+                        .log();
 
                     if let Some(chance) = &weapon_info.proc_chance {
                         if rng.roll_dice(1, 100) <= (chance * 100.0) as i32 {
@@ -130,14 +136,24 @@ impl<'a> System<'a> for MeleeCombatSystem {
                         }
                     }
                 } else if natural_roll == 1 {
-                    log.entries.push(format!("{} chce zaatakowac {}, ale potyka sie o wlasne nogi.", name.name, target_name.name));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("chce zaatakowac:")
+                        .npc_name(&target_name.name)
+                        .append("ale potyka sie o wlasne nogi.")
+                        .log();
                     add_effect(
                         None,
                         EffectType::Particle{ glyph: rltk::to_cp437('‼'), fg: rltk::RGB::named(rltk::BLUE), bg: rltk::RGB::named(rltk::BLACK), lifespan: 200.0 },
                         Targets::Single{ target: wants_melee.target }
                     );
                 } else {
-                    log.entries.push(format!("{} atakuje {}, ale bezskutecznie.", name.name, target_name.name,));
+                    crate::gamelog::Logger::new()
+                        .npc_name(&name.name)
+                        .append("atakuje:")
+                        .npc_name(&target_name.name)
+                        .append("ale bezskutecznie.")
+                        .log();
                     add_effect(
                         None,
                         EffectType::Particle{ glyph: rltk::to_cp437('‼'), fg: rltk::RGB::named(rltk::CYAN), bg: rltk::RGB::named(rltk::BLACK), lifespan: 200.0 },

@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{HungerClock, RunState, HungerState, gamelog::GameLog, MyTurn, effects::{add_effect, EffectType, Targets}};
+use super::{HungerClock, RunState, HungerState, MyTurn, effects::{add_effect, EffectType, Targets}};
 
 pub struct HungerSystem {}
 
@@ -10,12 +10,11 @@ impl<'a> System<'a> for HungerSystem {
                         WriteStorage<'a, HungerClock>,
                         ReadExpect<'a, Entity>,
                         ReadExpect<'a, RunState>,
-                        WriteExpect<'a, GameLog>,
                         ReadStorage<'a, MyTurn>
                     );
 
     fn run(&mut self, data : Self::SystemData) {
-        let (entities, mut hunger_clock, player_entity, _runstate, mut log, turns) = data;
+        let (entities, mut hunger_clock, player_entity, _runstate, turns) = data;
 
         for (entity, mut clock, _myturn) in (&entities, &mut hunger_clock, &turns).join() {
             clock.duration -= 1;
@@ -25,26 +24,38 @@ impl<'a> System<'a> for HungerSystem {
                         clock.state = HungerState::Normal;
                         clock.duration = 200;
                         if entity == *player_entity {
-                            log.entries.push("Wieclaw nie jest juz najedzony.".to_string());
+                            crate::gamelog::Logger::new()
+                                .color(rltk::ORANGE)
+                                .append("Wieclaw nie jest juz najedzony.")
+                                .log();
                         }
                     }
                     HungerState::Normal => {
                         clock.state = HungerState::Hungry;
                         clock.duration = 200;
                         if entity == *player_entity {
-                            log.entries.push("Wieclaw jest glodny.".to_string());
+                            crate::gamelog::Logger::new()
+                                .color(rltk::ORANGE)
+                                .append("Wieclaw jest glodny.")
+                                .log();
                         }
                     }
                     HungerState::Hungry => {
                         clock.state = HungerState::Starving;
                         clock.duration = 200;
                         if entity == *player_entity {
-                            log.entries.push("Wieclaw umiera z glodu!".to_string());
+                            crate::gamelog::Logger::new()
+                                .color(rltk::RED)
+                                .append("Wieclaw umiera z glodu!")
+                                .log();
                         }
                     }
                     HungerState::Starving => {
                         if entity == *player_entity {
-                            log.entries.push("Wieclaw odczuwa bolesny skurcz zoladka i traci 1 HP!".to_string());
+                            crate::gamelog::Logger::new()
+                                .color(rltk::RED)
+                                .append("Wieclaw odczuwa bolesny skurcz zoladka i traci 1 HP!")
+                                .log();
                         }
                         add_effect(
                             None,

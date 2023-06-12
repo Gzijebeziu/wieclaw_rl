@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{EntityMoved, Position, EntryTrigger, Map, Name, gamelog::GameLog, effects::*, AreaOfEffect};
+use super::{EntityMoved, Position, EntryTrigger, Map, Name, effects::*, AreaOfEffect};
 
 pub struct TriggerSystem {}
 
@@ -11,11 +11,10 @@ impl<'a> System<'a> for TriggerSystem {
                         ReadStorage<'a, EntryTrigger>,
                         ReadStorage<'a, Name>,
                         Entities<'a>,
-                        WriteExpect<'a, GameLog>,
                         ReadStorage<'a, AreaOfEffect>);
 
     fn run(&mut self, data : Self::SystemData) {
-        let (map, mut entity_moved, position, entry_trigger, names, entities, mut log, area_of_effect) = data;
+        let (map, mut entity_moved, position, entry_trigger, names, entities, area_of_effect) = data;
 
         for (entity, mut _entity_moved, pos) in (&entities, &mut entity_moved, &position).join() {
             let idx = map.xy_idx(pos.x, pos.y);
@@ -27,7 +26,12 @@ impl<'a> System<'a> for TriggerSystem {
                         Some(_trigger) => {
                             let name = names.get(entity_id);
                             if let Some(name) = name {
-                                log.entries.push(format!("Zdeptano: {}!", &name.name));
+                                crate::gamelog::Logger::new()
+                                    .color(rltk::RED)
+                                    .append(&name.name)
+                                    .color(rltk::WHITE)
+                                    .append("uruchamia sie!")
+                                    .log();
                             }
 
                             add_effect(

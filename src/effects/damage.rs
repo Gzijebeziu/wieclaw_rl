@@ -1,10 +1,11 @@
 use specs::{prelude::*, saveload::{SimpleMarker, MarkedBuilder}};
 use super::*;
-use crate::{Pools, Map, Attributes, Player, gamelog::GameLog, player_hp_at_level, mana_at_level, Confusion, StatusEffect, Duration,
+use crate::{Pools, Map, Attributes, Player, player_hp_at_level, mana_at_level, Confusion, StatusEffect, Duration,
             SerializeMe, Name, EquipmentChanged, Slow, DamageOverTime, Skills};
 
 pub fn inflict_damage(ecs: &mut World, damage: &EffectSpawner, target: Entity) {
     let mut pools = ecs.write_storage::<Pools>();
+    let player_entity = ecs.fetch::<Entity>();
     if let Some(pool) = pools.get_mut(target) {
         if !pool.god_mode {
             if let Some(creator) = damage.creator {
@@ -14,21 +15,27 @@ pub fn inflict_damage(ecs: &mut World, damage: &EffectSpawner, target: Entity) {
             }
             if let EffectType::Damage{amount} = damage.effect_type {
                 pool.hit_points.current -= amount;
-                if let Some(tile_idx) = entity_position(ecs, target) {
-                    add_effect(None, EffectType::Bloodstain, Targets::Tile{tile_idx});
-                    add_effect(None,
-                        EffectType::Particle{
-                            glyph: rltk::to_cp437('‼'),
-                            fg: rltk::RGB::named(rltk::ORANGE),
-                            bg: rltk::RGB::named(rltk::BLACK),
-                            lifespan: 200.0
-                        },
-                        Targets::Single{target}
-                    );
-
-                    if pool.hit_points.current < 1 {
-                        add_effect(damage.creator, EffectType::EntityDeath, Targets::Single{target});
+                add_effect(None, EffectType::Bloodstain, Targets::Single{target});
+                add_effect(None,
+                    EffectType::Particle{
+                        glyph: rltk::to_cp437('‼'),
+                        fg: rltk::RGB::named(rltk::ORANGE),
+                        bg: rltk::RGB::named(rltk::BLACK),
+                        lifespan: 200.0
+                    },
+                    Targets::Single{target}
+                );
+                if target == *player_entity {
+                    crate::gamelog::record_event("Damage Taken", amount);
+                }
+                if let Some(creator) = damage.creator {
+                    if creator == *player_entity {
+                        crate::gamelog::record_event("Damage Inflicted", amount);
                     }
+                }
+
+                if pool.hit_points.current < 1 {
+                    add_effect(damage.creator, EffectType::EntityDeath, Targets::Single{target});
                 }
             }
         }
@@ -59,33 +66,35 @@ pub fn death(ecs: &mut World, effect: &EffectSpawner, target: Entity) {
             }
 
             if xp_gain != 0 || gold_gain != 0.0 {
-                let mut log = ecs.fetch_mut::<GameLog>();
                 let mut player_stats = pools.get_mut(source).unwrap();
                 let mut player_attributes = attributes.get_mut(source).unwrap();
                 player_stats.xp += xp_gain;
                 player_stats.gold += gold_gain;
                 if player_stats.xp >= player_stats.level * 1000 {
                     player_stats.level += 1;
-                    log.entries.push(format!("Wieclaw ma teraz {}. poziom.", player_stats.level));
+                    crate::gamelog::Logger::new()
+                        .color(rltk::MAGENTA)
+                        .append(format!("Wieclaw ma teraz {}. poziom.", player_stats.level))
+                        .log();
 
                     let mut rng = ecs.fetch_mut::<rltk::RandomNumberGenerator>();
                     let attr_to_boost = rng.roll_dice(1, 4);
                     match attr_to_boost {
                         1 => {
                             player_attributes.might.base += 1;
-                            log.entries.push("Wieclaw jest silniejszy!".to_string());
+                            crate::gamelog::Logger::new().color(rltk::GREEN).append("Wieclaw jest silniejszy!").log();
                         }
                         2 => {
                             player_attributes.fitness.base += 1;
-                            log.entries.push("Wieclaw jest zdrowszy!".to_string());
+                            crate::gamelog::Logger::new().color(rltk::GREEN).append("Wieclaw jest zdrowszy!").log();
                         }
                         3 => {
                             player_attributes.quickness.base += 1;
-                            log.entries.push("Wieclaw jest zwinniejszy!".to_string());
+                            crate::gamelog::Logger::new().color(rltk::GREEN).append("Wieclaw jest zwinniejszy!").log();
                         }
                         _ => {
                             player_attributes.intelligence.base += 1;
-                            log.entries.push("Wieclaw jest bystrzejszy!".to_string());
+                            crate::gamelog::Logger::new().color(rltk::GREEN).append("Wieclaw jest bystrzejszy!").log();
                         }
                     }
 

@@ -1,6 +1,6 @@
 use specs::prelude::*;
 use super::{Targets, add_effect, EffectType, entity_position, targeting};
-use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing, ProvidesIdentification,
+use crate::{Consumable, ProvidesFood, Name, RunState, MagicMapper, Map, TownPortal, ProvidesHealing, ProvidesIdentification,
             InflictsDamage, Confusion, Hidden, SingleActivation, TeleportTo, SpawnParticleLine, SpawnParticleBurst, ProvidesRemoveCurse, Duration,
             AttributeBonus, SpellTemplate, Pools, ProvidesMana, TeachesSpell, KnownSpells, KnownSpell, Slow, DamageOverTime, AreaOfEffect,
             AlwaysTargetsSelf, Position, effects::aoe_tiles};
@@ -8,8 +8,10 @@ use crate::{Consumable, gamelog::GameLog, ProvidesFood, Name, RunState, MagicMap
 pub fn item_trigger(creator: Option<Entity>, item: Entity, targets: &Targets, ecs: &mut World) {
     if let Some(c) = ecs.write_storage::<Consumable>().get_mut(item) {
         if c.charges < 1 {
-            let mut gamelog = ecs.fetch_mut::<GameLog>();
-            gamelog.entries.push(format!("{} nie ma juz ladunków!", ecs.read_storage::<Name>().get(item).unwrap().name));
+            crate::gamelog::Logger::new()
+                .item_name(&ecs.read_storage::<Name>().get(item).unwrap().name)
+                .append("nie ma juz ladunków!")
+                .log();
             return;
         } else {
             c.charges -= 1;
@@ -62,7 +64,6 @@ pub fn spell_trigger(creator : Option<Entity>, spell: Entity, targets : &Targets
 
 fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs: &mut World) -> bool {
     let mut did_something = false;
-    let mut gamelog = ecs.fetch_mut::<GameLog>();
 
     if let Some(part) = ecs.read_storage::<SpawnParticleLine>().get(entity) {
         if let Some(start_pos) = targeting::find_item_position(ecs, entity, creator) {
@@ -101,13 +102,16 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
     if ecs.read_storage::<ProvidesFood>().get(entity).is_some() {
         add_effect(creator, EffectType::WellFed, targets.clone());
         let names = ecs.read_storage::<Name>();
-        gamelog.entries.push(format!("Wieclaw zjada {}.", names.get(entity).unwrap().name));
+        crate::gamelog::Logger::new()
+            .append("Wieclaw zjada")
+            .item_name(format!("{}.", names.get(entity).unwrap().name))
+            .log();
         did_something = true;
     }
 
     if ecs.read_storage::<MagicMapper>().get(entity).is_some() {
         let mut runstate = ecs.fetch_mut::<RunState>();
-        gamelog.entries.push("Wieclaw odkryl cala mape!".to_string());
+        crate::gamelog::Logger::new().append("Wieclaw odkryl cala mape!").log();
         *runstate = RunState::MagicMapReveal{row: 0};
         did_something = true;
     }
@@ -127,9 +131,9 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
     if ecs.read_storage::<TownPortal>().get(entity).is_some() {
         let map = ecs.fetch::<Map>();
         if map.depth == 1 {
-            gamelog.entries.push("Wieclaw juz jest w miescie, wiec zwój nie dziala.".to_string());
+            crate::gamelog::Logger::new().append("Wieclaw juz jest w miescie, wiec zwój nie dziala.").log();
         } else {
-            gamelog.entries.push("Wieclaw teleportuje sie do miasta!".to_string());
+            crate::gamelog::Logger::new().append("Wieclaw teleportuje sie do miasta!").log();
             let mut runstate = ecs.fetch_mut::<RunState>();
             *runstate = RunState::TownPortal;
             did_something = true;
@@ -138,15 +142,21 @@ fn event_trigger(creator: Option<Entity>, entity: Entity, targets: &Targets, ecs
 
     if let Some(heal) = ecs.read_storage::<ProvidesHealing>().get(entity) {
         add_effect(creator, EffectType::Healing{amount: heal.heal_amount}, targets.clone());
-        let names = ecs.read_storage::<Name>();
-        gamelog.entries.push(format!("Wieclaw konsumuje {} i odzyskuje {} HP.", names.get(entity).unwrap().name, heal.heal_amount));
+        crate::gamelog::Logger::new()
+            .append("Wieclaw odzyskuje")
+            .heal(heal.heal_amount)
+            .append("HP.")
+            .log();
         did_something = true;
     }
 
     if let Some(mana) = ecs.read_storage::<ProvidesMana>().get(entity) {
         add_effect(creator, EffectType::Mana{amount: mana.mana_amount}, targets.clone());
-        let names = ecs.read_storage::<Name>();
-        gamelog.entries.push(format!("Wieclaw konsumuje {} i odzyskuje {} MP.", names.get(entity).unwrap().name, mana.mana_amount));
+        crate::gamelog::Logger::new()
+            .append("Wieclaw odzyskuje")
+            .mana(mana.mana_amount)
+            .append("MP.")
+            .log();
         did_something = true;
     }
 

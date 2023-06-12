@@ -126,7 +126,9 @@ pub struct SerializationHelper {
 
 #[derive(Component, Serialize, Deserialize, Clone)]
 pub struct DMSerializationHelper {
-    pub map : super::map::dungeon::MasterDungeonMap
+    pub map : super::map::dungeon::MasterDungeonMap,
+    pub log : Vec<Vec<crate::gamelog::LogFragment>>,
+    pub events : HashMap<String, i32>
 }
 
 #[derive(PartialEq, Copy, Clone, Serialize, Deserialize)]
