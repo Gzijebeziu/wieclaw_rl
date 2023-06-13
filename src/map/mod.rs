@@ -6,6 +6,7 @@ pub use tiletype::{TileType, tile_walkable, tile_opaque, tile_cost};
 mod themes;
 pub use themes::*;
 pub mod dungeon;
+pub mod camera;
 
 
 #[derive(Default, Serialize, Deserialize, Clone)]
