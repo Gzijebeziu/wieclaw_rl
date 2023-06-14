@@ -9,7 +9,6 @@ impl<'a> System<'a> for InitiativeSystem {
                         ReadStorage<'a, Position>,
                         WriteStorage<'a, MyTurn>,
                         Entities<'a>,
-                        WriteExpect<'a, rltk::RandomNumberGenerator>,
                         ReadStorage<'a, Attributes>,
                         WriteExpect<'a, RunState>,
                         ReadExpect<'a, Entity>,
@@ -21,7 +20,7 @@ impl<'a> System<'a> for InitiativeSystem {
                         ReadStorage<'a, DamageOverTime>);
 
     fn run(&mut self, data : Self::SystemData) {
-        let (mut initiatives, positions, mut turns, entities, mut rng, attributes,
+        let (mut initiatives, positions, mut turns, entities, attributes,
             mut runstate, player, player_pos, pools, mut durations, mut dirty, statuses, dots) = data;
 
         if *runstate != RunState::Ticking { return; }
@@ -33,7 +32,7 @@ impl<'a> System<'a> for InitiativeSystem {
             if initiative.current < 1 {
                 let mut myturn = true;
 
-                initiative.current = 6 + rng.roll_dice(1, 6);
+                initiative.current = 6 + crate::rng::roll_dice(1, 6);
 
                 if let Some(attr) = attributes.get(entity) {
                     initiative.current -= attr.quickness.bonus;

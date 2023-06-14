@@ -1,5 +1,4 @@
 use super::{InitialMapBuilder, BuilderMap, TileType};
-use rltk::RandomNumberGenerator;
 
 #[derive(PartialEq, Copy, Clone)]
 #[allow(dead_code)]
@@ -12,8 +11,8 @@ pub struct VoronoiCellBuilder {
 
 impl InitialMapBuilder for VoronoiCellBuilder {
     #[allow(dead_code)]
-    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
-        self.build(rng, build_data);
+    fn build_map(&mut self, build_data : &mut BuilderMap) {
+        self.build(build_data);
     }
 }
 
@@ -43,12 +42,12 @@ impl VoronoiCellBuilder {
     }
 
     #[allow(clippy::map_entry)]
-    fn build(&mut self, rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
+    fn build(&mut self, build_data : &mut BuilderMap) {
         let mut voronoi_seeds : Vec<(usize, rltk::Point)> = Vec::new();
 
         while voronoi_seeds.len() < self.n_seeds {
-            let vx = rng.roll_dice(1, build_data.map.width-1);
-            let vy = rng.roll_dice(1, build_data.map.height-1);
+            let vx = crate::rng::roll_dice(1, build_data.map.width-1);
+            let vy = crate::rng::roll_dice(1, build_data.map.height-1);
             let vidx = build_data.map.xy_idx(vx, vy);
             let candidate = (vidx, rltk::Point::new(vx, vy));
             if !voronoi_seeds.contains(&candidate) {

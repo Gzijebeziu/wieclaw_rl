@@ -4,6 +4,7 @@ use std::env;
 extern crate serde;
 mod components;
 pub use components::*;
+mod systems;
 mod map;
 pub use map::*;
 use dungeon::*;
@@ -11,44 +12,26 @@ mod player;
 pub use player::*;
 mod rect;
 pub use rect::Rect;
-mod ai;
-mod visibility_system;
-use visibility_system::VisibilitySystem;
-mod map_indexing_system;
-use map_indexing_system::MapIndexingSystem;
-mod melee_combat_system;
-use melee_combat_system::MeleeCombatSystem;
-mod ranged_combat_system;
-use ranged_combat_system::RangedCombatSystem;
 mod damage_system;
 mod gui;
 mod gamelog;
 mod spawner;
-mod inventory_system;
-use inventory_system::{ItemCollectionSystem, ItemUseSystem, ItemDropSystem, ItemRemoveSystem, ItemIdentificationSystem, SpellUseSystem};
 pub mod saveload_system;
 pub mod random_table;
-mod particle_system;
-use particle_system::ParticleSpawnSystem;
-mod hunger_system;
-use hunger_system::HungerSystem;
 mod rex_assets;
-mod trigger_system;
-use trigger_system::TriggerSystem;
 pub mod map_builders;
 pub mod raws;
 mod gamesystem;
 pub use gamesystem::*;
-mod lightning_system;
-use lightning_system::LightningSystem;
-mod movement_system;
 pub mod spatial;
 pub mod effects;
+pub mod rng;
 #[macro_use]
 extern crate lazy_static;
 
 
 const SHOW_MAPGEN_VISUALIZER : bool = false;
+const SHOW_FPS : bool = true;
 
 
 #[derive(PartialEq, Copy, Clone)]
@@ -82,65 +65,13 @@ pub struct State {
     mapgen_next_state : Option<RunState>,
     mapgen_history : Vec<Map>,
     mapgen_index : usize,
-    mapgen_timer : f32
+    mapgen_timer : f32,
+    dispatcher : Box<dyn systems::UnifiedDispatcher + 'static>
 }
 
 impl State {
     fn run_systems(&mut self) {
-        let mut mapindex = MapIndexingSystem{};
-        mapindex.run_now(&self.ecs);
-        let mut vis = VisibilitySystem{};
-        vis.run_now(&self.ecs);
-        let mut encumbrance = ai::EncumbranceSystem{};
-        encumbrance.run_now(&self.ecs);
-        let mut initiative = ai::InitiativeSystem{};
-        initiative.run_now(&self.ecs);
-        let mut turnstatus = ai::TurnStatusSystem{};
-        turnstatus.run_now(&self.ecs);
-        let mut quipper = ai::QuipSystem{};
-        quipper.run_now(&self.ecs);
-        let mut adjacent = ai::AdjacentAI{};
-        adjacent.run_now(&self.ecs);
-        let mut visible = ai::VisibleAI{};
-        visible.run_now(&self.ecs);
-        let mut approach = ai::ApproachAI{};
-        approach.run_now(&self.ecs);
-        let mut flee = ai::FleeAI{};
-        flee.run_now(&self.ecs);
-        let mut chase = ai::ChaseAI{};
-        chase.run_now(&self.ecs);
-        let mut defaultmove = ai::DefaultMoveAI{};
-        defaultmove.run_now(&self.ecs);
-        let mut moving = movement_system::MovementSystem{};
-        moving.run_now(&self.ecs);
-        let mut triggers = TriggerSystem{};
-        triggers.run_now(&self.ecs);
-        let mut melee = MeleeCombatSystem{};
-        melee.run_now(&self.ecs);
-        let mut ranged = RangedCombatSystem{};
-        ranged.run_now(&self.ecs);
-        let mut pickup = ItemCollectionSystem{};
-        pickup.run_now(&self.ecs);
-        let mut itemequip = inventory_system::ItemEquipOnUse{};
-        itemequip.run_now(&self.ecs);
-        let mut itemuse = ItemUseSystem{};
-        itemuse.run_now(&self.ecs);
-        let mut spelluse = SpellUseSystem{};
-        spelluse.run_now(&self.ecs);
-        let mut item_id = ItemIdentificationSystem{};
-        item_id.run_now(&self.ecs);
-        let mut drop_items = ItemDropSystem{};
-        drop_items.run_now(&self.ecs);
-        let mut item_remove = ItemRemoveSystem{};
-        item_remove.run_now(&self.ecs);
-        let mut hunger = HungerSystem{};
-        hunger.run_now(&self.ecs);
-        effects::run_effects_queue(&mut self.ecs);
-        let mut particles = ParticleSpawnSystem{};
-        particles.run_now(&self.ecs);
-        let mut lightning = LightningSystem{};
-        lightning.run_now(&self.ecs);
-
+        self.dispatcher.run_now(&mut self.ecs);
         self.ecs.maintain();
     }
 }
@@ -156,7 +87,7 @@ impl GameState for State {
         }
 
         ctx.cls();
-        particle_system::update_particles(&mut self.ecs, ctx);
+        systems::particle_system::update_particles(&mut self.ecs, ctx);
 
         match newrunstate {
             RunState::MainMenu {..} => {}
@@ -456,6 +387,9 @@ impl GameState for State {
         damage_system::delete_the_dead(&mut self.ecs);
 
         rltk::render_draw_buffer(ctx).expect("Unable to render buffer");
+        if SHOW_FPS {
+            ctx.print(1, 59, &format!("FPS: {}", ctx.fps));
+        }
 
     }
 }
@@ -531,7 +465,8 @@ fn main() -> rltk::BError {
         mapgen_next_state : Some(RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame }),
         mapgen_index : 0,
         mapgen_history: Vec::new(),
-        mapgen_timer: 0.0
+        mapgen_timer: 0.0,
+        dispatcher: systems::build()
      };
 
     gs.ecs.register::<Position>();
@@ -623,11 +558,10 @@ fn main() -> rltk::BError {
     gs.ecs.insert(MasterDungeonMap::new());
     gs.ecs.insert(Map::new(1, 64, 64, "Nowa Mapa"));
     gs.ecs.insert(Point::new(0, 0));
-    gs.ecs.insert(rltk::RandomNumberGenerator::new());
     let player_entity = spawner::player(&mut gs.ecs, 0, 0);
     gs.ecs.insert(player_entity);
     gs.ecs.insert(RunState::MapGeneration{} );
-    gs.ecs.insert(particle_system::ParticleBuilder::new());
+    gs.ecs.insert(systems::particle_system::ParticleBuilder::new());
     gs.ecs.insert(rex_assets::RexAssets::new());
 
     gs.generate_world_map(1, 0);

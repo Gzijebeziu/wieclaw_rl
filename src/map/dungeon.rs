@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 use specs::prelude::*;
 use serde::{Serialize, Deserialize};
 use super::{Map, TileType, super::{Viewshed, Position, map_builders::level_builder, OtherLevelPosition}};
-use rltk::{Point, RandomNumberGenerator};
+use rltk::Point;
 
 #[derive(Default, Serialize, Deserialize, Clone)]
 pub struct MasterDungeonMap {
@@ -21,15 +21,14 @@ impl MasterDungeonMap {
             potion_mappings: HashMap::new()
         };
 
-        let mut rng = rltk::RandomNumberGenerator::new();
         for scroll_tag in crate::raws::get_scroll_tags().iter() {
-            let masked_name = make_scroll_name(&mut rng);
+            let masked_name = make_scroll_name();
             dm.scroll_mappings.insert(scroll_tag.to_string(), masked_name);
         }
 
         let mut used_potion_names : HashSet<String> = HashSet::new();
         for potion_tag in crate::raws::get_potion_tags().iter() {
-            let masked_name = make_potion_name(&mut rng, &mut used_potion_names);
+            let masked_name = make_potion_name(&mut used_potion_names);
             dm.potion_mappings.insert(potion_tag.to_string(), masked_name);
         }
 
@@ -64,9 +63,8 @@ pub fn level_transition(ecs : &mut World, new_depth: i32, offset: i32) -> Option
 }
 
 fn transition_to_new_map(ecs: &mut World, new_depth: i32) -> Vec<Map> {
-    let mut rng = ecs.write_resource::<RandomNumberGenerator>();
-    let mut builder = level_builder(new_depth, &mut rng, 80, 50);
-    builder.build_map(&mut rng);
+    let mut builder = level_builder(new_depth, 80, 50);
+    builder.build_map();
     if new_depth > 1 {
         if let Some(pos) = &builder.build_data.starting_position {
             let up_idx = builder.build_data.map.xy_idx(pos.x, pos.y);
@@ -81,7 +79,6 @@ fn transition_to_new_map(ecs: &mut World, new_depth: i32) -> Vec<Map> {
         player_start = builder.build_data.starting_position.as_mut().unwrap().clone();
     }
 
-    std::mem::drop(rng);
     builder.spawn_entities(ecs);
 
     let (player_x, player_y) = (player_start.x, player_start.y);
@@ -177,13 +174,13 @@ pub fn thaw_level_entities(ecs: &mut World) {
     }
 }
 
-fn make_scroll_name(rng: &mut rltk::RandomNumberGenerator) -> String {
-    let length = 4 + rng.roll_dice(1, 8);
+fn make_scroll_name() -> String {
+    let length = 4 + crate::rng::roll_dice(1, 8);
     let mut name = "Zwój ".to_string();
 
     for i in 0..length {
         if i % 2 == 0 {
-            name += match rng.roll_dice(1, 27) {
+            name += match crate::rng::roll_dice(1, 27) {
                 1 => "b",
                 2 => "c",
                 3 => "ch",
@@ -213,7 +210,7 @@ fn make_scroll_name(rng: &mut rltk::RandomNumberGenerator) -> String {
                 _ => "ci"
             }
         } else {
-            name += match rng.roll_dice(1, 8) {
+            name += match crate::rng::roll_dice(1, 8) {
                 1 => "a",
                 2 => "e",
                 3 => "en",
@@ -232,11 +229,11 @@ fn make_scroll_name(rng: &mut rltk::RandomNumberGenerator) -> String {
 const POTION_ADJECTIVES1: &[&str] = &["Zlocisty", "Brazowy", "Ladny", "Paskudny", "Spalony", "Nadgnity", "Pulchny"];
 const POTION_ADJECTIVES2: &[&str] = &["pachnacy", "smierdzacy", "smaczny", "obrzydliwy", "zachecajacy", "elegancki", "zepsuty"];
 
-fn make_potion_name(rng: &mut rltk::RandomNumberGenerator, used_names: &mut HashSet<String>) -> String {
+fn make_potion_name(used_names: &mut HashSet<String>) -> String {
     loop {
-        let mut name : String = POTION_ADJECTIVES1[rng.roll_dice(1, POTION_ADJECTIVES1.len() as i32) as usize -1].to_string();
+        let mut name : String = POTION_ADJECTIVES1[crate::rng::roll_dice(1, POTION_ADJECTIVES1.len() as i32) as usize -1].to_string();
         name += " ";
-        name += POTION_ADJECTIVES2[rng.roll_dice(1, POTION_ADJECTIVES2.len() as i32) as usize -1];
+        name += POTION_ADJECTIVES2[crate::rng::roll_dice(1, POTION_ADJECTIVES2.len() as i32) as usize -1];
         name += " wypiek";
 
         if !used_names.contains(&name) {

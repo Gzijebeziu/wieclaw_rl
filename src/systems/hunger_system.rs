@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{HungerClock, RunState, HungerState, MyTurn, effects::{add_effect, EffectType, Targets}};
+use crate::{HungerClock, RunState, HungerState, MyTurn, effects::{add_effect, EffectType, Targets}};
 
 pub struct HungerSystem {}
 

@@ -1,8 +1,7 @@
 use super::{BuilderChain, XStart, YStart, AreaStartingPosition, RoomSorter, RoomSort, CullUnreachable, VoronoiSpawning, TileType, dla::DLABuilder,
             BspDungeonBuilder, DistantExit, BspCorridors, CorridorSpawner, RoomDrawer, AreaEndingPosition, XEnd, YEnd, MetaMapBuilder, BuilderMap};
-use rltk::RandomNumberGenerator;
 
-pub fn fort_builder(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+pub fn fort_builder(new_depth: i32, width: i32, height: i32) -> BuilderChain {
     let mut chain = BuilderChain::new(new_depth, width, height, "Fort Biskupi");
     chain.start_with(BspDungeonBuilder::new());
     chain.with(RoomSorter::new(RoomSort::CENTRAL));
@@ -22,8 +21,8 @@ pub fn fort_builder(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, widt
 pub struct DragonsLair {}
 
 impl MetaMapBuilder for DragonsLair {
-    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut super::BuilderMap) {
-        self.build(rng, build_data);
+    fn build_map(&mut self, build_data : &mut super::BuilderMap) {
+        self.build(build_data);
     }
 }
 
@@ -33,13 +32,13 @@ impl DragonsLair {
         Box::new(DragonsLair{})
     }
 
-    fn build(&mut self, rng : &mut RandomNumberGenerator, build_data: &mut BuilderMap) {
+    fn build(&mut self, build_data: &mut BuilderMap) {
         build_data.map.depth = 6;
         build_data.take_snapshot();
 
         let mut builder = BuilderChain::new(6, build_data.width, build_data.height, "New Map");
         builder.start_with(DLABuilder::insectoid());
-        builder.build_map(rng);
+        builder.build_map();
 
         for h in builder.build_data.history.iter() {
             build_data.history.push(h.clone());
@@ -58,8 +57,8 @@ impl DragonsLair {
 pub struct DragonSpawner {}
 
 impl MetaMapBuilder for DragonSpawner {
-    fn build_map(&mut self, rng: &mut rltk::RandomNumberGenerator, build_data : &mut BuilderMap) {
-        self.build(rng, build_data);
+    fn build_map(&mut self,  build_data : &mut BuilderMap) {
+        self.build(build_data);
     }
 }
 
@@ -69,7 +68,7 @@ impl DragonSpawner {
         Box::new(DragonSpawner{})
     }
 
-    fn build(&mut self, _rng : &mut RandomNumberGenerator, build_data : &mut BuilderMap) {
+    fn build(&mut self, build_data : &mut BuilderMap) {
         let seed_x = build_data.map.width / 2;
         let seed_y = build_data.map.height / 2;
         let mut available_floors : Vec<(usize, f32)> = Vec::new();

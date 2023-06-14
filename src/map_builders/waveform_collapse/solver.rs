@@ -81,7 +81,7 @@ impl Solver {
         neighbors
     }
 
-    pub fn iteration(&mut self, map: &mut Map, rng : &mut super::RandomNumberGenerator) -> bool {
+    pub fn iteration(&mut self, map: &mut Map) -> bool {
         if self.remaining.is_empty() { return true; }
 
         let mut remain_copy = self.remaining.clone();
@@ -98,7 +98,7 @@ impl Solver {
         self.remaining = remain_copy;
 
         let remaining_index = if !neighbors_exist {
-            (rng.roll_dice(1, self.remaining.len() as i32)-1) as usize
+            (crate::rng::roll_dice(1, self.remaining.len() as i32)-1) as usize
         } else {
             0usize
         };
@@ -157,7 +157,7 @@ impl Solver {
         }
 
         if neighbors == 0 {
-            let new_chunk_idx = (rng.roll_dice(1, self.constraints.len() as i32)-1) as usize;
+            let new_chunk_idx = (crate::rng::roll_dice(1, self.constraints.len() as i32)-1) as usize;
             self.chunks[chunk_index] = Some(new_chunk_idx);
             let left_x = chunk_x as i32 * self.chunk_size as i32;
             let right_x = (chunk_x as i32+1) * self.chunk_size as i32;
@@ -199,7 +199,7 @@ impl Solver {
                 return true;
             } else {
                 let new_chunk_idx = if possible_options.len() ==1 { 0 }
-                    else { rng.roll_dice(1, possible_options.len() as i32)-1 };
+                    else { crate::rng::roll_dice(1, possible_options.len() as i32)-1 };
 
                 self.chunks[chunk_index] = Some(new_chunk_idx as usize);
                 let left_x = chunk_x as i32 * self.chunk_size as i32;

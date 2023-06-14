@@ -1,5 +1,5 @@
 use specs::prelude::*;
-use super::{WantsToPickupItem, Name, InBackpack, Position, WantsToUseItem, EquipmentChanged, ObfuscatedName, MagicItem,
+use crate::{WantsToPickupItem, Name, InBackpack, Position, WantsToUseItem, EquipmentChanged, ObfuscatedName, MagicItem,
             WantsToDropItem, Map, AreaOfEffect, IdentifiedItem, Item, MasterDungeonMap, CursedItem, WantsToCastSpell,
             Equippable, Equipped, WantsToRemoveItem};
 

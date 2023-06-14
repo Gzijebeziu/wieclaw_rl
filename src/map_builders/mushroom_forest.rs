@@ -2,7 +2,7 @@ use super::{BuilderChain, XStart, YStart, AreaStartingPosition, CullUnreachable,
     AreaEndingPosition, XEnd, YEnd, CellularAutomataBuilder, PrefabBuilder};
 use crate::map_builders::prefab_builder::prefab_sections::{UNDERGROUND_FORT, BUHAJ_ENTRY};
 
-pub fn mushroom_entrance(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+pub fn mushroom_entrance(new_depth: i32, width: i32, height: i32) -> BuilderChain {
     let mut chain = BuilderChain::new(new_depth, width, height, "Do Smardzowego Gaju");
     chain.start_with(CellularAutomataBuilder::new());
     chain.with(AreaStartingPosition::new(XStart::CENTER, YStart::CENTER));
@@ -14,7 +14,7 @@ pub fn mushroom_entrance(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator,
     chain
 }
 
-pub fn mushroom_builder(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+pub fn mushroom_builder(new_depth: i32, width: i32, height: i32) -> BuilderChain {
     let mut chain = BuilderChain::new(new_depth, width, height, "Gaj Smardzowy");
     chain.start_with(CellularAutomataBuilder::new());
     chain.with(AreaStartingPosition::new(XStart::CENTER, YStart::CENTER));
@@ -25,7 +25,7 @@ pub fn mushroom_builder(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, 
     chain
 }
 
-pub fn mushroom_exit(new_depth: i32, _rng: &mut rltk::RandomNumberGenerator, width: i32, height: i32) -> BuilderChain {
+pub fn mushroom_exit(new_depth: i32, width: i32, height: i32) -> BuilderChain {
     let mut chain = BuilderChain::new(new_depth, width, height, "Gaj Smardzowy");
     chain.start_with(CellularAutomataBuilder::new());
     chain.with(AreaStartingPosition::new(XStart::CENTER, YStart::CENTER));
