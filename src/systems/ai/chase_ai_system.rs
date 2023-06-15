@@ -54,8 +54,8 @@ impl<'a> System<'a> for ChaseAI {
                 );
             } else {
                 path = rltk::a_star_search(
-                    map.xy_idx(pos.x, pos.y),
-                    map.xy_idx(target_pos.0, target_pos.1),
+                    map.xy_idx(pos.x, pos.y) as i32,
+                    map.xy_idx(target_pos.0, target_pos.1) as i32,
                     &mut *map
                 );
             }

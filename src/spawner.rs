@@ -141,8 +141,10 @@ pub fn spawn_entity(ecs: &mut World, spawn : &(&usize, &String)) {
     if spawn_result.is_some() {
         return;
     }
-
-    rltk::console::log(format!("WARNING: don't know how to spawn [{}]!", spawn.1));
+    
+    if spawn.1 != "None" {
+        rltk::console::log(format!("WARNING: don't know how to spawn [{}]!", spawn.1));
+    }
 }
 
 pub fn spawn_town_portal(ecs: &mut World) {
