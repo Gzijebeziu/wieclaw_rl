@@ -458,6 +458,7 @@ fn main() -> rltk::BError {
         .with_simple_console(80, 60, "curses_square_16x16.png")
         .with_dimensions(80, 60)
         .with_vsync(false)
+        .with_fps_cap(60.0)
         .build()?;
     
     let mut gs = State {
