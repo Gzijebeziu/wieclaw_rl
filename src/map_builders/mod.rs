@@ -67,6 +67,8 @@ mod fort;
 use fort::fort_builder;
 mod mushroom_forest;
 use mushroom_forest::*;
+mod buhaje;
+use buhaje::*;
 use specs::prelude::*;
 
 pub struct BuilderMap {
@@ -307,6 +309,7 @@ pub fn level_builder(new_depth : i32, width: i32, height: i32) -> BuilderChain {
         7 => mushroom_entrance(new_depth, width, height),
         8 => mushroom_builder(new_depth, width, height),
         9 => mushroom_exit(new_depth, width, height),
+        10 => buhaj_city(new_depth, width, height),
         _ => random_builder(new_depth, width, height)
     }
 }

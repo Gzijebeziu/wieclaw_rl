@@ -76,7 +76,15 @@
     { "name" : "Rekawice puchowe", "weight" : 3, "min_depth" : 1, "max_depth" : 100 },
     { "name" : "Rekawice bokserskie", "weight" : 2, "min_depth" : 5, "max_depth" : 100 },
     { "name" : "Kapiszonowiec", "weight" : 2, "min_depth" : 3, "max_depth" : 100 },
-    { "name" : "Wolej", "weight" : 2, "min_depth" : 9, "max_depth" : 11 }
+    { "name" : "Wolej", "weight" : 2, "min_depth" : 9, "max_depth" : 11 },
+    { "name" : "Ciamejbuhaj", "weight" : 10, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Ciamejbuhaj Bydle", "weight" : 7, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Ciamejgolem", "weight" : 14, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Zegdorbuhaj", "weight" : 9, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Zegdorgnomon", "weight" : 13, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Tarnobuhaj", "weight" : 7, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Tarnobuhaj Kaplan", "weight" : 6, "min_depth" : 10, "max_depth" : 11 },
+    { "name" : "Tarnopajon", "weight" : 10, "min_depth" : 10, "max_depth" : 11 }
 ],
 
 "loot_tables" : [
@@ -107,7 +115,10 @@
     { "name" : "Biskupi", "responses": { "Default" : "attack", "Biskupi" : "ignore", "Fungi" : "ignore" } },
     { "name" : "Karmelitanki", "responses" : { "Default" : "attack", "Player" : "ignore", "Karmelitanki" : "ignore" } },
     { "name" : "Fungi", "responses" : { "Default" : "attack", "Fungi" : "ignore", "Biskupi" : "ignore", "Cave Goblins" : "ignore" } },
-    { "name" : "Buhaje", "responses" : { "Default" : "attack", "Buhaje" : "ignore" } }
+    { "name" : "Buhaje", "responses" : { "Default" : "attack", "Buhaje" : "ignore" } },
+    { "name" : "BuhajC", "responses" : { "Default" : "attack", "BuhajC" : "ignore", "BuhajZ" : "attack", "BuhajT" : "attack" } },
+    { "name" : "BuhajZ", "responses" : { "Default" : "attack", "BuhajZ" : "ignore", "BuhajC" : "attack", "BuhajT" : "attack" } },
+    { "name" : "BuhajT", "responses" : { "Default" : "attack", "BuhajT" : "ignore", "BuhajZ" : "attack", "BuhajC" : "attack" } }
 ],
 
 "items" : [
@@ -2328,7 +2339,7 @@
     {
         "name" : "Buhaj",
         "renderable" : {
-            "glyph" : "B",
+            "glyph" : "b",
             "fg" : "#BC7D50",
             "bg" : "#000000",
             "order" : 1
@@ -2341,6 +2352,157 @@
         "faction" : "Buhaje",
         "gold" : "3d6",
         "level" : 6
+    },
+
+    {
+        "name" : "Ciamejbuhaj",
+        "renderable" : {
+            "glyph" : "b",
+            "fg" : "#BCAE50",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "equipped" : [ "Fokos +1", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "faction" : "BuhajC",
+        "gold" : "3d6",
+        "level" : 6
+    },
+
+    {
+        "name" : "Ciamejbuhaj Bydle",
+        "renderable" : {
+            "glyph" : "B",
+            "fg" : "#BCAE50",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "equipped" : [ "Fokos +2, Kuplerz +1", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "faction" : "BuhajC",
+        "gold" : "3d6",
+        "level" : 7
+    },
+
+    {
+        "name" : "Ciamejgolem",
+        "renderable" : {
+            "glyph" : "G",
+            "fg" : "#BCAE50",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "BuhajC",
+        "gold" : "1d8"
+    },
+
+    {
+        "name" : "Zegdorbuhaj",
+        "renderable" : {
+            "glyph" : "b",
+            "fg" : "#BC6050",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "equipped" : [ "Wolej +1", "Klapek", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "faction" : "BuhajZ",
+        "gold" : "3d6",
+        "level" : 6
+    },
+
+    {
+        "name" : "Zegdorgnomon",
+        "renderable" : {
+            "glyph" : "g",
+            "fg" : "#BC6050",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "static",
+        "attributes" : {},
+        "faction" : "BuhajZ",
+        "gold" : "1d6",
+        "equipped" : [ "Kapiszonowiec", "Koszula góralska", "Portki góralskie" ]
+    },
+
+    {
+        "name" : "Tarnobuhaj",
+        "renderable" : {
+            "glyph" : "b",
+            "fg" : "#6A3173",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "equipped" : [ "Wolej", "Fokos", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "faction" : "BuhajT",
+        "gold" : "3d6",
+        "level" : 6
+    },
+
+    {
+        "name" : "Tarnobuhaj Kaplan",
+        "renderable" : {
+            "glyph" : "B",
+            "fg" : "#6A3173",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 8,
+        "movement" : "random_waypoint",
+        "attributes" : {},
+        "equipped" : [ "Wolej", "Fokos", "Kuplerz", "Koszula buhaja", "Portki buhaja", "Buty buhaja" ],
+        "faction" : "BuhajT",
+        "gold" : "3d6",
+        "level" : 8,
+        "abilities" : [
+            { "spell" : "Obstrukcja", "chance" : 0.2, "range" : 6.0, "min_range" : 3.0 }
+        ]
+    },
+
+    {
+        "name" : "Tarnopajon",
+        "level" : 3,
+        "attributes" : {},
+        "renderable" : {
+            "glyph" : "p",
+            "fg" : "#6A3173",
+            "bg" : "#000000",
+            "order" : 1
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "movement" : "static",
+        "natural" : {
+            "armor_class" : 12,
+            "attacks" : [
+                { "name" : "bite", "hit_bonus" : 1, "damage" : "1d12" }
+            ]
+        },
+        "abilities" : [
+            { "spell" : "Obstrukcja", "chance" : 0.2, "range" : 6.0, "min_range" : 3.0 }
+        ],
+        "faction" : "BuhajT"
     }
 ],
 
