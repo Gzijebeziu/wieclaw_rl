@@ -846,8 +846,7 @@
         },
         "wearable" : {
             "slot" : "Hands",
-            "armor_class" : 0.1,
-            "might" : 5
+            "armor_class" : 0.1
         },
         "weight_kg" : 0.5,
         "base_value" : 300.0,
@@ -1518,6 +1517,25 @@
             "bonus_max" : 5,
             "include_cursed" : true
         }
+    },
+
+    {
+        "name" : "Zloty Zombek",
+        "renderable" : {
+            "glyph" : "■",
+            "fg" : "#FFC90E",
+            "bg" : "#000000",
+            "order" : 2
+        },
+        "wearable" : {
+            "slot" : "Head",
+            "armor_class" : 20.0
+        },
+        "weight_kg" : 0.1,
+        "base_value" : 20000.0,
+        "initiative_penalty" : 0,
+        "magic" : { "class" : "legendary", "naming" : "Zloty Zombek" },
+        "attributes" : { "might" : 10, "fitness" : 10, "quickness" : 10, "intelligence" : 10 }
     }
 
 ],
@@ -2503,6 +2521,40 @@
             { "spell" : "Obstrukcja", "chance" : 0.2, "range" : 6.0, "min_range" : 3.0 }
         ],
         "faction" : "BuhajT"
+    },
+
+    {
+        "name" : "Wladek Dziadek",
+        "renderable" : {
+            "glyph" : "W",
+            "fg" : "#FF0000",
+            "bg" : "#000000",
+            "order" : 1,
+            "x_size" : 2,
+            "y_size" : 2
+        },
+        "blocks_tile" : true,
+        "vision_range" : 6,
+        "movement" : "static",
+        "attributes" : {
+            "might" : 13,
+            "fitness" : 13
+        },
+        "skills" : {
+            "Melee" : 18,
+            "Defense" : 16
+        },
+        "natural" : {
+            "armor_class" : 17,
+            "attacks" : [
+                { "name" : "whip", "hit_bonus" : 4, "damage" : "1d10+2" }
+            ]
+        },
+        "loot_table" : "Biskupi",
+        "faction" : "Biskupi",
+        "level" : 8,
+        "gold" : "20d10",
+        "abilities" : []
     }
 ],
 
@@ -2738,8 +2790,8 @@
     {
         "name" : "Oltarz",
         "renderable": {
-            "glyph" : "╫",
-            "fg" : "#55FF55",
+            "glyph" : "╧",
+            "fg" : "#908F96",
             "bg" : "#000000",
             "order" : 2
         },

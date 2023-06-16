@@ -1,10 +1,8 @@
 use rltk::{VirtualKeyCode, Rltk};
 use specs::prelude::*;
-use crate::raws::find_spell_entity;
-
-use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, WantsToCastSpell, WantsToShoot,
+use super::{Position, Player, Map, State, Viewshed, RunState, Point, Item, WantsToCastSpell, WantsToShoot, raws::find_spell_entity,
             Pools, WantsToMelee, WantsToPickupItem, TileType, HungerClock, HungerState, EntityMoved, Equipped, Weapon,
-            Door, BlocksVisibility, BlocksTile, Renderable, Faction, raws::Reaction, Vendor, VendorMode, Target, Name};
+            Door, BlocksVisibility, BlocksTile, Renderable, Faction, raws::Reaction, Vendor, VendorMode, Target, Name, CHEATS_ALLOWED};
 use std::cmp::{min, max};
 
 
@@ -290,8 +288,12 @@ pub fn player_input(gs: &mut State, ctx: &mut Rltk) -> RunState {
             VirtualKeyCode::D => return RunState::ShowDropItem,
 
             VirtualKeyCode::Escape => return RunState::SaveGame,
-
-            VirtualKeyCode::Backslash => return RunState::ShowCheatMenu,
+            
+            VirtualKeyCode::Backslash => {
+                if CHEATS_ALLOWED {
+                    return RunState::ShowCheatMenu;
+                }
+            }
 
             VirtualKeyCode::Period => {
                 if try_next_level(&mut gs.ecs) {

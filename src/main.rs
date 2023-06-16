@@ -31,7 +31,8 @@ extern crate lazy_static;
 
 
 const SHOW_MAPGEN_VISUALIZER : bool = false;
-const SHOW_FPS : bool = true;
+const SHOW_FPS : bool = false;
+const CHEATS_ALLOWED : bool = false;
 
 
 #[derive(PartialEq, Copy, Clone)]
