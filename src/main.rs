@@ -452,7 +452,7 @@ fn main() -> rltk::BError {
     use rltk::RltkBuilder;
 
     let context = RltkBuilder::new()
-        .with_title("WięcławRL 2")
+        .with_title("Więcław Roguelike")
         .with_tile_dimensions(16, 16)
         .with_resource_path("resources/")
         .with_font("curses_square_16x16.png", 16, 16)
