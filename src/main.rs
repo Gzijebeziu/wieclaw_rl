@@ -58,7 +58,8 @@ pub enum RunState { AwaitingInput,
     ShowVendor { vendor: Entity, mode: VendorMode },
     TeleportingToOtherLevel { x: i32, y: i32, depth: i32 },
     ShowRemoveCurse,
-    ShowIdentify
+    ShowIdentify,
+    Credits
 }
 
 pub struct State {
@@ -92,6 +93,7 @@ impl GameState for State {
 
         match newrunstate {
             RunState::MainMenu {..} => {}
+            RunState::Credits {..} => {}
             RunState::GameOver {..} => {}
             _ => {
                 camera::render_camera(&self.ecs, ctx);
@@ -211,6 +213,7 @@ impl GameState for State {
                                 newrunstate = RunState::AwaitingInput;
                                 saveload_system::delete_save();
                             }
+                            gui::MainMenuSelection::Credits => { newrunstate = RunState::Credits; }
                             gui::MainMenuSelection::Quit => { ::std::process::exit(0); }
                         }
                     }
@@ -223,6 +226,15 @@ impl GameState for State {
                     gui::GameOverResult::QuitToMenu => {
                         self.game_over_cleanup();
                         newrunstate = RunState::MainMenu{ menu_selection: gui::MainMenuSelection::NewGame };
+                    }
+                }
+            }
+            RunState::Credits => {
+                let result = gui::credits(self, ctx);
+                match result {
+                    gui::CreditsResult::NoSelection => {}
+                    gui::CreditsResult::QuitToMenu => {
+                        newrunstate = RunState::MainMenu { menu_selection: gui::MainMenuSelection::Credits };
                     }
                 }
             }

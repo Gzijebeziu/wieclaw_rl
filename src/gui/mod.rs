@@ -20,6 +20,8 @@ mod main_menu;
 pub use main_menu::*;
 mod game_over_menu;
 pub use game_over_menu::*;
+mod credits_menu;
+pub use credits_menu::*;
 mod cheat_menu;
 pub use cheat_menu::*;
 mod vendor_menu;

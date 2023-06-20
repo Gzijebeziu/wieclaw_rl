@@ -2,7 +2,7 @@ use rltk::prelude::*;
 use crate::{State, RunState, rex_assets::RexAssets };
 
 #[derive(PartialEq, Copy, Clone)]
-pub enum MainMenuSelection { NewGame, LoadGame, Quit }
+pub enum MainMenuSelection { NewGame, LoadGame, Credits, Quit }
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum MainMenuResult { NoSelection{ selected : MainMenuSelection }, Selected{ selected: MainMenuSelection } }
@@ -15,7 +15,7 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
     let runstate = gs.ecs.fetch::<RunState>();
 
     draw_batch.print(Point::new(1, 51), "v0.1.0");
-    draw_batch.draw_double_box(Rect::with_size(24, 18, 31, 10), ColorPair::new(RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK)));
+    draw_batch.draw_double_box(Rect::with_size(24, 18, 31, 11), ColorPair::new(RGB::named(rltk::WHEAT), RGB::named(rltk::BLACK)));
     draw_batch.print_color_centered(20, "Wieclaw Roguelike", ColorPair::new(RGB::named(rltk::YELLOW), RGB::named(rltk::BLACK)));
     draw_batch.print_color_centered(21, "Zebyr Zyjgames", ColorPair::new(RGB::named(rltk::CYAN), RGB::named(rltk::BLACK)));
     draw_batch.print_color_centered(22, "(strzalki góra/dól, Enter)", ColorPair::new(RGB::named(rltk::GRAY), RGB::named(rltk::BLACK)));
@@ -38,6 +38,13 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
                 y += 1;
             }
 
+            if selection == MainMenuSelection::Credits {
+                draw_batch.print_color_centered(y, "Autorzy", ColorPair::new(RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK)));
+            } else {
+                draw_batch.print_color_centered(y, "Autorzy", ColorPair::new(RGB::named(rltk::WHITE), RGB::named(rltk::BLACK)));
+            }
+            y += 1;
+
             if selection == MainMenuSelection::Quit {
                 draw_batch.print_color_centered(y, "ANI MI SIE WAZ", ColorPair::new(RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK)));
             } else {
@@ -56,7 +63,8 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
                             match selection {
                                 MainMenuSelection::NewGame => newselection = MainMenuSelection::Quit,
                                 MainMenuSelection::LoadGame => newselection = MainMenuSelection::NewGame,
-                                MainMenuSelection::Quit => newselection = MainMenuSelection::LoadGame
+                                MainMenuSelection::Credits => newselection = MainMenuSelection::LoadGame,
+                                MainMenuSelection::Quit => newselection = MainMenuSelection::Credits
                             }
                             if newselection == MainMenuSelection::LoadGame && !save_exists {
                                 newselection = MainMenuSelection::NewGame;
@@ -67,11 +75,12 @@ pub fn main_menu(gs : &mut State, ctx : &mut Rltk) -> MainMenuResult {
                             let mut newselection;
                             match selection {
                                 MainMenuSelection::NewGame => newselection = MainMenuSelection::LoadGame,
-                                MainMenuSelection::LoadGame => newselection = MainMenuSelection::Quit,
+                                MainMenuSelection::LoadGame => newselection = MainMenuSelection::Credits,
+                                MainMenuSelection::Credits => newselection = MainMenuSelection::Quit,
                                 MainMenuSelection::Quit => newselection = MainMenuSelection::NewGame
                             }
                             if newselection == MainMenuSelection::LoadGame && !save_exists {
-                                newselection = MainMenuSelection::Quit;
+                                newselection = MainMenuSelection::Credits;
                             }
                             return MainMenuResult::NoSelection { selected: newselection }
                         }

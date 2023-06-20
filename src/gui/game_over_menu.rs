@@ -39,7 +39,7 @@ pub fn game_over(ctx : &mut Rltk) -> GameOverResult {
 
     draw_batch.print_color_centered(
         23,
-        "Wcisnij dowolny klawisz by wyjsc do menu.",
+        "Wcisnij dowolny klawisz, by wyjsc do menu.",
         ColorPair::new(RGB::named(rltk::MAGENTA), RGB::named(rltk::BLACK))
     );
 
